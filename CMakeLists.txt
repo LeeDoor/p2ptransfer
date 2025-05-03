@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 4.0.1)
+project(p2ptransfer)
+set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
+find_package(Boost 1.88 REQUIRED)
+add_executable(client client.cpp)
+add_executable(server server.cpp)
+target_include_directories(client PUBLIC ${Boost_INCLUDE_DIRS})
+target_include_directories(server PUBLIC ${Boost_INCLUDE_DIRS})
