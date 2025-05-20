@@ -63,6 +63,6 @@ int main() {
         std::cout << "empty input file." << std::endl;
         return 2;
     }
-    resolver.async_resolve("localhost", "8080", resolve_handler);
+    resolver.async_resolve("192.168.1.93", "8080", resolve_handler);
     context.run();
 }
