@@ -1,5 +1,6 @@
 #include "manager.hpp"
 #include "argument_parser.hpp"
+#include "network_manager.hpp"
 #include <iostream>
 #include <limits>
 
@@ -13,5 +14,6 @@ int Manager::start(int argc, char** argv) {
     return 0;
 }
 void Manager::listen(Port port) {
-    std::cout << "listening on port " << port << std::endl;
+    NetworkManager network;
+    network.listen();
 }
