@@ -24,7 +24,7 @@ std::optional<Port> ArgumentParser::parse_port(char* port_str) {
             throw std::out_of_range("Port must be positive integer.");
         return static_cast<Port>(iport);
     } catch(std::exception& ex) {
-        std::cerr << "Wrong <PORT> value: " << ex.what() << std::endl;
+        std::cout << "Wrong <PORT> value: " << ex.what() << std::endl;
     }
     return std::nullopt;
 }

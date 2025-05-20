@@ -1,1 +1,1 @@
-./build/server/server $@
+./build/server/p2plisten $@
