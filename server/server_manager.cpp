@@ -1,8 +1,8 @@
-#include "manager.hpp"
+#include "server_manager.hpp"
 #include "argument_parser.hpp"
 #include "network_manager.hpp"
 
-int Manager::start(int argc, char** argv) {
+int ServerManager::start(int argc, char** argv) {
     ArgumentData args;
     ArgumentParser parser;
     if(!parser.parse_arguments(argc, argv, args)) {
@@ -11,7 +11,7 @@ int Manager::start(int argc, char** argv) {
     listen(args.opened_port);
     return 0;
 }
-void Manager::listen(Port port) {
+void ServerManager::listen(Port port) {
     NetworkManager network;
     network.init();
 }

@@ -1,6 +1,6 @@
-#include "manager.hpp"
+#include "server_manager.hpp"
 
 int main(int argc, char** argv) {
-    Manager manager;
+    ServerManager manager;
     return manager.start(argc, argv);
 }
