@@ -19,7 +19,10 @@ net::awaitable<void> NetworkManager::connect_and_send(Address address, Port port
         co_return;
     }
     ConnectionHandler handler(context_, std::move(*tcp_socket));
-    handler.handle();
+    if(co_await handler.handle(std::move(message))) {
+        std::cout << "failed to handle connection." << std::endl;
+        co_return;
+    }
 }
 net::awaitable<std::optional<tcpip::socket>> NetworkManager::try_connect(Address address, Port port) {
     auto [resolve_ec, endpoint] =

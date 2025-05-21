@@ -1,9 +1,28 @@
 #include "connection_handler.hpp"
+#include <boost/asio/as_tuple.hpp>
+#include <boost/asio/use_awaitable.hpp>
 #include <iostream>
 
-int ConnectionHandler::handle() {
-    std::cout << "handling connection on " << socket_.remote_endpoint().address() << ":" << socket_.remote_endpoint().port() << std::endl;
+net::awaitable<int> ConnectionHandler::handle(std::string message) {
+    boost::system::error_code ec;
+    size_t bytes;
+    std::tie(ec, bytes) = co_await socket_.async_write_some(net::buffer(message, message.size()), 
+                                                  net::as_tuple(net::use_awaitable));
+    if(ec) {
+        std::cout << "failed to write data: " << ec.what() << std::endl;
+        co_return 1;
+    }
+    std::cout << "transfered " << bytes << " bytes." << std::endl;
+    std::tie(ec, bytes) = co_await socket_.async_read_some(net::buffer(message, message.capacity()),
+                                                        net::as_tuple(net::use_awaitable));
+    if(ec) {
+        std::cout << "failed to read data: " << ec.what() << std::endl;
+        co_return 2;
+    }
+    message.resize(bytes);
+    std::cout << "gathered " << bytes << " bytes: " << message << std::endl;
+
     socket_.shutdown(tcpip::socket::shutdown_both);
     socket_.close();
-    return 0;
+    co_return 0;
 }
