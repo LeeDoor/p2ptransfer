@@ -9,22 +9,27 @@ The server is the part of the project, which takes responsibility about receivin
 # The language
 When a client looks for opened servers, it connects to everyone in a row and sends the **send request**:
 ```
-REQUEST bigfile.txt
+REQUEST 
+FILE bigfile.txt
 SIZE 25000
 ```
-* REQUEST means *I want to connect to you and send some file <filename>*.
+* REQUEST means *I want to connect to you*.
+* FILE means *I want to send you a file <filename>*.
 * SIZE means *The file i want to send to you has a size <bytes> bytes*.
 
 When a server gets a send request it sends a **send permission**. It consists of the `PERMISSION` word and sending filename:
 ```
-PERMISSION bigfile.txt
+PERMISSION 
+FILE bigfile.txt
 ```
 After the server sent a permission, it starts listening for a file. It gathers *<bytes>* amount of data and then replies with the **report**:
 1. If transfer was successful, then the report is:
 ```
-TRANSFERED bigfile.txt
+TRANSFERED 
+FILE bigfile.txt
 ```
 2. If transfer failed, the report is:
 ```
-FAILED bigfile.txt
+FAILED 
+FILE bigfile.txt
 ```
