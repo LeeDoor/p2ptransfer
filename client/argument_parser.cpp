@@ -24,7 +24,7 @@ bool ArgumentParser::is_valid(int argc) {
 std::optional<Port> ArgumentParser::parse_port(char* port_str) {
     try {
         int iport = std::stoi(port_str);
-        if(iport < 0 || iport > std::numeric_limits<Port>::max())
+        if(iport < 0)
             throw std::out_of_range("Port must be positive integer.");
         return static_cast<Port>(iport);
     } catch(std::exception& ex) {
