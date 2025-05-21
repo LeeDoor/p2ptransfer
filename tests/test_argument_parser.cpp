@@ -1,7 +1,10 @@
 #include <catch2/catch_test_macros.hpp>
 #include "../server/argument_parser.hpp"
+#define IS_COUT
+#include "logger.hpp"
 
 SCENARIO ("ArgumentParser parses the data") {
+    Logger::init();
     ArgumentData res;
     ArgumentParser parser;
     GIVEN ("an argument list as char**") {
@@ -70,4 +73,5 @@ SCENARIO ("ArgumentParser parses the data") {
             delete[] argv;
         }
     }
+    Logger::destroy();
 }

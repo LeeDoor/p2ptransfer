@@ -2,7 +2,7 @@
 #include "network_headers.hpp"
 #include "connection_handler.hpp"
 #include <boost/asio/as_tuple.hpp>
-#include <iostream>
+#include "logger.hpp"
 #include <boost/asio/detached.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/awaitable.hpp>
@@ -16,10 +16,10 @@ int NetworkManager::init(Port port) {
 net::awaitable<void> NetworkManager::listen(Port port) {
     auto tcp_socket = co_await get_connection(port);
     if(!tcp_socket) {
-        std::cout << "failed to open socket." << std::endl;
+        Logger::log() << "failed to open socket." << std::endl;
         co_return;
     }
-    std::cout << "connected from " 
+    Logger::log() << "connected from " 
         << tcp_socket->remote_endpoint().address() 
         << ":"
         << tcp_socket->remote_endpoint().port()
@@ -34,12 +34,12 @@ net::awaitable<std::optional<tcpip::socket>> NetworkManager::get_connection(Port
         tcpip::socket tcp_socket {context_};
         auto [ec] = co_await acceptor.async_accept(tcp_socket, net::as_tuple(net::use_awaitable));
         if(ec) {
-            std::cout << "failed to accept connection: " << ec.what() << std::endl;
+            Logger::log() << "failed to accept connection: " << ec.what() << std::endl;
             co_return std::nullopt;
         }
         co_return tcp_socket;
     } catch (const std::exception& ex) {
-        std::cout << "failed while creating acceptor: " << ex.what() << std::endl;
+        Logger::log() << "failed while creating acceptor: " << ex.what() << std::endl;
         co_return std::nullopt;
     }
 }

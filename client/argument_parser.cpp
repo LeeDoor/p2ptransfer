@@ -1,5 +1,5 @@
 #include "argument_parser.hpp"
-#include <iostream>
+#include "logger.hpp"
 
 bool ArgumentParser::parse_arguments(int argc, char** argv, ArgumentData& data) {
     if(!is_valid(argc)) {
@@ -17,7 +17,7 @@ bool ArgumentParser::parse_arguments(int argc, char** argv, ArgumentData& data) 
 
 bool ArgumentParser::is_valid(int argc) {
     if(argc != 4) {
-        std::cout << "Usage: p2ptransfer <ADDRESS> <PORT> <MESSAGE>" << std::endl;
+        Logger::log() << "Usage: p2ptransfer <ADDRESS> <PORT> <MESSAGE>" << std::endl;
         return false;
     }   return true;
 }
@@ -28,7 +28,7 @@ std::optional<Port> ArgumentParser::parse_port(char* port_str) {
             throw std::out_of_range("Port must be positive integer.");
         return static_cast<Port>(iport);
     } catch(std::exception& ex) {
-        std::cout << "Wrong <PORT> value: " << ex.what() << std::endl;
+        Logger::log() << "Wrong <PORT> value: " << ex.what() << std::endl;
     }
     return std::nullopt;
 }
