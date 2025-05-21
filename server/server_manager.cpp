@@ -12,6 +12,6 @@ int ServerManager::start(int argc, char** argv) {
     return 0;
 }
 void ServerManager::listen(Port port) {
-    NetworkManager network(port);
-    network.init();
+    NetworkManager network;
+    network.init(port);
 }
