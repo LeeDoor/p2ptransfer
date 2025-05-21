@@ -1,5 +1,6 @@
 add_library(server
     argument_parser.cpp 
+    connection_handler.cpp
     manager.cpp
     network_manager.cpp
 )

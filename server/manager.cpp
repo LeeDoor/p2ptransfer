@@ -1,8 +1,6 @@
 #include "manager.hpp"
 #include "argument_parser.hpp"
 #include "network_manager.hpp"
-#include <iostream>
-#include <limits>
 
 int Manager::start(int argc, char** argv) {
     ArgumentData args;
@@ -15,5 +13,5 @@ int Manager::start(int argc, char** argv) {
 }
 void Manager::listen(Port port) {
     NetworkManager network;
-    network.listen();
+    network.init();
 }
