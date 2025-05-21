@@ -1,23 +1,23 @@
 #include "argument_parser.hpp"
 #include <iostream>
-#include <limits>
 
 bool ArgumentParser::parse_arguments(int argc, char** argv, ArgumentData& data) {
     if(!is_valid(argc)) {
         return false;
     }
-    if(auto port = parse_port(argv[1])) {
+    data.address = argv[1];
+    if(auto port = parse_port(argv[2])) {
         data.port = *port;
     } else return false;
-    if(auto message = parse_message(argv[2])) {
+    if(auto message = parse_message(argv[3])) {
         data.message = std::move(*message);
     } else return false;
     return true;
 }
 
 bool ArgumentParser::is_valid(int argc) {
-    if(argc != 3) {
-        std::cout << "Usage: p2ptransfer <PORT> <MESSAGE>" << std::endl;
+    if(argc != 4) {
+        std::cout << "Usage: p2ptransfer <ADDRESS> <PORT> <MESSAGE>" << std::endl;
         return false;
     }   return true;
 }

@@ -7,13 +7,13 @@
 #include "network_headers.hpp"
 #include <iostream>
 
-int NetworkManager::initialize_connection(Port port, std::string message) {
-    co_spawn(context_, connect_and_send(port, std::move(message)), net::detached);
+int NetworkManager::initialize_connection(Address address, Port port, std::string message) {
+    co_spawn(context_, connect_and_send(address, port, std::move(message)), net::detached);
     context_.run();
     return 0;
 }
-net::awaitable<void> NetworkManager::connect_and_send(Port port, std::string message) {
-    std::optional<tcpip::socket> tcp_socket = co_await try_connect(port);
+net::awaitable<void> NetworkManager::connect_and_send(Address address, Port port, std::string message) {
+    std::optional<tcpip::socket> tcp_socket = co_await try_connect(address, port);
     if(!tcp_socket) {
         std::cout << "failed to open socket." << std::endl;
         co_return;
@@ -21,11 +21,11 @@ net::awaitable<void> NetworkManager::connect_and_send(Port port, std::string mes
     ConnectionHandler handler(context_, std::move(*tcp_socket));
     handler.handle();
 }
-net::awaitable<std::optional<tcpip::socket>> NetworkManager::try_connect(Port port) {
+net::awaitable<std::optional<tcpip::socket>> NetworkManager::try_connect(Address address, Port port) {
     auto [resolve_ec, endpoint] =
-        co_await resolver_.async_resolve("localhost", std::to_string(port), net::as_tuple(net::use_awaitable));
+        co_await resolver_.async_resolve(address, std::to_string(port), net::as_tuple(net::use_awaitable));
     if(resolve_ec) {
-        std::cout << "failed to resolve endpoint: " << "localhost:" << port << std::endl;
+        std::cout << "failed to resolve endpoint: " << address << ":" << port << std::endl;
         co_return std::nullopt;
     }
     tcpip::socket tcp_socket(context_);

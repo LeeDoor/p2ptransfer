@@ -1,7 +1,6 @@
 #include "client_manager.hpp"
 #include "argument_parser.hpp"
 #include "network_manager.hpp"
-#include <iostream>
 
 int ClientManager::start(int argc, char** argv) {
     ArgumentParser parser;
@@ -14,5 +13,5 @@ int ClientManager::start(int argc, char** argv) {
 }
 void ClientManager::connect(ArgumentData args) {
     NetworkManager network;
-    network.initialize_connection(args.port, std::move(args.message));
+    network.initialize_connection(args.address, args.port, std::move(args.message));
 }

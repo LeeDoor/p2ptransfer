@@ -30,23 +30,23 @@ SCENARIO ("ArgumentParser parses the data") {
             WHEN ("PORT is a positive number") {
                 strcpy(argv[1], "1984");
                 REQUIRE(parser.parse_arguments(2, argv, res));
-                REQUIRE(res.opened_port == 1984);
+                REQUIRE(res.port == 1984);
 
                 strcpy(argv[1], "65535");
                 REQUIRE(parser.parse_arguments(2, argv, res));
-                REQUIRE(res.opened_port == 65535);
+                REQUIRE(res.port == 65535);
 
                 strcpy(argv[1], "0");
                 REQUIRE(parser.parse_arguments(2, argv, res));
-                REQUIRE(res.opened_port == 0);
+                REQUIRE(res.port == 0);
 
                 strcpy(argv[1], "-0");
                 REQUIRE(parser.parse_arguments(2, argv, res));
-                REQUIRE(res.opened_port == 0);
+                REQUIRE(res.port == 0);
 
                 strcpy(argv[1], "1489");
                 REQUIRE(parser.parse_arguments(2, argv, res));
-                REQUIRE(res.opened_port == 1489);
+                REQUIRE(res.port == 1489);
             }
             WHEN ("PORT is negative value or a string") {
                 strcpy(argv[1], "-1984");
