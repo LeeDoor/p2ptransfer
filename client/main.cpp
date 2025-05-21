@@ -1,6 +1,6 @@
-#include <iostream>
+#include "client_manager.hpp"
 
-int main() {
-    std::cout << "I am a client!" << std::endl;
-    return 0;
+int main(int argc, char** argv) {
+    ClientManager manager;
+    return manager.start(argc, argv);
 }
