@@ -6,5 +6,5 @@ public:
     int start(int argc, char** argv);
 private:
     ArgumentData parse_arguments(int argc, char** argv);
-    void listen(Port port);
+    void listen(ArgumentData data);
 };

@@ -7,20 +7,14 @@
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/awaitable.hpp>
 #include <boost/asio/co_spawn.hpp>
+#include <boost/asio/ip/address.hpp>
 int NetworkManager::init(Port port) {
-    endpoint_.port(port);
-    boost::system::error_code ec{};
-    tcp_acceptor_.bind(endpoint_, ec);
-    if(ec) {
-        std::cout << "failed to open endpoint: " << ec.what() << std::endl;
-        return 1;
-    }
-    co_spawn(context_, listen(), net::detached);
+    co_spawn(context_, listen(port), net::detached);
     context_.run();
     return 0;
 }
-net::awaitable<void> NetworkManager::listen() {
-    auto tcp_socket = co_await get_connection();
+net::awaitable<void> NetworkManager::listen(Port port) {
+    auto tcp_socket = co_await get_connection(port);
     if(!tcp_socket) {
         std::cout << "failed to open socket." << std::endl;
         co_return;
@@ -33,13 +27,20 @@ net::awaitable<void> NetworkManager::listen() {
     ConnectionHandler handler(context_, std::move(*tcp_socket));
     co_await handler.handle();
 }
-net::awaitable<std::optional<tcpip::socket>> NetworkManager::get_connection() {
-    tcpip::socket tcp_socket {context_};
-    auto [ec] = co_await tcp_acceptor_.async_accept(tcp_socket, net::as_tuple(net::use_awaitable));
-    if(ec) {
-        std::cout << "failed to accept connection: " << ec.what() << std::endl;
+net::awaitable<std::optional<tcpip::socket>> NetworkManager::get_connection(Port port) {
+    tcpip::endpoint endpoint(tcpip::v4(), port);
+    try {
+        tcpip::acceptor acceptor(context_, endpoint);
+        tcpip::socket tcp_socket {context_};
+        auto [ec] = co_await acceptor.async_accept(tcp_socket, net::as_tuple(net::use_awaitable));
+        if(ec) {
+            std::cout << "failed to accept connection: " << ec.what() << std::endl;
+            co_return std::nullopt;
+        }
+        co_return tcp_socket;
+    } catch (const std::exception& ex) {
+        std::cout << "failed while creating acceptor: " << ex.what() << std::endl;
         co_return std::nullopt;
     }
-    co_return tcp_socket;
 }
 

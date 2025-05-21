@@ -8,10 +8,10 @@ int ServerManager::start(int argc, char** argv) {
     if(!parser.parse_arguments(argc, argv, args)) {
         return 1;
     }
-    listen(args.opened_port);
+    listen(args);
     return 0;
 }
-void ServerManager::listen(Port port) {
+void ServerManager::listen(ArgumentData data) {
     NetworkManager network;
-    network.init(port);
+    network.init(data.port);
 }

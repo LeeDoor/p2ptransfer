@@ -8,7 +8,7 @@ bool ArgumentParser::parse_arguments(int argc, char** argv, ArgumentData& args) 
         return false;
     }
     if(auto port = parse_port(argv[1])) {
-        args.opened_port = *port;
+        args.port = *port;
     } else {
         return false;
     }
