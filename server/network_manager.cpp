@@ -12,6 +12,10 @@ int NetworkManager::init() {
 }
 net::awaitable<void> NetworkManager::listen() {
     tcpip::socket tcp_socket = co_await get_connection();
+    if(!tcp_socket.is_open()) {
+        std::cout << "failed to open socket." << std::endl;
+        co_return;
+    }
     std::cout << "connected from " 
         << tcp_socket.remote_endpoint().address() 
         << ":"

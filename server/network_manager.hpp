@@ -1,13 +1,14 @@
 #pragma once
 #include "network_headers.hpp"
+#include "port.hpp"
 #include <boost/asio/awaitable.hpp>
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/ip/tcp.hpp>
 class NetworkManager {
 public:
-    NetworkManager()
+    NetworkManager(Port port)
         : context_(), 
-        endpoint_(tcpip::v4(), 8080), 
+        endpoint_(tcpip::v4(), port), 
         tcp_acceptor_(context_, endpoint_){}
     int init();
 private:
