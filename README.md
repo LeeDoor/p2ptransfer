@@ -14,6 +14,7 @@ SIZE 25000
 ```
 * REQUEST means *I want to connect to you and send some file <filename>*.
 * SIZE means *The file i want to send to you has a size <bytes> bytes*.
+
 When a server gets a send request it sends a **send permission**. It consists of the `PERMISSION` word and sending filename:
 ```
 PERMISSION bigfile.txt
