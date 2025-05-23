@@ -7,6 +7,7 @@
 #include "connection_handler.hpp"
 #include "network_headers.hpp"
 #include "logger.hpp"
+#include "request_header_names.hpp"
 
 net::awaitable<void> ConnectionHandler::handle() {
     std::string data;
@@ -27,9 +28,9 @@ net::awaitable<void> ConnectionHandler::handle() {
 net::awaitable<std::optional<SendRequestData>> ConnectionHandler::handle_send_request(std::string& buffer) {
     auto method = co_await handle_method(buffer);
     if(!method) { co_return std::nullopt; }
-    if(strcmp(method->c_str(), REQUEST_METHOD.c_str()) != 0) {
-        Logger::log() << "method is wrong: " << *method << " (should be " << REQUEST_METHOD << ")" << std::endl
-            << "comparison result: " << method->size() << " " << REQUEST_METHOD_SIZE << std::endl;
+    if(strcmp(method->c_str(), REQUEST_HEADER.c_str()) != 0) {
+        Logger::log() << "method is wrong: " << *method << " (should be " << REQUEST_HEADER << ")" << std::endl
+            << "comparison result: " << method->size() << " " << REQUEST_HEADER_SIZE << std::endl;
         co_return std::nullopt;
     } 
     SendRequestData send_request;

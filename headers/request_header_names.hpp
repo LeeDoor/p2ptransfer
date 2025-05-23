@@ -1,7 +1,11 @@
 #pragma once
-
 #include <string>
-constexpr std::string REQUEST_HEADER = "REQUEST";
-constexpr std::string FILE_HEADER = "FILE";
-constexpr std::string SIZE_HEADER = "SIZE";
-constexpr std::string PERMISSION_HEADER = "PERMISSION";
+// generates constexpr string and calculates it's size at compile time.
+// size is stored in name_SIZE variable.
+#define MAKE_CONSTEXPR(name, value) \
+constexpr std::string name = value; \
+constexpr size_t name ## _SIZE = std::string_view(name).size();
+MAKE_CONSTEXPR(REQUEST_HEADER, "REQUEST")
+MAKE_CONSTEXPR(FILE_HEADER, "FILE")
+MAKE_CONSTEXPR(SIZE_HEADER, "SIZE")
+MAKE_CONSTEXPR(PERMISSION_HEADER, "PERMISSION")
