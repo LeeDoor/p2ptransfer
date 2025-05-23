@@ -22,6 +22,7 @@ net::awaitable<bool> ConnectionHandler::send_request(const std::string& filepath
         Logger::log() << "failed to serialize send_request." << std::endl;
         co_return false;
     }
+    Logger::log() << "sending " << *send_request << std::endl;
     boost::system::error_code ec;
     size_t bytes;
     std::tie(ec, bytes) = co_await socket_.async_write_some(net::buffer(*send_request),

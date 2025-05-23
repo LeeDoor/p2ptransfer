@@ -2,7 +2,7 @@
 #include <string>
 #include <sstream>
 #include <variant>
-#include "header_deserializer.hpp"
+#include "request_deserializer.hpp"
 #include "request_header_names.hpp"
 #include "logger.hpp"
 RequestDeserializer::RequestDeserializer() {
@@ -14,9 +14,10 @@ RequestDeserializer::RequestDeserializer() {
     };
 }
 std::optional<SendRequest> RequestDeserializer::deserialize_send_request(const std::string request_str) {
+    Logger::log() << "handling request: " << request_str << std::endl;
     std::istringstream is(request_str);
     SendRequest sr;
-    if(deserialize_value<std::monostate>(is, RequestMethod::PERMISSION)) {
+    if(!deserialize_value<std::monostate>(is, RequestMethod::REQUEST)) {
         Logger::log() << "failed while deserializing the main method." << std::endl;
         return std::nullopt;
     }
@@ -56,6 +57,7 @@ std::optional<ValueType> RequestDeserializer::deserialize_value(std::istringstre
 std::optional<RequestMethod> RequestDeserializer::deserialize_method(std::istringstream& is) {
     std::string method_line;
     is >> method_line;
+    Logger::log() << "method: " << method_line << std::endl;
     if(!request_methods_.contains(method_line)) {
         return std::nullopt;
     }

@@ -1,6 +1,4 @@
 #pragma once
-
-#include "logger.hpp"
 #include "request_header_names.hpp"
 #include "request_structures.hpp"
 #include <optional>
