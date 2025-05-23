@@ -18,9 +18,6 @@ net::awaitable<void> ConnectionHandler::handle() {
         Logger::log() << "failed to perform send request. shutting down." << std::endl;
         HANDLE_RETURN;
     }
-    Logger::log() 
-        << "ready for gathering file " << send_request->filename 
-        << " of size " << send_request->filesize << std::endl;
     if(!co_await send_permission(*send_request)) {
         Logger::log() << "failed to perform send permission. shutting down." << std::endl;
         HANDLE_RETURN;

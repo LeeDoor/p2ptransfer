@@ -13,7 +13,10 @@ net::awaitable<int> ConnectionHandler::handle(std::string filepath) {
         Logger::log() << "failed to send send_request." << std::endl;
         HANDLE_RETURN(1);
     }
-    co_await read_permission();
+    if(! co_await read_permission()) {
+        Logger::log() << "failed to read send_permission." << std::endl;
+        HANDLE_RETURN(2);
+    }
     HANDLE_RETURN(0);
 }
 net::awaitable<bool> ConnectionHandler::send_request(const std::string& filepath) {
