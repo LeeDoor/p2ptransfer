@@ -3,7 +3,7 @@
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/awaitable.hpp>
 #include "network_headers.hpp"
-#include "send_request_data.hpp"
+#include "request_structures.hpp"
 
 class ConnectionHandler {
 public:
@@ -11,7 +11,7 @@ public:
         : io_(ctx), socket_(std::move(socket)){}
     net::awaitable<void> handle();
 private:
-    net::awaitable<std::optional<SendRequestData>> handle_send_request(std::string& buffer);
+    net::awaitable<std::optional<SendRequest>> handle_send_request(std::string& buffer);
     net::awaitable<std::optional<std::string>> async_readline(std::string& buffer);
     net::awaitable<std::optional<std::string>> handle_method(std::string& buffer);
     net::awaitable<std::optional<std::string>> handle_filename(std::string& buffer);

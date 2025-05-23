@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-struct SendRequestData {
+struct SendRequest {
     std::string filename;
     size_t filesize;
 };

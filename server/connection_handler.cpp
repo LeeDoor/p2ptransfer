@@ -10,30 +10,31 @@
 #include "request_header_names.hpp"
 
 net::awaitable<void> ConnectionHandler::handle() {
+#define HANDLE_RETURN socket_.shutdown(tcpip::socket::shutdown_both); co_return
     std::string data;
     data.reserve(100);
     auto send_request = co_await handle_send_request(data);
     if(!send_request) {
         Logger::log() << "failed to parse send request. shutting down." << std::endl;
-    } else {
-        Logger::log() 
-            << "ready for gathering file " << send_request->filename 
-            << " of size " << send_request->filesize << std::endl;
+        HANDLE_RETURN;
     }
-    socket_.shutdown(tcpip::socket::shutdown_both);
-    socket_.close();
+    Logger::log() 
+        << "ready for gathering file " << send_request->filename 
+        << " of size " << send_request->filesize << std::endl;
+    // co_await send_permission({.filename=send_request->filename});
+    HANDLE_RETURN;
     co_return;
 }
 
-net::awaitable<std::optional<SendRequestData>> ConnectionHandler::handle_send_request(std::string& buffer) {
+net::awaitable<std::optional<SendRequest>> ConnectionHandler::handle_send_request(std::string& buffer) {
     auto method = co_await handle_method(buffer);
     if(!method) { co_return std::nullopt; }
-    if(strcmp(method->c_str(), REQUEST_HEADER.c_str()) != 0) {
+    if(strcmp(method->c_str(), REQUEST_HEADER.data()) != 0) {
         Logger::log() << "method is wrong: " << *method << " (should be " << REQUEST_HEADER << ")" << std::endl
             << "comparison result: " << method->size() << " " << REQUEST_HEADER_SIZE << std::endl;
         co_return std::nullopt;
     } 
-    SendRequestData send_request;
+    SendRequest send_request;
     auto filename = co_await handle_filename(buffer);
     if(!filename) co_return std::nullopt;
     auto filesize = co_await handle_filesize(buffer);
@@ -76,7 +77,7 @@ net::awaitable<std::optional<std::string>> ConnectionHandler::handle_filename(st
     sstr >> header >> filename;
     if(!sstr.good() || 
         header.size() != FILE_HEADER_SIZE ||
-        strcmp(header.c_str(), FILE_HEADER.c_str()) != 0 ||
+        strcmp(header.c_str(), FILE_HEADER.data()) != 0 ||
         filename.empty()) {
         Logger::log() << "failed while reading filename." << std::endl;
         co_return std::nullopt;
@@ -91,8 +92,8 @@ net::awaitable<std::optional<size_t>> ConnectionHandler::handle_filesize(std::st
     size_t filesize;
     sstr >> header >> filesize;
     if(!sstr.good() ||
-       header.size() != SIZE_HEADER_SIZE ||
-       strcmp(header.c_str(), SIZE_HEADER.c_str()) != 0) {
+        header.size() != SIZE_HEADER_SIZE ||
+        strcmp(header.c_str(), SIZE_HEADER.data()) != 0) {
         Logger::log() << "failed while reading filesize." << std::endl;
         co_return std::nullopt;
     }
