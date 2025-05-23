@@ -1,6 +1,7 @@
 #include "connection_handler.hpp"
 #include <boost/asio/as_tuple.hpp>
 #include <boost/asio/use_awaitable.hpp>
+#include <boost/asio/write.hpp>
 #include <filesystem>
 #include "logger.hpp"
 #include "request_serializer.hpp"
@@ -16,21 +17,23 @@ net::awaitable<int> ConnectionHandler::handle(std::string filepath) {
 }
 net::awaitable<bool> ConnectionHandler::send_request(const std::string& filepath) {
     namespace fs = std::filesystem;
-    auto send_request = 
+    auto send_request_opt = 
         RequestSerializer::serialize_send_request(fs::path(filepath).filename(), fs::file_size(filepath));
-    if(!send_request) { 
+    if(!send_request_opt) { 
         Logger::log() << "failed to serialize send_request." << std::endl;
         co_return false;
     }
-    Logger::log() << "sending " << *send_request << std::endl;
+    std::string send_request(std::move(*send_request_opt));
+    Logger::log() << "sending " << send_request << std::endl;
     boost::system::error_code ec;
     size_t bytes;
-    std::tie(ec, bytes) = co_await socket_.async_write_some(net::buffer(*send_request),
+    std::tie(ec, bytes) = co_await net::async_write(socket_, net::buffer(send_request),
                                                   net::as_tuple(net::use_awaitable));
     if(ec) {
         Logger::log() << "failed to write data: " << ec.what() << std::endl;
         co_return false;
     }
+    Logger::log() << "transfered " << bytes << " bytes." << std::endl;
     co_return true;
 }
 net::awaitable<bool> ConnectionHandler::read_permission() {

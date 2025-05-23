@@ -8,12 +8,10 @@
 #include "network_headers.hpp"
 #include "logger.hpp"
 #include "request_deserializer.hpp"
-#include "request_header_names.hpp"
 
 net::awaitable<void> ConnectionHandler::handle() {
 #define HANDLE_RETURN socket_.shutdown(tcpip::socket::shutdown_both); co_return
     std::string data;
-    data.reserve(300);
     auto send_request = co_await handle_send_request(data);
     if(!send_request) {
         Logger::log() << "failed to parse send request. shutting down." << std::endl;
@@ -22,7 +20,6 @@ net::awaitable<void> ConnectionHandler::handle() {
     Logger::log() 
         << "ready for gathering file " << send_request->filename 
         << " of size " << send_request->filesize << std::endl;
-    // co_await send_permission({.filename=send_request->filename});
     HANDLE_RETURN;
     co_return;
 }
@@ -30,15 +27,18 @@ net::awaitable<void> ConnectionHandler::handle() {
 net::awaitable<std::optional<SendRequest>> ConnectionHandler::handle_send_request(std::string& buffer) {
     size_t bytes;
     boost::system::error_code ec;
+    std::string request;
     std::tie(ec, bytes) = 
-        co_await net::async_read(socket_, net::buffer(buffer), 
+        co_await net::async_read(socket_, net::dynamic_buffer(buffer), 
                                        net::as_tuple(net::use_awaitable));
-    if(ec) {
+    if(ec && ec != boost::asio::error::eof) {
         Logger::log() << "failed to read line: " << ec.what() << std::endl;
         co_return std::nullopt;
     }
+    request = buffer.substr(0, bytes);
+    buffer.erase(0, bytes);
     RequestDeserializer deserializer;
-    if(auto send_request = deserializer.deserialize_send_request(buffer)) {
+    if(auto send_request = deserializer.deserialize_send_request(request)) {
         co_return *send_request;
     }
     co_return std::nullopt;

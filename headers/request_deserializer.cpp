@@ -8,7 +8,7 @@
 RequestDeserializer::RequestDeserializer() {
     request_methods_ = {
         { REQUEST_HEADER, RequestMethod::REQUEST },
-        { FILE_HEADER, RequestMethod::REQUEST },
+        { FILE_HEADER, RequestMethod::FILENAME },
         { SIZE_HEADER, RequestMethod::SIZE },
         { PERMISSION_HEADER, RequestMethod::PERMISSION },
     };
@@ -57,7 +57,6 @@ std::optional<ValueType> RequestDeserializer::deserialize_value(std::istringstre
 std::optional<RequestMethod> RequestDeserializer::deserialize_method(std::istringstream& is) {
     std::string method_line;
     is >> method_line;
-    Logger::log() << "method: " << method_line << std::endl;
     if(!request_methods_.contains(method_line)) {
         return std::nullopt;
     }
