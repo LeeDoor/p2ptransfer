@@ -14,7 +14,6 @@ RequestDeserializer::RequestDeserializer() {
     };
 }
 std::optional<SendRequest> RequestDeserializer::deserialize_send_request(const std::string request_str) {
-    Logger::log() << "handling request: " << request_str << std::endl;
     std::istringstream is(request_str);
     SendRequest sr;
     if(!deserialize_value<std::monostate>(is, RequestMethod::REQUEST)) {

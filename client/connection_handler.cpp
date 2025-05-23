@@ -1,5 +1,6 @@
 #include "connection_handler.hpp"
 #include <boost/asio/as_tuple.hpp>
+#include <boost/asio/read_until.hpp>
 #include <boost/asio/use_awaitable.hpp>
 #include <boost/asio/write.hpp>
 #include <filesystem>
@@ -24,7 +25,6 @@ net::awaitable<bool> ConnectionHandler::send_request(const std::string& filepath
         co_return false;
     }
     std::string send_request(std::move(*send_request_opt));
-    Logger::log() << "sending " << send_request << std::endl;
     boost::system::error_code ec;
     size_t bytes;
     std::tie(ec, bytes) = co_await net::async_write(socket_, net::buffer(send_request),
@@ -33,20 +33,18 @@ net::awaitable<bool> ConnectionHandler::send_request(const std::string& filepath
         Logger::log() << "failed to write data: " << ec.what() << std::endl;
         co_return false;
     }
-    Logger::log() << "transfered " << bytes << " bytes." << std::endl;
     co_return true;
 }
 net::awaitable<bool> ConnectionHandler::read_permission() {
     boost::system::error_code ec;
     size_t bytes;
     std::string read_buffer;
-    read_buffer.reserve(1984);
-    std::tie(ec, bytes) = co_await socket_.async_read_some(net::buffer(read_buffer),
-                                                           net::as_tuple(net::use_awaitable));
-    if(ec) {
+    std::tie(ec, bytes) = co_await net::async_read_until(socket_, net::dynamic_buffer(read_buffer),
+                                                         "\n\n", net::as_tuple(net::use_awaitable));
+    if(ec && ec != net::error::eof) {
         Logger::log() << "failed to read data: " << ec.what() << std::endl;
         co_return false;
     }
-    Logger::log() << "response from server: " << read_buffer.substr(0, bytes) << std::endl;
+    Logger::log() << bytes << " response from server: " << read_buffer.substr(0, bytes);
     co_return true;
 }
