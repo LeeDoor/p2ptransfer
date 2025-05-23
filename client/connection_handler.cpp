@@ -6,8 +6,9 @@
 #include "request_serializer.hpp"
 
 net::awaitable<int> ConnectionHandler::handle(std::string filename) {
+    namespace fs = std::filesystem;
     auto send_request = 
-        RequestSerializer::serialize_send_request(filename, std::filesystem::file_size(filename));
+        RequestSerializer::serialize_send_request(fs::path(filename).filename(), fs::file_size(filename));
     if(!send_request) { 
         Logger::log() << "failed to serialize send_request." << std::endl;
         co_return 3;
