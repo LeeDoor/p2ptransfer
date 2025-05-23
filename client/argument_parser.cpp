@@ -1,5 +1,6 @@
 #include "argument_parser.hpp"
 #include "logger.hpp"
+#include <filesystem>
 
 bool ArgumentParser::parse_arguments(int argc, char** argv, ArgumentData& data) {
     if(!is_valid(argc)) {
@@ -9,8 +10,8 @@ bool ArgumentParser::parse_arguments(int argc, char** argv, ArgumentData& data) 
     if(auto port = parse_port(argv[2])) {
         data.port = *port;
     } else return false;
-    if(auto message = parse_message(argv[3])) {
-        data.message = std::move(*message);
+    if(auto filename = parse_filename(argv[3])) {
+        data.filename = std::move(*filename);
     } else return false;
     return true;
 }
@@ -32,6 +33,12 @@ std::optional<Port> ArgumentParser::parse_port(char* port_str) {
     }
     return std::nullopt;
 }
-std::optional<std::string> ArgumentParser::parse_message(char* message) {
+std::optional<std::string> ArgumentParser::parse_filename(char* message) {
+    if(!std::filesystem::exists(message)) {
+        Logger::log() << message 
+            << ": no such file in current context " << 
+            std::filesystem::current_path().string() << std::endl;
+        return std::nullopt;
+    }
     return message;
 }

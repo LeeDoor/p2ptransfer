@@ -13,5 +13,5 @@ int ClientManager::start(int argc, char** argv) {
 }
 void ClientManager::connect(ArgumentData args) {
     NetworkManager network;
-    network.initialize_connection(args.address, args.port, std::move(args.message));
+    network.initialize_connection(args.address, args.port, std::move(args.filename));
 }

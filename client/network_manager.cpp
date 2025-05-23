@@ -7,19 +7,19 @@
 #include "network_headers.hpp"
 #include "logger.hpp"
 
-int NetworkManager::initialize_connection(Address address, Port port, std::string message) {
-    co_spawn(context_, connect_and_send(address, port, std::move(message)), net::detached);
+int NetworkManager::initialize_connection(Address address, Port port, std::string filename) {
+    co_spawn(context_, connect_and_send(address, port, std::move(filename)), net::detached);
     context_.run();
     return 0;
 }
-net::awaitable<void> NetworkManager::connect_and_send(Address address, Port port, std::string message) {
+net::awaitable<void> NetworkManager::connect_and_send(Address address, Port port, std::string filename) {
     std::optional<tcpip::socket> tcp_socket = co_await try_connect(address, port);
     if(!tcp_socket) {
         Logger::log() << "failed to open socket." << std::endl;
         co_return;
     }
     ConnectionHandler handler(context_, std::move(*tcp_socket));
-    if(co_await handler.handle(std::move(message))) {
+    if(co_await handler.handle(std::move(filename))) {
         Logger::log() << "failed to handle connection." << std::endl;
         co_return;
     }

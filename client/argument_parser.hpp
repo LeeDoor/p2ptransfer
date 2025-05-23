@@ -8,5 +8,5 @@ public:
 private:
     bool is_valid(int argc);
     std::optional<Port> parse_port(char* port_str);
-    std::optional<std::string> parse_message(char* message);
+    std::optional<std::string> parse_filename(char* message);
 };

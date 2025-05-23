@@ -4,5 +4,5 @@
 struct ArgumentData {
     std::string address;
     Port port;
-    std::string message;
+    std::string filename;
 };

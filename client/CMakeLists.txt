@@ -3,6 +3,7 @@ add_library(client
     argument_parser.cpp
     network_manager.cpp
     connection_handler.cpp
+    request_serializer.cpp
 )
 target_include_directories(client PUBLIC ${Boost_INCLUDE_DIRS} ../headers) 
 target_compile_options(client PUBLIC -frtti -Wall -Wextra -Wpedantic)
