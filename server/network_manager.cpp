@@ -32,6 +32,7 @@ net::awaitable<std::optional<tcpip::socket>> NetworkManager::get_connection(Port
     try {
         tcpip::acceptor acceptor(context_, endpoint);
         tcpip::socket tcp_socket {context_};
+        Logger::log() << "listening for a connection on " << endpoint.address() << ":" << endpoint.port() << std::endl;
         auto [ec] = co_await acceptor.async_accept(tcp_socket, net::as_tuple(net::use_awaitable));
         if(ec) {
             Logger::log() << "failed to accept connection: " << ec.what() << std::endl;
