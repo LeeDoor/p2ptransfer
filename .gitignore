@@ -2,5 +2,6 @@ build/
 .cache/
 compile_commands.json
 READED_*
+big_data.txt
 
 
