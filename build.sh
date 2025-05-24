@@ -1,1 +1,1 @@
-mkdir build; cd build && cmake .. && cmake --build . -j16
+mkdir build; cd build && cmake -DENABLE_TESTING=ON .. && cmake --build . 

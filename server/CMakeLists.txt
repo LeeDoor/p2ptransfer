@@ -7,4 +7,4 @@ add_library(server
 target_include_directories(server PUBLIC ${Boost_INCLUDE_DIRS} ../headers)
 target_compile_options(server PRIVATE -frtti -Wall -Wextra -Wpedantic)
 add_executable(p2plisten main.cpp)
-target_link_libraries(p2plisten PUBLIC server base)
+target_link_libraries(p2plisten PUBLIC server base ${LINKAGE_PARAMS})

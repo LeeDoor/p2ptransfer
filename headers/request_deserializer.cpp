@@ -9,7 +9,7 @@ RequestDeserializer::RequestDeserializer() {
     request_methods_ = {
         { REQUEST_HEADER, RequestMethod::REQUEST },
         { FILE_HEADER, RequestMethod::FILENAME },
-        { SIZE_HEADER, RequestMethod::SIZE },
+        { SIZE_HEADER, RequestMethod::FILESIZE },
         { PERMISSION_HEADER, RequestMethod::PERMISSION },
     };
 }
@@ -26,7 +26,7 @@ std::optional<SendRequest> RequestDeserializer::deserialize_send_request(const s
         Logger::log() << "failed while deserializing the filename." << std::endl;
         return std::nullopt;
     }
-    if(auto filesize = deserialize_value<Filesize>(is, RequestMethod::SIZE)) {
+    if(auto filesize = deserialize_value<Filesize>(is, RequestMethod::FILESIZE)) {
         sr.filesize = *filesize;
     } else {
         Logger::log() << "failed while deserializing the filesize." << std::endl;

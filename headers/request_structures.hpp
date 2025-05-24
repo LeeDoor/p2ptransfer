@@ -7,7 +7,7 @@ enum RequestMethod {
     REQUEST,
     PERMISSION,
     FILENAME,
-    SIZE,
+    FILESIZE,
 };
 struct SendRequest {
     Filename filename;

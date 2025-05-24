@@ -16,7 +16,7 @@ net::awaitable<int> ConnectionHandler::handle(std::string filepath) {
     }
     namespace fs = std::filesystem;
     size_t filesize = fs::file_size(filepath);
-    if(! co_await send_request(fs::path(filepath).filename(), filesize)) {
+    if(! co_await send_request(fs::path(filepath).filename().string(), filesize)) {
         Logger::log() << "failed to send send_request." << std::endl;
         HANDLE_RETURN(1);
     }
