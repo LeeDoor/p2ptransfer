@@ -17,6 +17,14 @@ net::awaitable<int> ConnectionHandler::handle(std::string filepath) {
         Logger::log() << "failed to read send_permission." << std::endl;
         HANDLE_RETURN(2);
     }
+    std::string msg;
+    msg.resize(std::filesystem::file_size(filepath), '*');
+    std::ifstream ifs(filepath, std::ios::binary);
+    ifs.read(msg.data(), msg.size());
+    ifs.close();
+    Logger::log() << msg << std::endl << "starting spamming abobos" << std::endl;
+    co_await net::async_write(socket_, net::buffer(msg), net::use_awaitable);
+    Logger::log() << "stopped spamming abobos" << std::endl;
     HANDLE_RETURN(0);
 }
 net::awaitable<bool> ConnectionHandler::send_request(const std::string& filepath) {
