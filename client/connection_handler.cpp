@@ -44,14 +44,15 @@ net::awaitable<bool> ConnectionHandler::send_file(IStream& is, size_t filesize) 
         std::tie(ec, bytes) =
             co_await net::async_write(socket_, net::buffer(buff, chunk_size),
                                       net::as_tuple(net::use_awaitable));
-        Logger::log() << "read " << bytes << " bytes of " << bytes_remaining << std::endl;
         bytes_remaining -= bytes;
         if(ec && bytes_remaining) {
-            Logger::log() << "bytes: " << bytes << 
-                " remaining: " << bytes_remaining << " failed while writing file: " << ec.what() << std::endl;
+            Logger::log() << std::endl << " failed while writing file: " << ec.what() << std::endl;
             co_return false;
         }
+        Logger::log() << "\r" << std::flush  << std::setprecision(2) << 
+            "progress: " << std::setw(6)<< std::max(0.0, 100.0 - (bytes_remaining * 100.0 / filesize)) << " %";
     }
+    Logger::log() << std::endl;
     co_return true;
 }
 net::awaitable<bool> ConnectionHandler::send_request(const std::string& filename, size_t filesize) {
@@ -82,6 +83,5 @@ net::awaitable<bool> ConnectionHandler::read_permission() {
         Logger::log() << "failed to read data: " << ec.what() << std::endl;
         co_return false;
     }
-    Logger::log() << bytes << " response from server: " << read_buffer.substr(0, bytes);
     co_return true;
 }
