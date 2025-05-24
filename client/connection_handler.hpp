@@ -10,7 +10,9 @@ public:
         : context_(ctx), socket_(std::move(socket)){}
     net::awaitable<int> handle(std::string filepath);
 private:
-    net::awaitable<bool> send_request(const std::string& filepath);
+    template <typename IStream>
+    net::awaitable<bool> send_file(IStream& is, size_t filesize);
+    net::awaitable<bool> send_request(const std::string& filename, size_t filesize);
     net::awaitable<bool> read_permission();
 
     net::io_context& context_;

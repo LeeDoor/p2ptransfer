@@ -9,7 +9,14 @@
 
 net::awaitable<int> ConnectionHandler::handle(std::string filepath) {
     #define HANDLE_RETURN(ec) socket_.shutdown(tcpip::socket::shutdown_both); co_return ec
-    if(! co_await send_request(filepath)) {
+    std::ifstream ifs(filepath, std::ios::binary);
+    if(!ifs.is_open()) {
+        Logger::log() << "failed to open file for reading." << std::endl;
+        HANDLE_RETURN(3);
+    }
+    namespace fs = std::filesystem;
+    size_t filesize = fs::file_size(filepath);
+    if(! co_await send_request(fs::path(filepath).filename(), filesize)) {
         Logger::log() << "failed to send send_request." << std::endl;
         HANDLE_RETURN(1);
     }
@@ -17,20 +24,39 @@ net::awaitable<int> ConnectionHandler::handle(std::string filepath) {
         Logger::log() << "failed to read send_permission." << std::endl;
         HANDLE_RETURN(2);
     }
-    std::string msg;
-    msg.resize(std::filesystem::file_size(filepath), '*');
-    std::ifstream ifs(filepath, std::ios::binary);
-    ifs.read(msg.data(), msg.size());
-    ifs.close();
-    Logger::log() << msg << std::endl << "starting spamming abobos" << std::endl;
-    co_await net::async_write(socket_, net::buffer(msg), net::use_awaitable);
-    Logger::log() << "stopped spamming abobos" << std::endl;
+    if(! co_await send_file(ifs, filesize)) {
+        Logger::log() << "failed to send file." << std::endl;
+        HANDLE_RETURN(4);
+    }
+    Logger::log() << "file sent successfully." << std::endl;
     HANDLE_RETURN(0);
 }
-net::awaitable<bool> ConnectionHandler::send_request(const std::string& filepath) {
-    namespace fs = std::filesystem;
+template <typename IStream>
+net::awaitable<bool> ConnectionHandler::send_file(IStream& is, size_t filesize) {
+    constexpr size_t BUFFER_SIZE = 4096;
+    size_t bytes_remaining = filesize;
+    size_t bytes; boost::system::error_code ec;
+    std::string buff;
+    buff.resize(BUFFER_SIZE, '*');
+    while(bytes_remaining) {
+        size_t chunk_size = std::min(buff.size(), bytes_remaining);
+        is.read(buff.data(), chunk_size);
+        std::tie(ec, bytes) =
+            co_await net::async_write(socket_, net::buffer(buff, chunk_size),
+                                      net::as_tuple(net::use_awaitable));
+        Logger::log() << "read " << bytes << " bytes of " << bytes_remaining << std::endl;
+        bytes_remaining -= bytes;
+        if(ec && bytes_remaining) {
+            Logger::log() << "bytes: " << bytes << 
+                " remaining: " << bytes_remaining << " failed while writing file: " << ec.what() << std::endl;
+            co_return false;
+        }
+    }
+    co_return true;
+}
+net::awaitable<bool> ConnectionHandler::send_request(const std::string& filename, size_t filesize) {
     auto send_request_opt = 
-        RequestSerializer::serialize_send_request(fs::path(filepath).filename(), fs::file_size(filepath));
+        RequestSerializer::serialize_send_request(filename, filesize);
     if(!send_request_opt) { 
         Logger::log() << "failed to serialize send_request." << std::endl;
         co_return false;
