@@ -1,7 +1,40 @@
 # Resume
-Current state of the program allows:
-* Send a file to some IP.
-* Get a file from some IP.
+This program is **under development** and doesn't present the whole range of possibilities.
+At this point, **p2pTransfer** application allows us to:
+* Application is ported both for Linux and Windows.
+* Send/Receive some file within one LAN.
+To do so, clone the repo and build it for your system (building script is for linux only).
+For Linux:
+```bash
+git clone https://github.com/LeeDoor/p2ptransfer --depth 1
+./build.sh
+# On your receiving machine, run:
+./run_server.sh <PORT>
+# On your sending machine, run:
+./run_client.sh <ADDRESS> <PORT> <MESSAGE>
+```
+For Windows:
+```bash
+git clone https://github.com/LeeDoor/p2ptransfer --depth 1
+./windows_build.sh
+# Copy the result executables to your windows machine.
+# They are in win_build/client and win_build/server directories.
+
+# Open PowerShell and run the script.
+# On your receiving machine, run:
+./p2plisten.exe <PORT>
+# On your sending machine, run:
+./p2ptransfer.exe <ADDRESS> <PORT> <FILENAME>
+```
+Let's dive into CLI parameters:
+1. `run_server.sh` or `p2plisten.exe`:
+    * **`<PORT>`** - the port, where you are listening to connections.
+2. `run_client.sh` or `p2ptransfer.exe`:
+    * **`<ADDRESS>`** - IPv4 address of receiving machine. Get it using `ifconfig` or `ipconfig` commands.
+    * **`<PORT>`** - Port of receiving machine you entered in previous script.
+    * **`<FILENAME>`** - the path to file you want to send.
+
+After sending, on your listening machine there will be the file called `READED_<FILENAME>`.
 # Introduction
 **P2PTransfer** is an application to transfer any files using P2P connection. You can connect one PC to another and send any files directly. If you use local Wi-Fi or even the Ethernet cable, you can speed up file transfer many times.
 # The Server (file acceptor)
