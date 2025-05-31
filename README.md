@@ -4,6 +4,7 @@ At this point, **p2pTransfer** application allows us to:
 * Application is ported both for Linux and Windows.
 * Send/Receive some file within one LAN.
 To do so, clone the repo and build it for your system (building script is for linux only).
+
 For Linux:
 ```bash
 git clone https://github.com/LeeDoor/p2ptransfer --depth 1
