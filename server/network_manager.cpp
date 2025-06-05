@@ -1,5 +1,5 @@
 #include "network_manager.hpp"
-#include "network_headers.hpp"
+#include "common_types.hpp"
 #include "connection_handler.hpp"
 #include "logger.hpp"
 int NetworkManager::init(Port port) {
@@ -25,7 +25,7 @@ net::awaitable<SockPtr> NetworkManager::get_connection(Port port) {
     tcpip::endpoint endpoint(tcpip::v4(), port);
     try {
         SocketCloser socketCloser = [] (tcpip::socket* socket) {
-            boost::system::error_code ec;
+            ErrorCode ec;
             socket->shutdown(tcpip::socket::shutdown_both, ec);
             socket->close();
             Logger::log() << "socket closed successfully: " << ec.what() << std::endl;

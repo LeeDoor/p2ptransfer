@@ -29,7 +29,7 @@ template <typename IStream>
 net::awaitable<bool> ConnectionHandler::send_file(IStream& is, size_t filesize) {
     constexpr size_t BUFFER_SIZE = 4096;
     size_t bytes_remaining = filesize;
-    size_t bytes; boost::system::error_code ec;
+    size_t bytes; ErrorCode ec;
     std::string buff;
     buff.resize(BUFFER_SIZE, '*');
     while(bytes_remaining) {
@@ -57,7 +57,7 @@ net::awaitable<bool> ConnectionHandler::send_request(const std::string& filename
         co_return false;
     }
     std::string send_request(std::move(*send_request_opt));
-    boost::system::error_code ec;
+    ErrorCode ec;
     size_t bytes;
     std::tie(ec, bytes) = co_await net::async_write(*socket_, net::buffer(send_request),
                                                   net::as_tuple(net::use_awaitable));
@@ -68,7 +68,7 @@ net::awaitable<bool> ConnectionHandler::send_request(const std::string& filename
     co_return true;
 }
 net::awaitable<bool> ConnectionHandler::read_permission() {
-    boost::system::error_code ec;
+    ErrorCode ec;
     size_t bytes;
     std::string read_buffer;
     std::tie(ec, bytes) = co_await net::async_read_until(*socket_, net::dynamic_buffer(read_buffer),

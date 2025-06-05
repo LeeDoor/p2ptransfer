@@ -30,7 +30,7 @@ template<typename OStream>
 net::awaitable<bool> ConnectionHandler::handle_file(OStream& os, const SendRequest& send_request) {
     constexpr size_t buffer_size = 4096;
     size_t bytes;
-    boost::system::error_code ec;
+    ErrorCode ec;
     size_t bytes_remaining = send_request.filesize;
     std::array<char, buffer_size> buffer;
     while (bytes_remaining) {
@@ -52,7 +52,7 @@ net::awaitable<bool> ConnectionHandler::send_permission(const SendRequest& send_
         Logger::log() << "failed to serialize send permission." << std::endl;
         co_return false;
     }
-    boost::system::error_code ec;
+    ErrorCode ec;
     size_t bytes;
     std::tie(ec, bytes) =
         co_await net::async_write(*socket_, net::buffer(*send_permission), net::as_tuple(net::use_awaitable));
@@ -64,7 +64,7 @@ net::awaitable<bool> ConnectionHandler::send_permission(const SendRequest& send_
 }
 net::awaitable<std::optional<SendRequest>> ConnectionHandler::handle_send_request(std::string& buffer) {
     size_t bytes;
-    boost::system::error_code ec;
+    ErrorCode ec;
     std::tie(ec, bytes) = 
         co_await net::async_read_until(*socket_, net::dynamic_buffer(buffer), 
                                        "\n\n", net::as_tuple(net::use_awaitable));

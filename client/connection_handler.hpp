@@ -1,5 +1,5 @@
 #pragma once
-#include "network_headers.hpp"
+#include "common_types.hpp"
 
 class ConnectionHandler {
 public:

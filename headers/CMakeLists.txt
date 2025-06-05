@@ -3,7 +3,7 @@ target_precompile_headers(base INTERFACE
     stdlib.hpp
     address.hpp
     logger.hpp
-    network_headers.hpp
+    common_types.hpp
     port.hpp
     request_serializer.hpp
     request_deserializer.hpp

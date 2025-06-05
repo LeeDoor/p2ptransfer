@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "network_headers.hpp"
+#include "common_types.hpp"
 #include "port.hpp"
 #include "address.hpp"
 

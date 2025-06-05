@@ -1,6 +1,6 @@
 #include "network_manager.hpp"
 #include "connection_handler.hpp"
-#include "network_headers.hpp"
+#include "common_types.hpp"
 #include "logger.hpp"
 
 int NetworkManager::initialize_connection(Address address, Port port, std::string filename) {
@@ -28,7 +28,7 @@ net::awaitable<SockPtr> NetworkManager::try_connect(Address address, Port port) 
         co_return nullptr;
     }
     SocketCloser socketCloser = [] (tcpip::socket* s) {
-        boost::system::error_code ec;
+        ErrorCode ec;
         s->shutdown(tcpip::socket::shutdown_both, ec);
         s->close();
     };
