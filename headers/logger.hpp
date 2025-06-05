@@ -33,6 +33,16 @@ public:
             "Logger::init(); and Logger::destroy()" << std::endl;
         exit(1);
     }
+    static void progressbar_init() {
+        log() << std::setprecision(5) << std::right;
+    }
+    static void progressbar_stop() {
+        log() << std::left << std::endl;
+    }
+    static void log_progressbar(double persent) {
+        log() << "\r" << std::flush  << 
+            "progress: " << std::setw(10) << std::max(0.0, persent) << " %";
+    }
     private:
     static constexpr bool is_cout_ = IS_COUT;
     inline static std::ostream* os_;

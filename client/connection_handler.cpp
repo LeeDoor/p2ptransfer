@@ -32,6 +32,7 @@ net::awaitable<bool> ConnectionHandler::send_file(IStream& is, size_t filesize) 
     size_t bytes; ErrorCode ec;
     std::string buff;
     buff.resize(BUFFER_SIZE, '*');
+    Logger::progressbar_init();
     while(bytes_remaining) {
         size_t chunk_size = std::min(buff.size(), bytes_remaining);
         is.read(buff.data(), chunk_size);
@@ -40,12 +41,14 @@ net::awaitable<bool> ConnectionHandler::send_file(IStream& is, size_t filesize) 
                                       net::as_tuple(net::use_awaitable));
         bytes_remaining -= bytes;
         if(ec && bytes_remaining) {
+            Logger::progressbar_stop();
             Logger::log() << std::endl << " failed while writing file: " << ec.what() << std::endl;
             co_return false;
         }
-        Logger::log() << "\r" << std::flush  << std::setprecision(2) << 
-            "progress: " << std::setw(6)<< std::max(0.0, 100.0 - (bytes_remaining * 100.0 / filesize)) << " %";
+        double progress = 100.0 - (bytes_remaining * 100.0 / filesize);
+        Logger::log_progressbar(progress);
     }
+    Logger::progressbar_stop();
     Logger::log() << std::endl;
     co_return true;
 }
