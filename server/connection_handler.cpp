@@ -23,7 +23,7 @@ net::awaitable<void> ConnectionHandler::handle() {
         Logger::log() << "failed to read file." << std::endl;
         co_return;
     }
-    Logger::log() << "file writed successfully." << std::endl;
+    Logger::log() << "file written successfully." << std::endl;
 }
 
 template<typename OStream>
