@@ -1,5 +1,5 @@
 #pragma once
-#include <string>
+#include "stdlib.hpp"
 using SerializedText = std::string;
 using Filename = std::string;
 using Filesize = size_t;

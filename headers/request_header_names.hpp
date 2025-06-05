@@ -1,5 +1,5 @@
 #pragma once
-#include <string_view>
+#include "stdlib.hpp"
 using HeaderType = std::string_view;
 // generates constexpr string and calculates it's size at compile time.
 // size is stored in name_SIZE variable.
