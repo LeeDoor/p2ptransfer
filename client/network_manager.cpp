@@ -1,10 +1,10 @@
 #include "network_manager.hpp"
 #include "connection_handler.hpp"
 #include <boost/asio/detached.hpp>
+#include "network_headers.hpp"
 #include <boost/asio/use_awaitable.hpp>
 #include <boost/asio/as_tuple.hpp>
 #include <boost/asio/co_spawn.hpp>
-#include "network_headers.hpp"
 #include "logger.hpp"
 
 int NetworkManager::initialize_connection(Address address, Port port, std::string filename) {
@@ -13,29 +13,34 @@ int NetworkManager::initialize_connection(Address address, Port port, std::strin
     return 0;
 }
 net::awaitable<void> NetworkManager::connect_and_send(Address address, Port port, std::string filename) {
-    std::optional<tcpip::socket> tcp_socket = co_await try_connect(address, port);
+    SockPtr tcp_socket = co_await try_connect(address, port);
     if(!tcp_socket) {
         Logger::log() << "failed to open socket." << std::endl;
         co_return;
     }
-    ConnectionHandler handler(context_, std::move(*tcp_socket));
+    ConnectionHandler handler(context_, std::move(tcp_socket));
     if(co_await handler.handle(std::move(filename))) {
         Logger::log() << "failed to handle connection." << std::endl;
         co_return;
     }
 }
-net::awaitable<std::optional<tcpip::socket>> NetworkManager::try_connect(Address address, Port port) {
+net::awaitable<SockPtr> NetworkManager::try_connect(Address address, Port port) {
     auto [resolve_ec, endpoint] =
         co_await resolver_.async_resolve(address, std::to_string(port), net::as_tuple(net::use_awaitable));
     if(resolve_ec) {
         Logger::log() << "failed to resolve endpoint: " << address << ":" << port << std::endl;
-        co_return std::nullopt;
+        co_return nullptr;
     }
-    tcpip::socket tcp_socket(context_);
-    auto [ec] = co_await tcp_socket.async_connect(endpoint.begin()->endpoint(), net::as_tuple(net::use_awaitable));
+    SocketCloser socketCloser = [] (tcpip::socket* s) {
+        boost::system::error_code ec;
+        s->shutdown(tcpip::socket::shutdown_both, ec);
+        s->close();
+    };
+    SockPtr tcp_socket(new tcpip::socket(context_), socketCloser);
+    auto [ec] = co_await tcp_socket->async_connect(endpoint.begin()->endpoint(), net::as_tuple(net::use_awaitable));
     if(ec) {
         Logger::log() << "failed to connect: " << ec.what() << std::endl;
-        co_return std::nullopt;
+        co_return nullptr;
     }
     co_return tcp_socket;
 }

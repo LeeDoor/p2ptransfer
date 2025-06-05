@@ -6,7 +6,7 @@
 
 class ConnectionHandler {
 public:
-    ConnectionHandler(net::io_context& ctx, tcpip::socket socket)
+    ConnectionHandler(net::io_context& ctx, SockPtr socket)
         : context_(ctx), socket_(std::move(socket)){}
     net::awaitable<int> handle(std::string filepath);
 private:
@@ -16,5 +16,5 @@ private:
     net::awaitable<bool> read_permission();
 
     net::io_context& context_;
-    tcpip::socket socket_;
+    SockPtr socket_;
 };

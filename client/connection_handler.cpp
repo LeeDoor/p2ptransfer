@@ -8,28 +8,27 @@
 #include "request_serializer.hpp"
 
 net::awaitable<int> ConnectionHandler::handle(std::string filepath) {
-    #define HANDLE_RETURN(ec) socket_.shutdown(tcpip::socket::shutdown_both); co_return ec
     std::ifstream ifs(filepath, std::ios::binary);
     if(!ifs.is_open()) {
         Logger::log() << "failed to open file for reading." << std::endl;
-        HANDLE_RETURN(3);
+        co_return 1;
     }
     namespace fs = std::filesystem;
     size_t filesize = fs::file_size(filepath);
     if(! co_await send_request(fs::path(filepath).filename().string(), filesize)) {
         Logger::log() << "failed to send send_request." << std::endl;
-        HANDLE_RETURN(1);
+        co_return 2;
     }
     if(! co_await read_permission()) {
         Logger::log() << "failed to read send_permission." << std::endl;
-        HANDLE_RETURN(2);
+        co_return 3;
     }
     if(! co_await send_file(ifs, filesize)) {
         Logger::log() << "failed to send file." << std::endl;
-        HANDLE_RETURN(4);
+        co_return 4;
     }
     Logger::log() << "file sent successfully." << std::endl;
-    HANDLE_RETURN(0);
+    co_return 0;
 }
 template <typename IStream>
 net::awaitable<bool> ConnectionHandler::send_file(IStream& is, size_t filesize) {
@@ -42,7 +41,7 @@ net::awaitable<bool> ConnectionHandler::send_file(IStream& is, size_t filesize) 
         size_t chunk_size = std::min(buff.size(), bytes_remaining);
         is.read(buff.data(), chunk_size);
         std::tie(ec, bytes) =
-            co_await net::async_write(socket_, net::buffer(buff, chunk_size),
+            co_await net::async_write(*socket_, net::buffer(buff, chunk_size),
                                       net::as_tuple(net::use_awaitable));
         bytes_remaining -= bytes;
         if(ec && bytes_remaining) {
@@ -65,7 +64,7 @@ net::awaitable<bool> ConnectionHandler::send_request(const std::string& filename
     std::string send_request(std::move(*send_request_opt));
     boost::system::error_code ec;
     size_t bytes;
-    std::tie(ec, bytes) = co_await net::async_write(socket_, net::buffer(send_request),
+    std::tie(ec, bytes) = co_await net::async_write(*socket_, net::buffer(send_request),
                                                   net::as_tuple(net::use_awaitable));
     if(ec) {
         Logger::log() << "failed to write data: " << ec.what() << std::endl;
@@ -77,7 +76,7 @@ net::awaitable<bool> ConnectionHandler::read_permission() {
     boost::system::error_code ec;
     size_t bytes;
     std::string read_buffer;
-    std::tie(ec, bytes) = co_await net::async_read_until(socket_, net::dynamic_buffer(read_buffer),
+    std::tie(ec, bytes) = co_await net::async_read_until(*socket_, net::dynamic_buffer(read_buffer),
                                                          "\n\n", net::as_tuple(net::use_awaitable));
     if(ec && ec != net::error::eof) {
         Logger::log() << "failed to read data: " << ec.what() << std::endl;
