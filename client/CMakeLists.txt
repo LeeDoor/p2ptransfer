@@ -4,6 +4,7 @@ add_library(client
     network_manager.cpp
     connection_handler.cpp
 )
+target_link_libraries(client PRIVATE base)
 target_include_directories(client PUBLIC ${Boost_INCLUDE_DIRS} ../headers) 
 target_compile_options(client PUBLIC -frtti -Wall -Wextra -Wpedantic)
 add_executable(p2ptransfer main.cpp)

@@ -1,7 +1,5 @@
 #include "argument_parser.hpp"
 #include "logger.hpp"
-#include "logger.hpp"
-
 bool ArgumentParser::parse_arguments(int argc, char** argv, ArgumentData& args) {
     if(!is_valid(argc) || argv == nullptr) {
         Logger::log() << "Usage: p2plisten <PORT>." << std::endl;

@@ -4,7 +4,8 @@ add_library(server
     server_manager.cpp
     network_manager.cpp
 )
+target_link_libraries(server PRIVATE base)
 target_include_directories(server PUBLIC ${Boost_INCLUDE_DIRS} ../headers)
 target_compile_options(server PRIVATE -frtti -Wall -Wextra -Wpedantic)
 add_executable(p2plisten main.cpp)
-target_link_libraries(p2plisten PUBLIC server base ${LINKAGE_PARAMS})
+target_link_libraries(p2plisten PUBLIC server ${LINKAGE_PARAMS})

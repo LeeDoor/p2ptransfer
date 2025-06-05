@@ -1,10 +1,6 @@
 #include "network_manager.hpp"
 #include "connection_handler.hpp"
-#include <boost/asio/detached.hpp>
 #include "network_headers.hpp"
-#include <boost/asio/use_awaitable.hpp>
-#include <boost/asio/as_tuple.hpp>
-#include <boost/asio/co_spawn.hpp>
 #include "logger.hpp"
 
 int NetworkManager::initialize_connection(Address address, Port port, std::string filename) {

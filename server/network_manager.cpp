@@ -1,13 +1,7 @@
 #include "network_manager.hpp"
 #include "network_headers.hpp"
 #include "connection_handler.hpp"
-#include <boost/asio/as_tuple.hpp>
 #include "logger.hpp"
-#include <boost/asio/detached.hpp>
-#include <boost/asio/ip/tcp.hpp>
-#include <boost/asio/awaitable.hpp>
-#include <boost/asio/co_spawn.hpp>
-#include <boost/asio/ip/address.hpp>
 int NetworkManager::init(Port port) {
     co_spawn(context_, listen(port), net::detached);
     context_.run();

@@ -19,7 +19,6 @@ bool ArgumentParser::parse_arguments(int argc, char** argv, ArgumentData& data) 
 bool ArgumentParser::is_valid(int argc) {
     if(argc != 4) {
         Logger::log() << "Usage: p2ptransfer <ADDRESS> <PORT> <MESSAGE>" << std::endl;
-        return false;
     }   return true;
 }
 std::optional<Port> ArgumentParser::parse_port(char* port_str) {

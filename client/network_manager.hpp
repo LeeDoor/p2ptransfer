@@ -1,7 +1,5 @@
 #pragma once
 #include <string>
-#include <boost/asio/awaitable.hpp>
-#include <boost/asio/ip/tcp.hpp>
 #include "network_headers.hpp"
 #include "port.hpp"
 #include "address.hpp"
