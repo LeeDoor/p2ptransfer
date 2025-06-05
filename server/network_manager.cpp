@@ -28,7 +28,6 @@ net::awaitable<SockPtr> NetworkManager::get_connection(Port port) {
             ErrorCode ec;
             socket->shutdown(tcpip::socket::shutdown_both, ec);
             socket->close();
-            Logger::log() << "socket closed successfully: " << ec.what() << std::endl;
         };
         tcpip::acceptor acceptor(context_, endpoint);
         std::unique_ptr<tcpip::socket, SocketCloser> tcp_socket (new tcpip::socket(context_), socketCloser);

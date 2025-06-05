@@ -66,7 +66,7 @@ net::awaitable<std::optional<SendRequest>> ConnectionHandler::handle_send_reques
     size_t bytes;
     ErrorCode ec;
     std::tie(ec, bytes) = 
-        co_await net::async_read_until(*socket_, net::dynamic_buffer(buffer), 
+        co_await net::async_read_until(*socket_, net::dynamic_buffer(buffer, 512), 
                                        "\n\n", net::as_tuple(net::use_awaitable));
     if(ec && ec != boost::asio::error::eof) {
         Logger::log() << "failed to read line: " << ec.what() << std::endl;

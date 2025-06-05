@@ -28,10 +28,11 @@ def parse_size(size_str):
     if size_str.isdigit():
         return int(size_str)
     
-    units = {'B': 1, 'KB': 1024, 'MB': 1024**2, 'GB': 1024**3, 'TB': 1024**4}
+    units = {'KB': 1024, 'MB': 1024**2, 'GB': 1024**3, 'TB': 1024**4}
     for unit, multiplier in units.items():
         if size_str.endswith(unit):
             try:
+                print("found:", unit, multiplier)
                 num = float(size_str[:-len(unit)])
                 return int(num * multiplier)
             except ValueError:
