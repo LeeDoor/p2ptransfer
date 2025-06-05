@@ -7,7 +7,7 @@
 
 class ConnectionHandler {
 public:
-    ConnectionHandler(net::io_context& ctx, tcpip::socket&& socket)
+    ConnectionHandler(net::io_context& ctx, SockPtr socket)
         : io_(ctx), socket_(std::move(socket)){}
     net::awaitable<void> handle();
 private:
@@ -16,5 +16,5 @@ private:
     net::awaitable<bool> handle_file(OStream& os, const SendRequest& send_request);
     net::awaitable<bool> send_permission(const SendRequest& send_request);
     net::io_context& io_;
-    tcpip::socket socket_;
+    SockPtr socket_;
 };

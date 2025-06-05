@@ -11,6 +11,6 @@ public:
     int init(Port port);
 private:
     net::awaitable<void> listen(Port port);
-    net::awaitable<std::optional<tcpip::socket>> get_connection(Port port);
+    net::awaitable<SockPtr> get_connection(Port port);
     net::io_context context_;
 };
