@@ -8,7 +8,10 @@ target_link_libraries(server PRIVATE base)
 target_include_directories(server PUBLIC ${INCLUDE_PARAMS})
 target_compile_options(server PRIVATE -frtti -Wall -Wextra -Wpedantic)
 if(${GRAPHICS})
-    qt_add_executable(p2plisten main_graphics.cpp)
+    qt_add_executable(p2plisten 
+        main_graphics.cpp
+        mainwindow.cpp
+    )
 else()
     add_executable(p2plisten main.cpp)
 endif()
