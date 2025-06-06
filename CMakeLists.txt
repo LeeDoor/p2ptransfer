@@ -2,9 +2,8 @@ cmake_minimum_required(VERSION 4.0.1)
 project(p2ptransfer)
 set(CMAKE_CXX_STANDARD 20) # use c++20
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # require C++20
-set(CMAKE_CXX_EXTENSIONS OFF) 
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1) # exporting compile_commands.json for neovim
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g") # TODO: replace with Debug
+set(CMAKE_BUILD_TYPE Debug)
 
 option(ENABLE_TESTING "build tests or not" OFF) # testing executable
 option(GRAPHICS "Build with Qt" ON) # graphics executable
