@@ -18,4 +18,5 @@ void Presenter::connection_aborted(const Address& address, Port port) {
 void Presenter::listen() {
     Port port = view_->get_port();
     network_manager_->init(port);
+    view_->set_progressbar(14.88);
 }

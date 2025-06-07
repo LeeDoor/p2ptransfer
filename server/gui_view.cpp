@@ -24,7 +24,7 @@ void GUIView::set_address(const Address& address) {
     window_.set_ipaddress(address.c_str());
 }
 Port GUIView::get_port() {
-
+    return window_.get_port();
 }
 
 void GUIView::on_connection_opened(const Address& address, Port port) {

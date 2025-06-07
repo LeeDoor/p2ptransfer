@@ -2,8 +2,7 @@
 #include "logger.hpp"
 
 int main(int argc, char** argv) {
-    Logger::init();
+    LoggerInitializer logger;
     ClientManager manager;
     return manager.start(argc, argv);
-    Logger::destroy();
 }

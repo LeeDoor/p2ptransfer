@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include "view.hpp"
-#include <QMainWindow>
+#include "qt_headers.hpp"
 
 namespace Ui {
 class MainWindow;
@@ -19,6 +19,8 @@ public:
     void set_view(std::shared_ptr<IView> view);
     void set_ipaddress(const QString& ipaddress);
     void set_progressbar(double persent);
+
+    Port get_port();
 public slots:
     void listen_pressed();
 

@@ -30,7 +30,9 @@ public:
             return std::osyncstream(*os_);
         std::cerr << 
             "initialize the logger before usage: "
-            "Logger::init(); and Logger::destroy()" << std::endl;
+            "Logger::init(); and Logger::destroy() "
+            "or create a LoggerInitializer variable "
+            "at the beginning of your program." << std::endl;
         exit(1);
     }
     static void progressbar_init() {
@@ -48,3 +50,9 @@ public:
     inline static std::ostream* os_;
     inline static bool initialized = false;
 };
+class LoggerInitializer {
+public:
+    LoggerInitializer() { Logger::init(); }
+    ~LoggerInitializer() { Logger::destroy(); }
+};
+

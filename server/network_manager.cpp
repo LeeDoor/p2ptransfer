@@ -2,9 +2,24 @@
 #include "common_types.hpp"
 #include "connection_handler.hpp"
 #include "logger.hpp"
+NetworkManager::~NetworkManager() {
+    if(is_running_) {
+        context_.stop();
+        context_thread_.join();
+    }
+}
 int NetworkManager::init(Port port) {
+    if(is_running_) return 1;
+    if(context_thread_.joinable()) 
+        context_thread_.join();
+    is_running_ = true;
     co_spawn(context_, listen(port), net::detached);
-    context_.run();
+    context_thread_ = std::thread([this] {
+        context_.run();
+        context_.restart();
+        Logger::log() << "context_ finished.\n";
+        is_running_ = false;
+    });
     return 0;
 }
 net::awaitable<void> NetworkManager::listen(Port port) {
