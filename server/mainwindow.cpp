@@ -10,6 +10,9 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::set_ipaddress(const QString& ipaddress) {
     ui->ipaddressLabel->setText(ipaddress);
 }
+void MainWindow::set_progressbar(double persent) {
+    ui->progressBar->setValue(persent);
+}
 
 MainWindow::~MainWindow()
 {

@@ -1,10 +1,8 @@
-#include "mainwindow.hpp"
-#include "qt_headers.hpp"
+#include "gui_view.hpp"
+#include "presenter.hpp"
 
 int main(int argc, char** argv) {
-    QApplication app(argc, argv);
-    MainWindow window;
-    window.set_ipaddress("192.168.1.1");
-    window.show();
-    return app.exec();
+    std::unique_ptr<IView> view_ptr = std::make_unique<GUIView>(argc, argv);
+    Presenter presenter(std::move(view_ptr));
+    return presenter.run();
 }

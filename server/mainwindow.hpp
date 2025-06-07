@@ -16,6 +16,7 @@ public:
     ~MainWindow();
 public slots:
     void set_ipaddress(const QString& ipaddress);
+    void set_progressbar(double persent);
 
 private:
     Ui::MainWindow *ui;
