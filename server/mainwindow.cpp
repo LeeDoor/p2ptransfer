@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 }
 void MainWindow::set_ipaddress(const QString& ipaddress) {
+    ui->ipaddressLabel->setText(ipaddress);
 }
 
 MainWindow::~MainWindow()

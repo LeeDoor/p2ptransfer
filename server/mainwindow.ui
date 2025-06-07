@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>374</width>
-    <height>186</height>
+    <width>232</width>
+    <height>136</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -58,6 +58,9 @@
         </property>
         <property name="inputMask">
          <string>00000</string>
+        </property>
+        <property name="text">
+         <string>45954</string>
         </property>
        </widget>
       </item>

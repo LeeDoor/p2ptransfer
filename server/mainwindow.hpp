@@ -14,7 +14,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-signals:
+public slots:
     void set_ipaddress(const QString& ipaddress);
 
 private:
