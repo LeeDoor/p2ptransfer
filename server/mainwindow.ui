@@ -84,5 +84,25 @@
   </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buttonListen</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>listen_pressed()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>202</x>
+     <y>85</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>227</x>
+     <y>87</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>listen_pressed()</slot>
+ </slots>
 </ui>

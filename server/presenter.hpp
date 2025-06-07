@@ -4,17 +4,17 @@
 #include "network_manager.hpp"
 #include "port.hpp"
 #include "view.hpp"
-class Presenter {
+class Presenter : public std::enable_shared_from_this<Presenter> {
 public:
-    Presenter(std::unique_ptr<IView> view);
+    Presenter(std::shared_ptr<IView> view);
     int run();
     // Model interface
     void connection_opened(const Address& address, Port port);
     void connected(const Address& address, Port port);
     void connection_aborted(const Address& address, Port port);
     // View interface
-    void Listen();
+    void listen();
 private:
-    std::unique_ptr<IView> view_;
-    std::unique_ptr<NetworkManager> network_manager_;
+    std::shared_ptr<IView> view_;
+    std::shared_ptr<NetworkManager> network_manager_;
 };

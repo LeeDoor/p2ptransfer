@@ -4,10 +4,19 @@ GUIView::GUIView(int& argc, char** argv) :
     window_()
     {}
 int GUIView::run() {
+    window_.set_view(shared_from_this());
     window_.show();
     return application_.exec();
 }
 
+void GUIView::set_presenter(std::shared_ptr<Presenter> presenter) {
+    presenter_ = presenter;
+}
+void GUIView::listen() {
+    if(auto presenter = presenter_.lock()) {
+        presenter->listen();
+    }
+}
 void GUIView::set_progressbar(double persent) {
     window_.set_progressbar(persent);
 }
