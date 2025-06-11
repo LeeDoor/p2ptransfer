@@ -22,6 +22,9 @@ void Presenter::file_transfered() {
 void Presenter::set_progressbar_status(double present) {
     view_->set_progressbar(present);
 }
+bool Presenter::verify_file(SendRequest send_request) {
+    return view_->verify_file(send_request);
+}
 void Presenter::listen() {
     Port port = view_->get_port();
     network_manager_->init(port);

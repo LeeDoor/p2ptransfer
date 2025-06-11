@@ -62,3 +62,7 @@ void MainWindow::enable_ui() {
     ui->portLineEdit->setEnabled(true);
     ui->progressBar->setValue(0);
 }
+bool MainWindow::verify_file(const QString& filename, const QString& filesize) {
+    auto result = QMessageBox::question(this, "File request", "Do you want to get a file: " + filename + " (" + filesize + " bytes)?");
+    return result == QMessageBox::Yes;
+}

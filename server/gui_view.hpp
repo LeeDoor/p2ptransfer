@@ -19,7 +19,9 @@ public:
     void on_connection_aborted(const Address& address, Port port) override;
     void on_connected(const Address& address, Port port) override;
     void on_file_transfered() override;
+    bool verify_file(SendRequest send_request) override;
 private:
+    QString filesize_to_qstring(Filesize filesize);
     QApplication application_;
     MainWindow window_;
     std::weak_ptr<Presenter> presenter_;

@@ -3,6 +3,7 @@
 #include "address.hpp"
 #include "network_manager.hpp"
 #include "port.hpp"
+#include "request_structures.hpp"
 #include "view.hpp"
 class Presenter : public std::enable_shared_from_this<Presenter> {
 public:
@@ -14,6 +15,7 @@ public:
     void connection_aborted(const Address& address, Port port);
     void file_transfered();
     void set_progressbar_status(double present);
+    bool verify_file(SendRequest send_request);
     // View interface
     void listen();
 private:

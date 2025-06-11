@@ -11,6 +11,10 @@ net::awaitable<int> ConnectionHandler::handle() {
         Logger::log() << "failed to perform send request. shutting down." << std::endl;
         co_return 1;
     }
+    if(auto presenter = presenter_.lock()) {
+        if(!presenter->verify_file(*send_request)) 
+            co_return 5;
+    }
     if(!co_await send_permission(*send_request)) {
         Logger::log() << "failed to perform send permission. shutting down." << std::endl;
         co_return 2;
