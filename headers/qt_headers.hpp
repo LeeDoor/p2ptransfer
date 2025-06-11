@@ -3,3 +3,4 @@
 #include <QWidget>
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QMetaObject>

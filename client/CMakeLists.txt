@@ -4,6 +4,7 @@ set (CLIENT_SOURCE
     network_manager.cpp
     connection_handler.cpp
 )
+set(GRAPHICS OFF)
 if(${GRAPHICS}) 
     set(CLIENT_SOURCE ${CLIENT_SOURCE} 
         main_graphics.cpp

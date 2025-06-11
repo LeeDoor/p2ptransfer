@@ -1,4 +1,5 @@
 #include "gui_view.hpp"
+
 GUIView::GUIView(int& argc, char** argv) :
     application_(argc, argv),
     window_()
@@ -18,21 +19,36 @@ void GUIView::listen() {
     }
 }
 void GUIView::set_progressbar(double persent) {
-    window_.set_progressbar(persent);
+    QMetaObject::invokeMethod(&window_, [this, persent] {
+        window_.set_progressbar(persent);
+    });
 }
 void GUIView::set_address(const Address& address) {
-    window_.set_ipaddress(address.c_str());
+    QMetaObject::invokeMethod(&window_, [this, address] {
+        window_.set_ipaddress(address.c_str());
+    });
 }
 Port GUIView::get_port() {
     return window_.get_port();
 }
 
 void GUIView::on_connection_opened(const Address& address, Port port) {
-
+    QMetaObject::invokeMethod(&window_, [this, address, port] {
+        window_.on_connection_opened(address.c_str(), QString::number(port));
+    });
 }
 void GUIView::on_connection_aborted(const Address& address, Port port) {
-
+    QMetaObject::invokeMethod(&window_, [this, address, port] {
+        window_.on_connection_aborted(address.c_str(), QString::number(port));
+    });
 }
 void GUIView::on_connected(const Address& address, Port port) {
-
+    QMetaObject::invokeMethod(&window_, [this, address, port] {
+        window_.on_connected(address.c_str(), QString::number(port));
+    });
+}
+void GUIView::on_file_transfered() {
+    QMetaObject::invokeMethod(&window_, [this] {
+        window_.on_file_transfered();   
+    });
 }

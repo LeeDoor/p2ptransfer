@@ -2,28 +2,30 @@
 #include "logger.hpp"
 #include "request_deserializer.hpp"
 #include "request_serializer.hpp"
+#include "presenter.hpp"
 
-net::awaitable<void> ConnectionHandler::handle() {
+net::awaitable<int> ConnectionHandler::handle() {
     std::string data;
     auto send_request = co_await handle_send_request(data);
     if(!send_request) {
         Logger::log() << "failed to perform send request. shutting down." << std::endl;
-        co_return;
+        co_return 1;
     }
     if(!co_await send_permission(*send_request)) {
         Logger::log() << "failed to perform send permission. shutting down." << std::endl;
-        co_return;
+        co_return 2;
     }
     std::ofstream ofs("READED_" + send_request->filename, std::ios::binary);
     if(!ofs.is_open()) {
         Logger::log() << "failed to open file for writing." << std::endl;
-        co_return;
+        co_return 3;
     }
     if(!co_await handle_file(ofs, *send_request)) {
         Logger::log() << "failed to read file." << std::endl;
-        co_return;
+        co_return 4;
     }
     Logger::log() << "file written successfully." << std::endl;
+    co_return 0;
 }
 
 template<typename OStream>
@@ -47,6 +49,9 @@ net::awaitable<bool> ConnectionHandler::handle_file(OStream& os, const SendReque
         os.write(buffer.data(), bytes);
         double progress = 100.0 - (bytes_remaining * 100.0 / send_request.filesize);
         Logger::log_progressbar(progress);
+        if(auto presenter = presenter_.lock()) {
+            presenter->set_progressbar_status(progress);
+        }
     }
     Logger::progressbar_stop();
     co_return true;

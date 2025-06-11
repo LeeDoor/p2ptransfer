@@ -18,6 +18,7 @@ public:
     void on_connection_opened(const Address& address, Port port) override;
     void on_connection_aborted(const Address& address, Port port) override;
     void on_connected(const Address& address, Port port) override;
+    void on_file_transfered() override;
 private:
     QApplication application_;
     MainWindow window_;

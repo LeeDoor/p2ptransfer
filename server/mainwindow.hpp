@@ -17,14 +17,22 @@ public:
     ~MainWindow();
 
     void set_view(std::shared_ptr<IView> view);
+
     void set_ipaddress(const QString& ipaddress);
     void set_progressbar(double persent);
+    void on_connection_opened(const QString& address, const QString& port);
+    void on_connected(const QString& address, const QString& port);
+    void on_connection_aborted(const QString& address, const QString& port);
+    void on_file_transfered();
 
     Port get_port();
 public slots:
     void listen_pressed();
 
 private:
+    void disable_ui();
+    void enable_ui();
+
     Ui::MainWindow *ui;
     std::weak_ptr<IView> view_;
 };

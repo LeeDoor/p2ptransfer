@@ -16,4 +16,5 @@ public:
     virtual void on_connection_opened(const Address& address, Port port) = 0;
     virtual void on_connection_aborted(const Address& address, Port port) = 0;
     virtual void on_connected(const Address& address, Port port) = 0;
+    virtual void on_file_transfered() = 0;
 };

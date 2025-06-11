@@ -12,6 +12,8 @@ public:
     void connection_opened(const Address& address, Port port);
     void connected(const Address& address, Port port);
     void connection_aborted(const Address& address, Port port);
+    void file_transfered();
+    void set_progressbar_status(double present);
     // View interface
     void listen();
 private:
