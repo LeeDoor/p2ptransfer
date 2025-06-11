@@ -63,6 +63,6 @@ void MainWindow::enable_ui() {
     ui->progressBar->setValue(0);
 }
 bool MainWindow::verify_file(const QString& filename, const QString& filesize) {
-    auto result = QMessageBox::question(this, "File request", "Do you want to get a file: " + filename + " (" + filesize + " bytes)?");
+    auto result = QMessageBox::question(this, "File request", "Do you want to get a file: " + filename + " (" + filesize + ")?");
     return result == QMessageBox::Yes;
 }
