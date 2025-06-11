@@ -5,6 +5,9 @@ Presenter::Presenter(std::shared_ptr<IView> view)
 int Presenter::run() {
     view_->set_presenter(shared_from_this());
     network_manager_->set_presenter(shared_from_this());
+
+    set_address(network_manager_->get_local_address());
+
     return view_->run();
 }
 void Presenter::connection_opened(const Address& address, Port port) {
@@ -21,6 +24,9 @@ void Presenter::file_transfered() {
 }
 void Presenter::set_progressbar_status(double present) {
     view_->set_progressbar(present);
+}
+void Presenter::set_address(const Address& address) {
+    view_->set_address(address);
 }
 bool Presenter::verify_file(SendRequest send_request) {
     return view_->verify_file(send_request);

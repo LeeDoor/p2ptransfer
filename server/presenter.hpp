@@ -15,6 +15,7 @@ public:
     void connection_aborted(const Address& address, Port port);
     void file_transfered();
     void set_progressbar_status(double present);
+    void set_address(const Address& address);
     bool verify_file(SendRequest send_request);
     // View interface
     void listen();

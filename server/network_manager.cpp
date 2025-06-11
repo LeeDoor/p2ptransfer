@@ -26,6 +26,13 @@ int NetworkManager::init(Port port) {
 void NetworkManager::set_presenter(std::shared_ptr<Presenter> presenter) {
     presenter_ = presenter;
 }
+Address NetworkManager::get_local_address() {
+    using udp = net::ip::udp;
+    const udp::endpoint ep (net::ip::make_address("192.168.0.1"), 8080);
+    udp::socket socket(context_, udp::endpoint(udp::v4(), 8081));
+    socket.connect(ep);
+    return socket.local_endpoint().address().to_string();
+}
 net::awaitable<void> NetworkManager::listen(Port port) {
     SockPtr tcp_socket = co_await get_connection(port);
     if(!tcp_socket) {

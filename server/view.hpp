@@ -13,12 +13,12 @@ public:
     virtual void set_progressbar(double persent) = 0;
     virtual void set_address(const Address& address) = 0;
     virtual Port get_port() = 0;
+    virtual bool verify_file(SendRequest send_request) = 0;
 
     virtual void on_connection_opened(const Address& address, Port port) = 0;
     virtual void on_connection_aborted(const Address& address, Port port) = 0;
     virtual void on_connected(const Address& address, Port port) = 0;
     virtual void on_file_transfered() = 0;
-    virtual bool verify_file(SendRequest send_request) = 0;
 protected:
     std::string filesize_to_string(Filesize filesize) {
         if(filesize < (1 << 10)) {
