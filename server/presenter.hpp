@@ -1,6 +1,7 @@
 #pragma once
 
 #include "address.hpp"
+#include "address_gatherer.hpp"
 #include "network_manager.hpp"
 #include "port.hpp"
 #include "request_structures.hpp"
@@ -22,4 +23,5 @@ public:
 private:
     std::shared_ptr<IView> view_;
     std::shared_ptr<NetworkManager> network_manager_;
+    std::shared_ptr<AddressGatherer> address_gatherer_;
 };

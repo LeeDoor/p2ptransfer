@@ -1,13 +1,13 @@
 #include "presenter.hpp"
 Presenter::Presenter(std::shared_ptr<IView> view)
     : view_(std::move(view)),
-      network_manager_(std::make_shared<NetworkManager>())  {}
+      network_manager_(std::make_shared<NetworkManager>()),
+      address_gatherer_(std::make_shared<AddressGatherer>())  {}
 int Presenter::run() {
     view_->set_presenter(shared_from_this());
     network_manager_->set_presenter(shared_from_this());
-
-    set_address(network_manager_->get_local_address());
-
+    address_gatherer_->set_presenter(shared_from_this());
+    address_gatherer_->gather_local_address();
     return view_->run();
 }
 void Presenter::connection_opened(const Address& address, Port port) {
