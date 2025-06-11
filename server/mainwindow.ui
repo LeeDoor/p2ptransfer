@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>232</width>
-    <height>136</height>
+    <width>272</width>
+    <height>142</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>P2P Listen</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1,5,5">
@@ -27,7 +27,7 @@
       <item>
        <widget class="QLabel" name="ipaddressLabel">
         <property name="text">
-         <string>255.255.255.255</string>
+         <string>Loading Address...</string>
         </property>
        </widget>
       </item>
