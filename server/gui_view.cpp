@@ -34,22 +34,22 @@ void GUIView::cant_open_socket() {
     });
 }
 
-void GUIView::on_connection_opened(const Address& address, Port port) {
+void GUIView::connection_opened(const Address& address, Port port) {
     QMetaObject::invokeMethod(&window_, [this, address, port] {
         window_.on_connection_opened(address.c_str(), QString::number(port));
     });
 }
-void GUIView::on_connection_aborted(const Address& address, Port port) {
+void GUIView::connection_aborted(const Address& address, Port port) {
     QMetaObject::invokeMethod(&window_, [this, address, port] {
         window_.on_connection_aborted(address.c_str(), QString::number(port));
     });
 }
-void GUIView::on_connected(const Address& address, Port port) {
+void GUIView::connected(const Address& address, Port port) {
     QMetaObject::invokeMethod(&window_, [this, address, port] {
         window_.on_connected(address.c_str(), QString::number(port));
     });
 }
-void GUIView::on_file_transfered() {
+void GUIView::file_transfered() {
     QMetaObject::invokeMethod(&window_, [this] {
         window_.on_file_transfered();   
     });

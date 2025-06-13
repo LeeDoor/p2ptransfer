@@ -17,12 +17,12 @@ public:
     // Model interface
     void connection_opened(const Address& address, Port port) override;
     void connected(const Address& address, Port port) override;
-    void connection_aborted(const Address& address, Port port) override;
     void file_transfered() override;
-    void set_progressbar_status(double present) override;
-    bool verify_file(SendRequest send_request) override;
+    void connection_aborted(const Address& address, Port port) override;
     void cant_open_socket() override;
     void set_address(const Address& address) override;
+    void set_progressbar_status(double present) override;
+    bool verify_file(SendRequest send_request) override;
     // View interface
     void listen() override;
 private:

@@ -13,16 +13,16 @@ int Presenter::run() {
     return view_->run();
 }
 void Presenter::connection_opened(const Address& address, Port port) {
-    view_->on_connection_opened(address, port);
+    view_->connection_opened(address, port);
 }
 void Presenter::connected(const Address& address, Port port) {
-    view_->on_connected(address, port);
+    view_->connected(address, port);
 }
 void Presenter::connection_aborted(const Address& address, Port port) {
-    view_->on_connection_aborted(address, port);
+    view_->connection_aborted(address, port);
 }
 void Presenter::file_transfered() {
-    view_->on_file_transfered();
+    view_->file_transfered();
 }
 void Presenter::set_progressbar_status(double present) {
     view_->set_progressbar(present);
