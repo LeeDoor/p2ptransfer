@@ -12,9 +12,14 @@ void AddressGatherer::gather_local_address() {
     gather_thread_ = std::thread([this] {
         const udp::endpoint ep (net::ip::make_address("192.168.0.1"), 8080);
         udp::socket socket(context_, udp::endpoint(udp::v4(), 8081));
-        socket.connect(ep);
+        ErrorCode ec;
+        socket.connect(ep, ec);
         if(auto presenter = presenter_.lock()) {
-            presenter->set_address(socket.local_endpoint().address().to_string());
+            if(ec) {
+                presenter->set_address("Unable to gather LAN address");
+            } else {
+                presenter->set_address(socket.local_endpoint().address().to_string());
+            }
         }
     });
 }
