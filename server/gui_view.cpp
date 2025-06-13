@@ -31,6 +31,11 @@ void GUIView::set_address(const Address& address) {
 Port GUIView::get_port() {
     return window_.get_port();
 }
+void GUIView::cant_open_socket() {
+    QMetaObject::invokeMethod(&window_, [this] {
+        window_.cant_open_socket();
+    });
+}
 
 void GUIView::on_connection_opened(const Address& address, Port port) {
     QMetaObject::invokeMethod(&window_, [this, address, port] {

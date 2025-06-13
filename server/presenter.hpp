@@ -18,6 +18,7 @@ public:
     void set_progressbar_status(double present);
     void set_address(const Address& address);
     bool verify_file(SendRequest send_request);
+    void cant_open_socket();
     // View interface
     void listen();
 private:

@@ -31,6 +31,9 @@ void Presenter::set_address(const Address& address) {
 bool Presenter::verify_file(SendRequest send_request) {
     return view_->verify_file(send_request);
 }
+void Presenter::cant_open_socket() {
+    view_->cant_open_socket();
+}
 void Presenter::listen() {
     Port port = view_->get_port();
     network_manager_->init(port);

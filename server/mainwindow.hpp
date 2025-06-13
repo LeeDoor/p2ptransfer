@@ -25,6 +25,7 @@ public:
     void on_connection_aborted(const QString& address, const QString& port);
     void on_file_transfered();
     bool verify_file(const QString& filename, const QString& filesize);
+    void cant_open_socket();
 
     Port get_port();
 public slots:

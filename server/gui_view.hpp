@@ -14,6 +14,7 @@ public:
     void set_progressbar(double persent) override;
     void set_address(const Address& address) override;
     Port get_port() override;
+    void cant_open_socket() override;
 
     void on_connection_opened(const Address& address, Port port) override;
     void on_connection_aborted(const Address& address, Port port) override;

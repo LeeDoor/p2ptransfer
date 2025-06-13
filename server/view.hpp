@@ -14,6 +14,7 @@ public:
     virtual void set_address(const Address& address) = 0;
     virtual Port get_port() = 0;
     virtual bool verify_file(SendRequest send_request) = 0;
+    virtual void cant_open_socket() = 0;
 
     virtual void on_connection_opened(const Address& address, Port port) = 0;
     virtual void on_connection_aborted(const Address& address, Port port) = 0;

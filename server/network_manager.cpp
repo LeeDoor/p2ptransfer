@@ -30,6 +30,9 @@ net::awaitable<void> NetworkManager::listen(Port port) {
     SockPtr tcp_socket = co_await get_connection(port);
     if(!tcp_socket) {
         Logger::log() << "failed to open socket." << std::endl;
+        if(auto presenter = presenter_.lock()) {
+            presenter->cant_open_socket();
+        }
         co_return;
     }
     Address remote_address = tcp_socket->remote_endpoint().address().to_string();

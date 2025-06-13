@@ -20,6 +20,10 @@ void MainWindow::set_ipaddress(const QString& ipaddress) {
 void MainWindow::set_progressbar(double persent) {
     ui->progressBar->setValue(persent);
 }
+void MainWindow::cant_open_socket() {
+    QMessageBox::warning(this, "Socket failure", "Unable to open socket. Please change port and try again.");
+    enable_ui();
+}
 Port MainWindow::get_port() {
     QString text = ui->portLineEdit->text();
     bool ok;
