@@ -2,7 +2,7 @@
 
 #include "common_types.hpp"
 #include "model_address_gather.hpp"
-class AddressGatherer : public IModelAddressGather {
+class AddressGatherer : public IModelAddressGatherer {
 public:
     ~AddressGatherer();
     void gather_local_address();

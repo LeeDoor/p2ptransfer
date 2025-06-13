@@ -1,7 +1,7 @@
 #include "presenter.hpp"
 Presenter::Presenter(std::shared_ptr<IView> view, 
               std::shared_ptr<IModelNetworkManager> network_manager,
-              std::shared_ptr<IModelAddressGather> address_gather)
+              std::shared_ptr<IModelAddressGatherer> address_gather)
     : view_(std::move(view)),
       network_manager_(std::move(network_manager)),
       address_gatherer_(std::move(address_gather))  {}
