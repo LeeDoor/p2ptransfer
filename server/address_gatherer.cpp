@@ -1,7 +1,8 @@
 #include "address_gatherer.hpp"
 
 AddressGatherer::~AddressGatherer() {
-    gather_thread_.join();
+    if(gather_thread_.joinable()) 
+        gather_thread_.join();
 }
 void AddressGatherer::gather_local_address() {
     using udp = net::ip::udp;

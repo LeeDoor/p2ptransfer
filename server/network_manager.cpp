@@ -6,7 +6,9 @@ NetworkManager::~NetworkManager() {
     if(is_running_) {
         context_.stop();
     }
-    context_thread_.join();
+    if(context_thread_.joinable()) {
+        context_thread_.join();
+    }
 }
 int NetworkManager::init(Port port) {
     if(is_running_) return 1;
