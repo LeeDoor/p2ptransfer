@@ -1,8 +1,8 @@
 #pragma once
 
 #include "port.hpp"
-#include "presenter_dependent.hpp"
-class IModelNetworkManager : public PresenterDependent { 
+#include "model_callback_dependent.hpp"
+class IModelNetworkManager : public ModelCallbackDependent { 
 public:
     virtual int init(Port port) = 0;
 };

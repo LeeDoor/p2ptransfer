@@ -2,27 +2,29 @@
 
 #include "address.hpp"
 #include "model_address_gather.hpp"
+#include "model_callback.hpp"
 #include "model_network_manager.hpp"
 #include "port.hpp"
 #include "request_structures.hpp"
 #include "view.hpp"
-class Presenter : public std::enable_shared_from_this<Presenter> {
+#include "view_callback.hpp"
+class Presenter : public IModelCallback, public IViewCallback, public std::enable_shared_from_this<Presenter> {
 public:
     Presenter(std::shared_ptr<IView> view, 
               std::shared_ptr<IModelNetworkManager> connection,
               std::shared_ptr<IModelAddressGatherer> address_gather);
     int run();
     // Model interface
-    void connection_opened(const Address& address, Port port);
-    void connected(const Address& address, Port port);
-    void connection_aborted(const Address& address, Port port);
-    void file_transfered();
-    void set_progressbar_status(double present);
-    void set_address(const Address& address);
-    bool verify_file(SendRequest send_request);
-    void cant_open_socket();
+    void connection_opened(const Address& address, Port port) override;
+    void connected(const Address& address, Port port) override;
+    void connection_aborted(const Address& address, Port port) override;
+    void file_transfered() override;
+    void set_progressbar_status(double present) override;
+    bool verify_file(SendRequest send_request) override;
+    void cant_open_socket() override;
+    void set_address(const Address& address) override;
     // View interface
-    void listen();
+    void listen() override;
 private:
     std::shared_ptr<IView> view_;
     std::shared_ptr<IModelNetworkManager> network_manager_;

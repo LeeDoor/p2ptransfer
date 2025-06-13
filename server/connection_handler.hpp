@@ -1,11 +1,12 @@
 #pragma once
 #include "common_types.hpp"
+#include "model_callback.hpp"
 #include "request_structures.hpp"
 class Presenter;
 class ConnectionHandler {
 public:
-    ConnectionHandler(net::io_context& ctx, SockPtr socket, std::weak_ptr<Presenter> presenter)
-    : io_(ctx), socket_(std::move(socket)), presenter_(presenter)
+    ConnectionHandler(net::io_context& ctx, SockPtr socket, std::weak_ptr<IModelCallback> callback)
+    : io_(ctx), socket_(std::move(socket)), callback_(callback)
     {}
     net::awaitable<int> handle();
 private:
@@ -15,5 +16,5 @@ private:
     net::awaitable<bool> send_permission(const SendRequest& send_request);
     net::io_context& io_;
     SockPtr socket_;
-    std::weak_ptr<Presenter> presenter_;
+    std::weak_ptr<IModelCallback> callback_;
 };

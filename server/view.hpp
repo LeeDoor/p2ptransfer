@@ -2,10 +2,10 @@
 
 #include "address.hpp"
 #include "port.hpp"
-#include "presenter_dependent.hpp"
+#include "view_callback_dependent.hpp"
 #include "request_structures.hpp"
 class Presenter;
-class IView : public PresenterDependent {
+class IView : public ViewCallbackDependent {
 public:
     virtual int run() = 0;
 

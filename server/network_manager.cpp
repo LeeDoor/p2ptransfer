@@ -2,12 +2,11 @@
 #include "common_types.hpp"
 #include "connection_handler.hpp"
 #include "logger.hpp"
-#include "presenter.hpp"
 NetworkManager::~NetworkManager() {
     if(is_running_) {
         context_.stop();
-        context_thread_.join();
     }
+    context_thread_.join();
 }
 int NetworkManager::init(Port port) {
     if(is_running_) return 1;
@@ -27,25 +26,25 @@ net::awaitable<void> NetworkManager::listen(Port port) {
     SockPtr tcp_socket = co_await get_connection(port);
     if(!tcp_socket) {
         Logger::log() << "failed to open socket." << std::endl;
-        if(auto presenter = presenter_.lock()) {
-            presenter->cant_open_socket();
+        if(auto callback = callback_.lock()) {
+            callback->cant_open_socket();
         }
         co_return;
     }
     Address remote_address = tcp_socket->remote_endpoint().address().to_string();
     Port remote_port = tcp_socket->remote_endpoint().port();
     Logger::log() << "connected from " << remote_address << ":" << remote_port << std::endl;
-    if(auto presenter = presenter_.lock()) {
-        presenter->connected(remote_address, remote_port);
+    if(auto callback = callback_.lock()) {
+        callback->connected(remote_address, remote_port);
     }
-    ConnectionHandler handler(context_, std::move(tcp_socket), presenter_);
+    ConnectionHandler handler(context_, std::move(tcp_socket), callback_);
     if(co_await handler.handle()) {
-        if(auto presenter = presenter_.lock()) {
-            presenter->connection_aborted(remote_address, remote_port);
+        if(auto callback = callback_.lock()) {
+            callback->connection_aborted(remote_address, remote_port);
         }
     } else {
-        if(auto presenter = presenter_.lock()) {
-            presenter->file_transfered();
+        if(auto callback = callback_.lock()) {
+            callback->file_transfered();
         }
     }
 }
@@ -60,8 +59,8 @@ net::awaitable<SockPtr> NetworkManager::get_connection(Port port) {
         tcpip::acceptor acceptor(context_, endpoint);
         std::unique_ptr<tcpip::socket, SocketCloser> tcp_socket (new tcpip::socket(context_), socketCloser);
         Logger::log() << "listening for a connection on " << endpoint.address() << ":" << endpoint.port() << std::endl;
-        if(auto presenter = presenter_.lock()) {
-            presenter->connection_opened(endpoint.address().to_string(), endpoint.port());
+        if(auto callback = callback_.lock()) {
+            callback->connection_opened(endpoint.address().to_string(), endpoint.port());
         }
         auto [ec] = co_await acceptor.async_accept(*tcp_socket.get(), net::as_tuple(net::use_awaitable));
         if(ec) {

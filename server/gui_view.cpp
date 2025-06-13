@@ -1,5 +1,4 @@
 #include "gui_view.hpp"
-#include "presenter.hpp"
 
 GUIView::GUIView(int& argc, char** argv) :
     application_(argc, argv),
@@ -12,8 +11,8 @@ int GUIView::run() {
 }
 
 void GUIView::listen() {
-    if(auto presenter = presenter_.lock()) {
-        presenter->listen();
+    if(auto callback = callback_.lock()) {
+        callback->listen();
     }
 }
 void GUIView::set_progressbar(double persent) {

@@ -2,7 +2,6 @@
 #include "logger.hpp"
 #include "request_deserializer.hpp"
 #include "request_serializer.hpp"
-#include "presenter.hpp"
 
 net::awaitable<int> ConnectionHandler::handle() {
     std::string data;
@@ -11,8 +10,8 @@ net::awaitable<int> ConnectionHandler::handle() {
         Logger::log() << "failed to perform send request. shutting down." << std::endl;
         co_return 1;
     }
-    if(auto presenter = presenter_.lock()) {
-        if(!presenter->verify_file(*send_request)) 
+    if(auto callback = callback_.lock()) {
+        if(!callback->verify_file(*send_request)) 
             co_return 5;
     }
     if(!co_await send_permission(*send_request)) {
@@ -53,8 +52,8 @@ net::awaitable<bool> ConnectionHandler::handle_file(OStream& os, const SendReque
         os.write(buffer.data(), bytes);
         double progress = 100.0 - (bytes_remaining * 100.0 / send_request.filesize);
         Logger::log_progressbar(progress);
-        if(auto presenter = presenter_.lock()) {
-            presenter->set_progressbar_status(progress);
+        if(auto callback = callback_.lock()) {
+            callback->set_progressbar_status(progress);
         }
     }
     Logger::progressbar_stop();

@@ -1,5 +1,4 @@
 #include "address_gatherer.hpp"
-#include "presenter.hpp"
 
 AddressGatherer::~AddressGatherer() {
     gather_thread_.join();
@@ -11,11 +10,11 @@ void AddressGatherer::gather_local_address() {
         udp::socket socket(context_, udp::endpoint(udp::v4(), 8081));
         ErrorCode ec;
         socket.connect(ep, ec);
-        if(auto presenter = presenter_.lock()) {
+        if(auto callback = callback_.lock()) {
             if(ec) {
-                presenter->set_address("Unable to gather LAN address");
+                callback->set_address("Unable to gather LAN address");
             } else {
-                presenter->set_address(socket.local_endpoint().address().to_string());
+                callback->set_address(socket.local_endpoint().address().to_string());
             }
         }
     });
