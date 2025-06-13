@@ -4,6 +4,7 @@
 class Presenter;
 class ModelCallbackDependent {
 public:
+    virtual ~ModelCallbackDependent() = default;
     void set_model_callback(std::shared_ptr<IModelCallback> callback) {
         callback_ = callback;
     }

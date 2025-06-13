@@ -8,6 +8,7 @@
 class Presenter;
 class IView : public IConnectionStatusCallback, public ViewCallbackDependent {
 public:
+    virtual ~IView() = default;
     virtual int run() = 0;
     virtual void listen() = 0;
     virtual void set_progressbar(double persent) = 0;
