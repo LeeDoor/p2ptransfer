@@ -1,7 +1,6 @@
 add_library(server
     argument_parser.cpp 
     connection_handler.cpp
-    server_manager.cpp
     network_manager.cpp
     presenter.cpp
     address_gatherer.cpp

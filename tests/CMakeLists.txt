@@ -1,5 +1,8 @@
-find_package(Catch2 3 REQUIRED)
+find_package(GTest REQUIRED)
+enable_testing()
 add_executable(tests
-    test_argument_parser.cpp
+    test_presenter.cpp
 )
-target_link_libraries(tests PUBLIC server Catch2::Catch2WithMain ${LINKAGE_PARAMS})
+target_precompile_headers(tests INTERFACE test_headers.hpp)
+target_link_libraries(tests PUBLIC server GTest::gtest_main ${LINKAGE_PARAMS})
+gtest_discover_tests(tests)
