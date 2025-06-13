@@ -1,7 +1,6 @@
 #pragma once
 
 #include "mainwindow.hpp"
-#include "presenter.hpp"
 #include "qt_headers.hpp"
 #include "view.hpp"
 class GUIView : public IView, public std::enable_shared_from_this<GUIView> {
@@ -9,7 +8,6 @@ public:
     GUIView(int& argc, char** argv);
     int run() override;
 
-    void set_presenter(std::shared_ptr<Presenter> presenter) override;
     void listen() override;
     void set_progressbar(double persent) override;
     void set_address(const Address& address) override;
@@ -25,5 +23,4 @@ private:
     QString filesize_to_qstring(Filesize filesize);
     QApplication application_;
     MainWindow window_;
-    std::weak_ptr<Presenter> presenter_;
 };

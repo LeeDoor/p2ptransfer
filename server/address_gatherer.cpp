@@ -4,9 +4,6 @@
 AddressGatherer::~AddressGatherer() {
     gather_thread_.join();
 }
-void AddressGatherer::set_presenter(std::shared_ptr<Presenter> presenter) {
-    presenter_ = presenter;
-}
 void AddressGatherer::gather_local_address() {
     using udp = net::ip::udp;
     gather_thread_ = std::thread([this] {

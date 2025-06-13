@@ -1,8 +1,10 @@
 #include "presenter.hpp"
-Presenter::Presenter(std::shared_ptr<IView> view)
+Presenter::Presenter(std::shared_ptr<IView> view, 
+              std::shared_ptr<IModelNetworkManager> network_manager,
+              std::shared_ptr<IModelAddressGather> address_gather)
     : view_(std::move(view)),
-      network_manager_(std::make_shared<NetworkManager>()),
-      address_gatherer_(std::make_shared<AddressGatherer>())  {}
+      network_manager_(std::move(network_manager)),
+      address_gatherer_(std::move(address_gather))  {}
 int Presenter::run() {
     view_->set_presenter(shared_from_this());
     network_manager_->set_presenter(shared_from_this());

@@ -1,14 +1,13 @@
 #pragma once
 #include "common_types.hpp"
+#include "model_network_manager.hpp"
 #include "port.hpp"
-class Presenter;
-class NetworkManager {
+class NetworkManager : public IModelNetworkManager {
 public:
     NetworkManager()
         : context_(){} 
     ~NetworkManager();
     int init(Port port);
-    void set_presenter(std::shared_ptr<Presenter> presenter);
 private:
     net::awaitable<void> listen(Port port);
     net::awaitable<SockPtr> get_connection(Port port);
@@ -16,5 +15,4 @@ private:
     std::thread context_thread_;
     net::io_context context_;
     bool is_running_ = false;
-    std::weak_ptr<Presenter> presenter_;
 };

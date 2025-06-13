@@ -2,13 +2,13 @@
 
 #include "address.hpp"
 #include "port.hpp"
+#include "presenter_dependent.hpp"
 #include "request_structures.hpp"
 class Presenter;
-class IView {
+class IView : public PresenterDependent {
 public:
     virtual int run() = 0;
 
-    virtual void set_presenter(std::shared_ptr<Presenter> presenter) = 0;
     virtual void listen() = 0;
     virtual void set_progressbar(double persent) = 0;
     virtual void set_address(const Address& address) = 0;
@@ -35,6 +35,6 @@ protected:
         if(dsize < (1ll << 40)) {
             return std::format("{:.1f}", dsize / (1 << 30)) + "GB";
         }
-        return "NIGO";
+        return std::format("{:.2f}", dsize / (1ll << 40)) + "TB";
     }
 };

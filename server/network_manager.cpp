@@ -23,9 +23,6 @@ int NetworkManager::init(Port port) {
     });
     return 0;
 }
-void NetworkManager::set_presenter(std::shared_ptr<Presenter> presenter) {
-    presenter_ = presenter;
-}
 net::awaitable<void> NetworkManager::listen(Port port) {
     SockPtr tcp_socket = co_await get_connection(port);
     if(!tcp_socket) {

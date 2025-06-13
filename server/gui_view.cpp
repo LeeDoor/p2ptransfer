@@ -1,4 +1,5 @@
 #include "gui_view.hpp"
+#include "presenter.hpp"
 
 GUIView::GUIView(int& argc, char** argv) :
     application_(argc, argv),
@@ -10,9 +11,6 @@ int GUIView::run() {
     return application_.exec();
 }
 
-void GUIView::set_presenter(std::shared_ptr<Presenter> presenter) {
-    presenter_ = presenter;
-}
 void GUIView::listen() {
     if(auto presenter = presenter_.lock()) {
         presenter->listen();
