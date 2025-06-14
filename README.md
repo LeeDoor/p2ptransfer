@@ -1,3 +1,4 @@
+![хаха инет хреновый](img/p2ptransfer.jpg)
 # Resume
 This program is **under development** and doesn't present the whole range of possibilities.
 At this point, **p2pTransfer** application allows us to:
