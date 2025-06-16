@@ -1,5 +1,4 @@
 #include "server/view.hpp"
-#include "connection_status_callback_mock.hpp"
 #include <gmock/gmock.h>
 
 class ViewMock : public IView {
