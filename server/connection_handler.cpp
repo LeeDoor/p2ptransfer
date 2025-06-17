@@ -53,7 +53,7 @@ net::awaitable<bool> ConnectionHandler::handle_file(OStream& os, const SendReque
         double progress = 100.0 - (bytes_remaining * 100.0 / send_request.filesize);
         Logger::log_progressbar(progress);
         if(auto callback = callback_.lock()) {
-            callback->set_progressbar_status(progress);
+            callback->set_progressbar(progress);
         }
     }
     Logger::progressbar_stop();

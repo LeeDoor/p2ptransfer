@@ -1,10 +1,10 @@
 #include "presenter.hpp"
 #include "logger.hpp"
-#include "presenter_builder.hpp"
+#include "gui_presenter_builder.hpp"
 
 int main(int argc, char** argv) {
     LoggerInitializer init;
-    PresenterBuilder presenter_builder;
-    std::shared_ptr<Presenter> presenter = presenter_builder.build_GUI(argc, argv);
+    GUIPresenterBuilder presenter_builder(argc, argv);
+    std::shared_ptr<Presenter> presenter = presenter_builder.build();
     return presenter->run();
 }

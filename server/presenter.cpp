@@ -21,7 +21,7 @@ void Presenter::connection_aborted(const Address& address, Port port) {
 void Presenter::file_transfered() {
     view_->file_transfered();
 }
-void Presenter::set_progressbar_status(double present) {
+void Presenter::set_progressbar(double present) {
     view_->set_progressbar(present);
 }
 void Presenter::set_address(const Address& address) {

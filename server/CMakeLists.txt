@@ -4,7 +4,6 @@ add_library(server
     network_manager.cpp
     presenter.cpp
     address_gatherer.cpp
-    presenter_builder.cpp
 )
 target_link_libraries(server PRIVATE base)
 target_include_directories(server PUBLIC ${INCLUDE_PARAMS})

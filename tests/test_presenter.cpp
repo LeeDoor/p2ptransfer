@@ -1,4 +1,4 @@
-#include "server/presenter_builder.hpp"
+#include "tests/test_presenter_builder.hpp"
 #include "view_mock.hpp"
 #include "network_manager_mock.hpp"
 #include "address_gatherer_mock.hpp"
@@ -10,8 +10,8 @@ protected:
         network_mock = std::make_shared<NetworkManagerMock>();
         address_mock = std::make_shared<AddressGathererMock>();
         view_mock = std::make_shared<ViewMock>();
-        PresenterBuilder presenter_builder;
-        presenter = presenter_builder.Build(view_mock, network_mock, address_mock);
+        TestPresenterBuilder presenter_builder(view_mock, network_mock, address_mock);
+        presenter = presenter_builder.build();
         EXPECT_CALL(*address_mock, gather_local_address())
             .Times(1);
         EXPECT_CALL(*view_mock, run())
@@ -37,7 +37,7 @@ TEST_F (PresenterTest, ListenCalledWithPort) {
         .WillOnce(Return(TEST_PORT));
     presenter->listen();
 }
-TEST_F(PresenterTest, ConnectionMethods) {
+TEST_F(PresenterTest, ConnectionStatusMethods) {
     // abort before opening
     EXPECT_CALL(*view_mock, connection_aborted(TEST_ADDRESS, TEST_PORT));
     presenter->connection_aborted(TEST_ADDRESS, TEST_PORT);
@@ -56,4 +56,26 @@ TEST_F(PresenterTest, ConnectionMethods) {
     // abort_twice
     EXPECT_CALL(*view_mock, connection_aborted(TEST_ADDRESS, TEST_PORT));
     presenter->connection_aborted(TEST_ADDRESS, TEST_PORT);
+}
+TEST_F(PresenterTest, SetProgressbar) {
+    EXPECT_CALL(*view_mock, set_progressbar(77.9));
+    presenter->set_progressbar(77.9);
+    // shouldn't module it
+    EXPECT_CALL(*view_mock, set_progressbar(-15));
+    presenter->set_progressbar(-15);
+    // cant limit it
+    EXPECT_CALL(*view_mock, set_progressbar(225));
+    presenter->set_progressbar(225);
+}   
+TEST_F(PresenterTest, SetAddress) {
+    EXPECT_CALL(*view_mock, set_address(TEST_ADDRESS));
+    presenter->set_address(TEST_ADDRESS);
+}
+TEST_F(PresenterTest, VerifyFile) {
+    SendRequest sr {"filename", 1561};
+    EXPECT_CALL(*view_mock, verify_file(testing::_))
+        .WillOnce(Return(true))
+        .WillOnce(Return(false));
+    EXPECT_TRUE(presenter->verify_file(sr));
+    EXPECT_FALSE(presenter->verify_file(sr));
 }

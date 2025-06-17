@@ -21,7 +21,7 @@ public:
     void connection_aborted(const Address& address, Port port) override;
     void cant_open_socket() override;
     void set_address(const Address& address) override;
-    void set_progressbar_status(double present) override;
+    void set_progressbar(double present) override;
     bool verify_file(SendRequest send_request) override;
     // View interface
     void listen() override;
