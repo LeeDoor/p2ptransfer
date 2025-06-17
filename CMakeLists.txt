@@ -5,11 +5,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON) # require C++20
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1) # exporting compile_commands.json for neovim
 set(CMAKE_BUILD_TYPE Debug)
 
-option(ENABLE_TESTING "build tests or not" OFF) # testing executable
 option(GRAPHICS "Build with Qt" ON) # graphics executable
 
 set(LINKAGE_PARAMS ) # libraries to link
-set(INCLUDE_PARAMS ../headers) # directories to include
+set(INCLUDE_PARAMS ${CMAKE_SOURCE_DIR}/headers) # directories to include
 
 if(WIN32) 
     set(LINKAGE_PARAMS ws2_32 -lmswsock) 
@@ -29,7 +28,3 @@ endif()
 add_subdirectory(headers)
 add_subdirectory(server)
 add_subdirectory(client)
-
-if(${ENABLE_TESTING}) 
-    add_subdirectory(tests)
-endif()
