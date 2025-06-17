@@ -1,17 +1,26 @@
 #pragma once
 
+#include "connection_status_callback.hpp"
+#include "file_transfer_callback.hpp"
+#include "gather_address_callback.hpp"
 #include "mainwindow.hpp"
 #include "qt_headers.hpp"
-#include "view.hpp"
-class GUIView : public IView, public std::enable_shared_from_this<GUIView> {
+#include "ui_callback.hpp"
+#include "callback.hpp"
+#include "view_callback.hpp"
+class GUIView : public IConnectionStatusCallback, 
+                public IFileTransferCallback, 
+                public IGatherAddressCallback, 
+                public IUICallback, 
+                public std::enable_shared_from_this<GUIView>,
+                public WithCallback<std::shared_ptr<IViewCallback>> {
 public:
     GUIView(int& argc, char** argv);
-    int run() override;
+    int run();
 
     void listen() override;
     void set_progressbar(double persent) override;
     void set_address(const Address& address) override;
-    Port get_port() override;
     void cant_open_socket() override;
 
     void connection_opened(const Address& address, Port port) override;

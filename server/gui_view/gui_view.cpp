@@ -1,19 +1,18 @@
 #include "gui_view.hpp"
+#include "filesize_formatter.hpp"
 
 GUIView::GUIView(int& argc, char** argv) :
     application_(argc, argv),
     window_()
     {}
 int GUIView::run() {
-    window_.set_view(shared_from_this());
+    window_.set_callback(shared_from_this());
     window_.show();
     return application_.exec();
 }
 
 void GUIView::listen() {
-    if(auto callback = callback_.lock()) {
-        callback->listen();
-    }
+    callback_->listen(window_.get_port());
 }
 void GUIView::set_progressbar(double persent) {
     QMetaObject::invokeMethod(&window_, [this, persent] {
@@ -24,9 +23,6 @@ void GUIView::set_address(const Address& address) {
     QMetaObject::invokeMethod(&window_, [this, address] {
         window_.set_ipaddress(address.c_str());
     });
-}
-Port GUIView::get_port() {
-    return window_.get_port();
 }
 void GUIView::cant_open_socket() {
     QMetaObject::invokeMethod(&window_, [this] {
@@ -62,5 +58,5 @@ bool GUIView::verify_file(SendRequest send_request) {
     return result;
 }
 QString GUIView::filesize_to_qstring(Filesize filesize) {
-    return filesize_to_string(filesize).c_str();
+    return FilesizeFormatter::to_string(filesize).c_str();
 }

@@ -8,14 +8,12 @@ if(${GRAPHICS})
     )
     add_subdirectory(gui_view)
 endif()
-add_subdirectory(presenter)
 add_subdirectory(model)
 
 add_library(server INTERFACE)
 target_link_libraries(server INTERFACE 
     server_view 
     server_model 
-    server_presenter 
     ${LINKAGE_PARAMS})
 
 qt_add_executable(p2plisten main_graphics.cpp)

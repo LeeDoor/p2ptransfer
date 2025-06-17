@@ -10,21 +10,21 @@ NetworkManager::~NetworkManager() {
         context_thread_.join();
     }
 }
-int NetworkManager::init(Port port) {
-    if(is_running_) return 1;
+void NetworkManager::listen(Port port) {
+    if(is_running_) return;
     if(context_thread_.joinable()) 
         context_thread_.join();
     is_running_ = true;
-    co_spawn(context_, listen(port), net::detached);
+    co_spawn(context_, listen_async(port), net::detached);
     context_thread_ = std::thread([this] {
         context_.run();
         context_.restart();
         Logger::log() << "context_ finished.\n";
         is_running_ = false;
     });
-    return 0;
+    return;
 }
-net::awaitable<void> NetworkManager::listen(Port port) {
+net::awaitable<void> NetworkManager::listen_async(Port port) {
     SockPtr tcp_socket = co_await get_connection(port);
     if(!tcp_socket) {
         Logger::log() << "failed to open socket." << std::endl;
@@ -39,7 +39,7 @@ net::awaitable<void> NetworkManager::listen(Port port) {
     if(auto callback = callback_.lock()) {
         callback->connected(remote_address, remote_port);
     }
-    ConnectionHandler handler(context_, std::move(tcp_socket), callback_);
+    ConnectionHandler handler(context_, std::move(tcp_socket));
     if(co_await handler.handle()) {
         if(auto callback = callback_.lock()) {
             callback->connection_aborted(remote_address, remote_port);
@@ -75,4 +75,3 @@ net::awaitable<SockPtr> NetworkManager::get_connection(Port port) {
         co_return nullptr;
     }
 }
-

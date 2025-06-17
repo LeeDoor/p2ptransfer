@@ -1,22 +1,22 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "view.hpp"
+#include "callback.hpp"
+#include "port.hpp"
+#include "ui_callback.hpp"
 #include "qt_headers.hpp"
 
 namespace Ui {
 class MainWindow;
 }
 
-class MainWindow : public QMainWindow
+class MainWindow : public QMainWindow, public WithCallback<std::weak_ptr<IUICallback>>
 {
     Q_OBJECT
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
-    void set_view(std::shared_ptr<IView> view);
 
     void set_ipaddress(const QString& ipaddress);
     void set_progressbar(double persent);
@@ -36,7 +36,6 @@ private:
     void enable_ui();
 
     Ui::MainWindow *ui;
-    std::weak_ptr<IView> view_;
 };
 
 #endif // MAINWINDOW_H

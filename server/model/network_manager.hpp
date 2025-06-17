@@ -1,15 +1,17 @@
 #pragma once
 #include "common_types.hpp"
-#include "model_network_manager.hpp"
+#include "view_callback.hpp"
 #include "port.hpp"
-class NetworkManager : public IModelNetworkManager {
+#include "callback.hpp"
+#include "connection_status_callback.hpp"
+class NetworkManager : public IViewCallback, public WithCallback<std::weak_ptr<IConnectionStatusCallback>> {
 public:
     NetworkManager()
         : context_(){} 
     ~NetworkManager();
-    int init(Port port);
+    void listen(Port port) override;
 private:
-    net::awaitable<void> listen(Port port);
+    net::awaitable<void> listen_async(Port port);
     net::awaitable<SockPtr> get_connection(Port port);
 
     std::thread context_thread_;

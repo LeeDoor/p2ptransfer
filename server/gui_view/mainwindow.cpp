@@ -11,9 +11,6 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-void MainWindow::set_view(std::shared_ptr<IView> view) {
-    view_ = view;
-}
 void MainWindow::set_ipaddress(const QString& ipaddress) {
     ui->ipaddressLabel->setText(ipaddress);
 }
@@ -37,8 +34,8 @@ Port MainWindow::get_port() {
 
 void MainWindow::listen_pressed() {
     disable_ui();
-    if(std::shared_ptr<IView> view = view_.lock()) {
-        view->listen();
+    if(auto callback = callback_.lock()) {
+        callback->listen();
     }
 }
 
