@@ -1,5 +1,5 @@
 add_library(server_view
-    gui_view.cpp
+    gui_presenter.cpp
     mainwindow.cpp
 )
 target_link_libraries(server_view PUBLIC base)

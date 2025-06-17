@@ -8,14 +8,14 @@
 #include "ui_callback.hpp"
 #include "callback.hpp"
 #include "view_callback.hpp"
-class GUIView : public IConnectionStatusCallback, 
+class GUIPresenter : public IConnectionStatusCallback, 
                 public IFileTransferCallback, 
                 public IGatherAddressCallback, 
                 public IUICallback, 
-                public std::enable_shared_from_this<GUIView>,
+                public std::enable_shared_from_this<GUIPresenter>,
                 public WithCallback<std::shared_ptr<IViewCallback>> {
 public:
-    GUIView(int& argc, char** argv);
+    GUIPresenter(int& argc, char** argv);
     int run();
 
     void listen() override;
