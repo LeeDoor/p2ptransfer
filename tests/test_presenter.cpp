@@ -1,3 +1,4 @@
+#include "server/presenter_builder.hpp"
 #include "view_mock.hpp"
 #include "network_manager_mock.hpp"
 #include "address_gatherer_mock.hpp"
@@ -9,7 +10,8 @@ protected:
         network_mock = std::make_shared<NetworkManagerMock>();
         address_mock = std::make_shared<AddressGathererMock>();
         view_mock = std::make_shared<ViewMock>();
-        presenter = std::make_shared<Presenter>(view_mock, network_mock, address_mock);
+        PresenterBuilder presenter_builder;
+        presenter = presenter_builder.Build(view_mock, network_mock, address_mock);
     }
     std::shared_ptr<NetworkManagerMock> network_mock;
     std::shared_ptr<AddressGathererMock> address_mock;

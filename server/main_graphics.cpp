@@ -1,16 +1,10 @@
-#include "address_gatherer.hpp"
-#include "gui_view.hpp"
-#include "network_manager.hpp"
 #include "presenter.hpp"
 #include "logger.hpp"
+#include "presenter_builder.hpp"
 
 int main(int argc, char** argv) {
     LoggerInitializer init;
-    auto view_ptr = std::make_shared<GUIView>(argc, argv);
-    auto network_manager = std::make_shared<NetworkManager>();
-    auto address_gatherer = std::make_shared<AddressGatherer>();
-    auto presenter = std::make_shared<Presenter>(std::move(view_ptr),
-                                                 std::move(network_manager),
-                                                 std::move(address_gatherer));
+    PresenterBuilder presenter_builder;
+    std::shared_ptr<Presenter> presenter = presenter_builder.build_GUI(argc, argv);
     return presenter->run();
 }
