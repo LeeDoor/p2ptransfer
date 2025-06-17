@@ -5,12 +5,10 @@
 
 int main(int argc, char** argv) {
     LoggerInitializer init;
-    auto view = std::make_shared<GUIPresenter>(argc, argv);
-    auto network = std::make_shared<NetworkManager>();
-    auto address_gatherer = std::make_shared<AddressGatherer>();
-    view->set_callback(network);
-    network->set_callback(view);
-    address_gatherer->set_callback(view);
-    address_gatherer->gather_local_address();
-    return view->run();
+    auto presenter 
+        = std::make_shared<GUIPresenter>(argc, argv,
+                                         std::make_shared<NetworkManager>(),
+                                         std::make_shared<AddressGatherer>());
+    presenter->setup();
+    return presenter->run();
 }

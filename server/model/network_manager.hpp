@@ -1,10 +1,10 @@
 #pragma once
 #include "common_types.hpp"
-#include "view_callback.hpp"
+#include "listener.hpp"
 #include "port.hpp"
 #include "callback.hpp"
 #include "connection_status_callback.hpp"
-class NetworkManager : public IViewCallback, public WithCallback<std::weak_ptr<IConnectionStatusCallback>> {
+class NetworkManager : public IListener, public WithCallback<std::weak_ptr<IConnectionStatusCallback>> {
 public:
     NetworkManager()
         : context_(){} 

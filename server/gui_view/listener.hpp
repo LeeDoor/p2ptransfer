@@ -1,8 +1,8 @@
 #pragma once
 
 #include "port.hpp"
-class IViewCallback {
+class IListener {
 public:
-    virtual ~IViewCallback() = default;
+    virtual ~IListener() = default;
     virtual void listen(Port port) = 0;
 };
