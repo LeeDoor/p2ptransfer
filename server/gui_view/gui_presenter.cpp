@@ -17,7 +17,6 @@ void GUIPresenter::setup() {
     setup_ui();
 }
 void GUIPresenter::setup_callbacks() {
-    Presenter::setup_callbacks(shared_from_this());
     address_gatherer_->set_callback(shared_from_this());
     listener_->set_callback(shared_from_this());
     window_->set_callback(shared_from_this());

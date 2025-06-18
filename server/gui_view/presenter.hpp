@@ -12,10 +12,6 @@ public:
     virtual ~Presenter() = default;
     virtual int run() = 0;
 protected:
-    void setup_callbacks(std::shared_ptr<Presenter> presenter) {
-        address_gatherer_->set_callback(presenter);
-        listener_->set_callback(presenter);
-    };
     std::shared_ptr<IListener> listener_;
     std::shared_ptr<IAddressGatherer> address_gatherer_;
 };

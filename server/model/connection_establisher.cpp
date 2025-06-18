@@ -40,6 +40,9 @@ net::awaitable<void> ConnectionEstablisher::listen_async(Port port) {
         callback->connected(remote_address, remote_port);
     }
     FileProcessor handler(context_, std::move(tcp_socket));
+    if(auto callback = callback_.lock()) {
+        handler.set_callback(static_pointer_cast<IFileTransferCallback>(callback));
+    }
     if(co_await handler.read_remote_file()) {
         if(auto callback = callback_.lock()) {
             callback->connection_aborted(remote_address, remote_port);
