@@ -1,8 +1,8 @@
-#include "network_manager.hpp"
+#include "connection_establisher.hpp"
 #include "common_types.hpp"
 #include "file_processor.hpp"
 #include "logger.hpp"
-NetworkManager::~NetworkManager() {
+ConnectionEstablisher::~ConnectionEstablisher() {
     if(is_running_) {
         context_.stop();
     }
@@ -10,7 +10,7 @@ NetworkManager::~NetworkManager() {
         context_thread_.join();
     }
 }
-void NetworkManager::listen(Port port) {
+void ConnectionEstablisher::listen(Port port) {
     if(is_running_) return;
     if(context_thread_.joinable()) 
         context_thread_.join();
@@ -24,7 +24,7 @@ void NetworkManager::listen(Port port) {
     });
     return;
 }
-net::awaitable<void> NetworkManager::listen_async(Port port) {
+net::awaitable<void> ConnectionEstablisher::listen_async(Port port) {
     SockPtr tcp_socket = co_await get_connection(port);
     if(!tcp_socket) {
         Logger::log() << "failed to open socket." << std::endl;
@@ -50,7 +50,7 @@ net::awaitable<void> NetworkManager::listen_async(Port port) {
         }
     }
 }
-net::awaitable<SockPtr> NetworkManager::get_connection(Port port) {
+net::awaitable<SockPtr> ConnectionEstablisher::get_connection(Port port) {
     tcpip::endpoint endpoint(tcpip::v4(), port);
     try {
         SocketCloser socketCloser = [] (tcpip::socket* socket) {

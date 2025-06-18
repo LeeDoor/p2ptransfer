@@ -4,11 +4,11 @@
 #include "port.hpp"
 #include "callback.hpp"
 #include "connection_status_callback.hpp"
-class NetworkManager : public IListener, public WithCallback<std::weak_ptr<IConnectionStatusCallback>> {
+class ConnectionEstablisher : public IListener, public WithCallback<std::weak_ptr<IConnectionStatusCallback>> {
 public:
-    NetworkManager()
+    ConnectionEstablisher()
         : context_(){} 
-    ~NetworkManager();
+    ~ConnectionEstablisher();
     void listen(Port port) override;
 private:
     net::awaitable<void> listen_async(Port port);
