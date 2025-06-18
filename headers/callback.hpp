@@ -3,9 +3,9 @@
 template<typename CallbackType>
 class WithCallback {
 public:
-    void set_callback(CallbackType callback) {
-        callback_ = std::move(callback);
+    void set_callback(std::shared_ptr<CallbackType> callback) {
+        callback_ = callback;
     }
 protected:
-    CallbackType callback_;
+    std::weak_ptr<CallbackType> callback_;
 };

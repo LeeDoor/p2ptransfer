@@ -10,8 +10,7 @@ namespace Ui {
 class MainWindow;
 }
 
-class MainWindow : public QMainWindow, public WithCallback<std::weak_ptr<IUICallback>>
-{
+class MainWindow : public QMainWindow, public WithCallback<IUICallback> {
     Q_OBJECT
 
 public:

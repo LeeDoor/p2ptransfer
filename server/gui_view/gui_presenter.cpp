@@ -9,11 +9,17 @@ GUIPresenter::GUIPresenter(int& argc, char** argv,
     listener_(std::move(listener)),
     address_gatherer_(std::move(address_gatherer))
 {}
+std::shared_ptr<GUIPresenter> GUIPresenter::shared_from_this() {
+    return static_pointer_cast<GUIPresenter>(Presenter::shared_from_this());
+}
 void GUIPresenter::setup() {
     setup_callbacks();
     setup_ui();
 }
 void GUIPresenter::setup_callbacks() {
+    Presenter::setup_callbacks(shared_from_this());
+    address_gatherer_->set_callback(shared_from_this());
+    listener_->set_callback(shared_from_this());
     window_->set_callback(shared_from_this());
 }
 void GUIPresenter::setup_ui() {

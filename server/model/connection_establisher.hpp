@@ -2,9 +2,7 @@
 #include "common_types.hpp"
 #include "listener.hpp"
 #include "port.hpp"
-#include "callback.hpp"
-#include "connection_status_callback.hpp"
-class ConnectionEstablisher : public IListener, public WithCallback<std::weak_ptr<IConnectionStatusCallback>> {
+class ConnectionEstablisher : public IListener {
 public:
     ConnectionEstablisher()
         : context_(){} 

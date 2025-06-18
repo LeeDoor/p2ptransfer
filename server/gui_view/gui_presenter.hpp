@@ -1,24 +1,19 @@
 #pragma once
 
-#include "connection_status_callback.hpp"
-#include "file_transfer_callback.hpp"
-#include "gather_address_callback.hpp"
+#include "i_address_gatherer.hpp"
+#include "presenter.hpp"
 #include "mainwindow.hpp"
 #include "qt_headers.hpp"
 #include "ui_callback.hpp"
 #include "listener.hpp"
-#include "address_gatherer.hpp"
-class GUIPresenter : public IConnectionStatusCallback, 
-                public IFileTransferCallback, 
-                public IGatherAddressCallback, 
-                public IUICallback, 
-                public std::enable_shared_from_this<GUIPresenter>{
+class GUIPresenter : public IUICallback, public Presenter {
 public:
     GUIPresenter(int& argc, char** argv,
                  std::shared_ptr<IListener> listener,
                  std::shared_ptr<IAddressGatherer> address_gatherer);
+    std::shared_ptr<GUIPresenter> shared_from_this();
     void setup();
-    int run();
+    int run() override;
 
     void listen() override;
     void set_progressbar(double persent) override;
@@ -30,7 +25,7 @@ public:
     void connected(const Address& address, Port port) override;
     void file_transfered() override;
     bool verify_file(SendRequest send_request) override;
-private:
+protected:
     void setup_callbacks();
     void setup_ui();
     QString filesize_to_qstring(Filesize filesize);

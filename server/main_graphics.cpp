@@ -5,13 +5,10 @@
 
 int main(int argc, char** argv) {
     LoggerInitializer init;
-    auto nm = std::make_shared<ConnectionEstablisher>();
-    auto ag = std::make_shared<AddressGatherer>();
     auto presenter 
         = std::make_shared<GUIPresenter>(argc, argv,
-                                         nm, ag); // TODO: dummy replace
-    nm->set_callback(presenter);
-    ag->set_callback(presenter);
+                                         std::make_shared<ConnectionEstablisher>(), 
+                                         std::make_shared<AddressGatherer>());
     presenter->setup();
     return presenter->run();
 }

@@ -4,7 +4,7 @@
 #include "request_structures.hpp"
 #include "file_transfer_callback.hpp"
 class Presenter;
-class FileProcessor : public WithCallback<std::weak_ptr<IFileTransferCallback>> {
+class FileProcessor : public WithCallback<IFileTransferCallback> {
 public:
     FileProcessor(net::io_context& ctx, SockPtr socket)
     : io_(ctx), socket_(std::move(socket)){}
