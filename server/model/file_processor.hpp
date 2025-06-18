@@ -10,6 +10,9 @@ public:
     : io_(ctx), socket_(std::move(socket)){}
     net::awaitable<int> read_remote_file();
 private:
+    constexpr static size_t MAX_SEND_REQUEST_SIZE = 512;
+    constexpr static std::string_view REQUEST_COMPLETION = "\n\n";
+
     net::awaitable<std::optional<SendRequest>> handle_send_request(std::string& buffer);
     template<typename OStream>
     net::awaitable<bool> handle_file(OStream& os, const SendRequest& send_request);
