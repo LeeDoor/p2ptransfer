@@ -6,5 +6,5 @@
 class IListener : public WithCallback<IRemoteInteractionCallback>{
 public:
     virtual ~IListener() = default;
-    virtual void listen(Port port) = 0;
+    virtual void listen_if_not_already(Port port) = 0;
 };

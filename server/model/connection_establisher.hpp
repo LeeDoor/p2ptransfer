@@ -7,8 +7,10 @@ public:
     ConnectionEstablisher()
         : context_(){} 
     ~ConnectionEstablisher();
-    void listen(Port port) override;
+    void listen_if_not_already(Port port) override;
 private:
+    void try_join_context_thread();
+    void run_context_thread();
     net::awaitable<void> listen_async(Port port);
     net::awaitable<SockPtr> get_connection(Port port);
 

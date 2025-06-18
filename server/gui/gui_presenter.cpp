@@ -30,7 +30,7 @@ int GUIPresenter::run() {
 }
 
 void GUIPresenter::listen() {
-    listener_->listen(window_->get_port());
+    listener_->listen_if_not_already(window_->get_port());
 }
 void GUIPresenter::set_progressbar(double persent) {
     QMetaObject::invokeMethod(window_.get(), [this, persent] {
