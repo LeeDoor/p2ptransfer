@@ -4,9 +4,9 @@ set(INCLUDE_PARAMS ${INCLUDE_PARAMS}
 )
 if(${GRAPHICS})
     set(INCLUDE_PARAMS ${INCLUDE_PARAMS} 
-        ${CMAKE_CURRENT_SOURCE_DIR}/gui_view
+        ${CMAKE_CURRENT_SOURCE_DIR}/gui
     )
-    add_subdirectory(gui_view)
+    add_subdirectory(gui)
 endif()
 add_subdirectory(model)
 
