@@ -14,7 +14,7 @@ net::awaitable<void> NetworkManager::connect_and_send(Address address, Port port
         Logger::log() << "failed to open socket." << std::endl;
         co_return;
     }
-    ConnectionHandler handler(context_, std::move(tcp_socket));
+    FileProcessor handler(context_, std::move(tcp_socket));
     if(co_await handler.handle(std::move(filename))) {
         Logger::log() << "failed to handle connection." << std::endl;
         co_return;

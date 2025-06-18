@@ -1,9 +1,9 @@
 #pragma once
 #include "common_types.hpp"
 
-class ConnectionHandler {
+class FileProcessor {
 public:
-    ConnectionHandler(net::io_context& ctx, SockPtr socket)
+    FileProcessor(net::io_context& ctx, SockPtr socket)
         : context_(ctx), socket_(std::move(socket)){}
     net::awaitable<int> handle(std::string filepath);
 private:

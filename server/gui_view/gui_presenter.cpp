@@ -15,7 +15,6 @@ void GUIPresenter::setup() {
 }
 void GUIPresenter::setup_callbacks() {
     window_->set_callback(shared_from_this());
-    throw std::logic_error("setup callbacks");
 }
 void GUIPresenter::setup_ui() {
     address_gatherer_->gather_local_address();

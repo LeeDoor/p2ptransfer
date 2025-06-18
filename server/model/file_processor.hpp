@@ -4,11 +4,11 @@
 #include "request_structures.hpp"
 #include "file_transfer_callback.hpp"
 class Presenter;
-class ConnectionHandler : public WithCallback<std::weak_ptr<IFileTransferCallback>> {
+class FileProcessor : public WithCallback<std::weak_ptr<IFileTransferCallback>> {
 public:
-    ConnectionHandler(net::io_context& ctx, SockPtr socket)
+    FileProcessor(net::io_context& ctx, SockPtr socket)
     : io_(ctx), socket_(std::move(socket)){}
-    net::awaitable<int> handle();
+    net::awaitable<int> read_remote_file();
 private:
     net::awaitable<std::optional<SendRequest>> handle_send_request(std::string& buffer);
     template<typename OStream>

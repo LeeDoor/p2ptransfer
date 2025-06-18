@@ -1,6 +1,6 @@
 #include "network_manager.hpp"
 #include "common_types.hpp"
-#include "connection_handler.hpp"
+#include "file_processor.hpp"
 #include "logger.hpp"
 NetworkManager::~NetworkManager() {
     if(is_running_) {
@@ -39,8 +39,8 @@ net::awaitable<void> NetworkManager::listen_async(Port port) {
     if(auto callback = callback_.lock()) {
         callback->connected(remote_address, remote_port);
     }
-    ConnectionHandler handler(context_, std::move(tcp_socket));
-    if(co_await handler.handle()) {
+    FileProcessor handler(context_, std::move(tcp_socket));
+    if(co_await handler.read_remote_file()) {
         if(auto callback = callback_.lock()) {
             callback->connection_aborted(remote_address, remote_port);
         }

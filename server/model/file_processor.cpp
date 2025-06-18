@@ -1,9 +1,9 @@
-#include "connection_handler.hpp"
+#include "file_processor.hpp"
 #include "logger.hpp"
 #include "request_deserializer.hpp"
 #include "request_serializer.hpp"
 
-net::awaitable<int> ConnectionHandler::handle() {
+net::awaitable<int> FileProcessor::read_remote_file() {
     std::string data;
     auto send_request = co_await handle_send_request(data);
     if(!send_request) {
@@ -32,7 +32,7 @@ net::awaitable<int> ConnectionHandler::handle() {
 }
 
 template<typename OStream>
-net::awaitable<bool> ConnectionHandler::handle_file(OStream& os, const SendRequest& send_request) {
+net::awaitable<bool> FileProcessor::handle_file(OStream& os, const SendRequest& send_request) {
     constexpr size_t buffer_size = 4096;
     size_t bytes;
     ErrorCode ec;
@@ -59,7 +59,7 @@ net::awaitable<bool> ConnectionHandler::handle_file(OStream& os, const SendReque
     Logger::progressbar_stop();
     co_return true;
 } 
-net::awaitable<bool> ConnectionHandler::send_permission(const SendRequest& send_request) {
+net::awaitable<bool> FileProcessor::send_permission(const SendRequest& send_request) {
     auto send_permission = RequestSerializer::serialize_send_permission(send_request.filename);
     if(!send_permission) {
         Logger::log() << "failed to serialize send permission." << std::endl;
@@ -75,7 +75,7 @@ net::awaitable<bool> ConnectionHandler::send_permission(const SendRequest& send_
     }
     co_return true;
 }
-net::awaitable<std::optional<SendRequest>> ConnectionHandler::handle_send_request(std::string& buffer) {
+net::awaitable<std::optional<SendRequest>> FileProcessor::handle_send_request(std::string& buffer) {
     size_t bytes;
     ErrorCode ec;
     std::tie(ec, bytes) = 

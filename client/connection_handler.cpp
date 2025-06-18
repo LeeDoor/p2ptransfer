@@ -2,7 +2,7 @@
 #include "logger.hpp"
 #include "request_serializer.hpp"
 
-net::awaitable<int> ConnectionHandler::handle(std::string filepath) {
+net::awaitable<int> FileProcessor::handle(std::string filepath) {
     std::ifstream ifs(filepath, std::ios::binary);
     if(!ifs.is_open()) {
         Logger::log() << "failed to open file for reading." << std::endl;
@@ -26,7 +26,7 @@ net::awaitable<int> ConnectionHandler::handle(std::string filepath) {
     co_return 0;
 }
 template <typename IStream>
-net::awaitable<bool> ConnectionHandler::send_file(IStream& is, size_t filesize) {
+net::awaitable<bool> FileProcessor::send_file(IStream& is, size_t filesize) {
     constexpr size_t BUFFER_SIZE = 4096;
     size_t bytes_remaining = filesize;
     size_t bytes; ErrorCode ec;
@@ -52,7 +52,7 @@ net::awaitable<bool> ConnectionHandler::send_file(IStream& is, size_t filesize) 
     Logger::log() << std::endl;
     co_return true;
 }
-net::awaitable<bool> ConnectionHandler::send_request(const std::string& filename, size_t filesize) {
+net::awaitable<bool> FileProcessor::send_request(const std::string& filename, size_t filesize) {
     auto send_request_opt = 
         RequestSerializer::serialize_send_request(filename, filesize);
     if(!send_request_opt) { 
@@ -70,7 +70,7 @@ net::awaitable<bool> ConnectionHandler::send_request(const std::string& filename
     }
     co_return true;
 }
-net::awaitable<bool> ConnectionHandler::read_permission() {
+net::awaitable<bool> FileProcessor::read_permission() {
     ErrorCode ec;
     size_t bytes;
     std::string read_buffer;
