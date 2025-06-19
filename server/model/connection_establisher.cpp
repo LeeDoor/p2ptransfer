@@ -30,26 +30,29 @@ void ConnectionEstablisher::listen_if_not_already(Port port) {
     return;
 }
 net::awaitable<void> ConnectionEstablisher::listen_async(Port port) {
-    SockPtr tcp_socket = co_await socket_manager_->get_connection_async(port);
-    auto callback = callback_.lock();
-    if(!callback) co_return;
-    if(!tcp_socket) {
-        Logger::log() << "failed to open socket." << std::endl;
-        callback->cant_open_socket();
-        co_return;
-    }
-    Address remote_address = tcp_socket->remote_endpoint().address().to_string();
-    Port remote_port = tcp_socket->remote_endpoint().port();
-    Logger::log() << "connected from " << remote_address << ":" << remote_port << std::endl;
-    callback->connected(remote_address, remote_port);
-    FileProcessor handler(context_, std::move(tcp_socket));
-    handler.set_callback(static_pointer_cast<IFileTransferCallback>(callback));
+    std::unique_ptr<SocketManager> socket_manager_ = std::make_unique<SocketManager>(context_);
     try {
-        co_await handler.read_remote_file();
-        callback->file_transfered();
-    } catch (const std::exception& ex) {
-        callback->connection_aborted(remote_address, remote_port);
-        throw;
+        auto callback = callback_.lock();
+        if(!callback) throw std::runtime_error("callback of ConnectionEstablisher is dead");
+        try {
+        co_await socket_manager_->get_connection_async(port);
+        } catch(...) {
+            callback->cant_open_socket();
+            throw;
+        }
+        auto remote_endpoint = socket_manager_->get_remote_endpoint();
+        callback->connected(remote_endpoint.address, remote_endpoint.port);
+        FileProcessor handler(std::move(socket_manager_));
+        handler.set_callback(static_pointer_cast<IFileTransferCallback>(callback));
+        try {
+            co_await handler.read_remote_file();
+            callback->file_transfered();
+        } catch (const std::exception& ex) {
+            callback->connection_aborted(remote_endpoint.address, remote_endpoint.port);
+            throw;
+        }
+    } catch (std::exception& ex) {
+        Logger::log() << ex.what() << std::endl;
     }
 }
 

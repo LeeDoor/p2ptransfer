@@ -5,8 +5,6 @@
 #include "socket_manager.hpp"
 class ConnectionEstablisher : public IListener {
 public:
-    ConnectionEstablisher()
-        : context_(), socket_manager_(std::make_shared<SocketManager>()){} 
     ~ConnectionEstablisher();
     void listen_if_not_already(Port port) override;
 private:
@@ -15,7 +13,6 @@ private:
     net::awaitable<void> listen_async(Port port);
 
     net::io_context context_;
-    std::shared_ptr<SocketManager> socket_manager_;
     std::thread context_thread_;
     bool is_running_ = false;
 };

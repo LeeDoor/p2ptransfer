@@ -2,55 +2,54 @@
 
 SockPtr SocketManager::get_connection_sync(Port port) {
     SockPtr sock_;
-    co_spawn(context_, get_connection_async(port), [&](std::exception_ptr a, SockPtr sock){
-        sock_ = std::move(sock);
-    });
+    co_spawn(context_, get_connection_async(port), [&](std::exception_ptr a){});
     context_.run();
     return sock_;
 }
-net::awaitable<SockPtr> SocketManager::get_connection_async(Port port) {
+net::awaitable<void> SocketManager::get_connection_async(Port port) {
     tcpip::endpoint endpoint(tcpip::v4(), port);
-    try {
-        SocketCloser socketCloser = [] (tcpip::socket* socket) {
-            ErrorCode ec;
-            socket->shutdown(tcpip::socket::shutdown_both, ec);
-            socket->close();
-        };
-        tcpip::acceptor acceptor(context_, endpoint);
-        SockPtr tcp_socket (new tcpip::socket(context_), socketCloser);
-        auto [ec] = co_await acceptor.async_accept(*tcp_socket.get(), net::as_tuple(net::use_awaitable));
-        if(ec) {
-            co_return nullptr;
-        }
-        co_return tcp_socket;
-    } catch (const std::exception& ex) {
-        co_return nullptr;
-    }
-}
-net::awaitable<SockPtr> SocketManager::connect_async(Address address, Port port) {
-    tcpip::resolver resolver_(context_);
-    auto [resolve_ec, endpoint] =
-        co_await resolver_.async_resolve(address, std::to_string(port), net::as_tuple(net::use_awaitable));
-    if(resolve_ec) {
-        co_return nullptr;
-    }
-    SocketCloser socketCloser = [] (tcpip::socket* s) {
+    SocketCloser socketCloser = [] (tcpip::socket* socket) {
         ErrorCode ec;
-        s->shutdown(tcpip::socket::shutdown_both, ec);
-        s->close();
+        socket->shutdown(tcpip::socket::shutdown_both, ec);
+        socket->close();
     };
-    SockPtr tcp_socket(new tcpip::socket(context_), socketCloser);
-    auto [ec] = co_await tcp_socket->async_connect(endpoint.begin()->endpoint(), net::as_tuple(net::use_awaitable));
-    if(ec) {
-        co_return nullptr;
-    }
-    co_return tcp_socket;
+    tcpip::acceptor acceptor(context_, endpoint);
+    socket_ = {new tcpip::socket(context_), socketCloser};
+    co_await acceptor.async_accept(*socket_, net::use_awaitable);
 }
-SockPtr SocketManager::connect_sync(Address address, Port port) {
-    SockPtr sock_;
-    co_spawn(context_, connect_async(address, port), [&](std::exception_ptr a, SockPtr sock){
-        sock_ = std::move(sock);
-    });
-    context_.run();
-    return sock_;
+SocketManager::RemoteEndpoint SocketManager::get_remote_endpoint() {
+    if(socket_ == nullptr) 
+        throw std::logic_error("get_remote_endpoint while socket is nullptr is illegal");
+    return {
+        socket_->remote_endpoint().address().to_string(), 
+        socket_->remote_endpoint().port()
+    };
+}
+net::awaitable<std::string> SocketManager::read_request() {
+    std::string buffer;
+    size_t bytes;
+    auto dynamic_buffer = net::dynamic_buffer(buffer, MAX_SEND_REQUEST_SIZE);
+    bytes = 
+        co_await net::async_read_until(*socket_, dynamic_buffer, 
+                                       REQUEST_COMPLETION, 
+                                       net::use_awaitable);
+    co_return buffer.substr(0, bytes);
+}
+net::awaitable<void> SocketManager::send_response(std::string&& response) {
+    size_t bytes;
+    co_await net::async_write(*socket_, 
+                              net::buffer(response), 
+                              net::use_awaitable);
+}
+net::awaitable<size_t> SocketManager::read_file_part_to(BufferType& buffer, size_t& bytes_remaining) {
+    size_t bytes; ErrorCode ec;
+    std::tie(ec, bytes) 
+        = co_await net::async_read(*socket_, 
+                                   net::buffer(buffer, std::min(BUFFER_SIZE, bytes_remaining)),
+                                   net::as_tuple(net::use_awaitable));
+    bytes_remaining -= bytes;
+    if(ec && bytes_remaining) {
+        throw std::runtime_error("failed to read file: " + ec.what());
+    }
+    co_return bytes;
 }

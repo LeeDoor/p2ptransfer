@@ -11,14 +11,7 @@ net::awaitable<void> FileProcessor::read_remote_file() {
 }
 
 net::awaitable<SendRequest> FileProcessor::handle_send_request() {
-    std::string buffer;
-    size_t bytes;
-    auto dynamic_buffer = net::dynamic_buffer(buffer, MAX_SEND_REQUEST_SIZE);
-    bytes = 
-        co_await net::async_read_until(*socket_, dynamic_buffer, 
-                                       REQUEST_COMPLETION, 
-                                       net::use_awaitable);
-    std::string request = buffer.substr(0, bytes);
+    std::string request = co_await socket_manager_->read_request();
     RequestDeserializer deserializer;
     auto send_request = deserializer.deserialize_send_request(request);
     co_return *send_request;
@@ -26,15 +19,7 @@ net::awaitable<SendRequest> FileProcessor::handle_send_request() {
 
 net::awaitable<void> FileProcessor::send_permission(const SendRequest& send_request) {
     auto send_permission = RequestSerializer::serialize_send_permission(send_request.filename);
-    ErrorCode ec;
-    size_t bytes;
-    std::tie(ec, bytes) =
-        co_await net::async_write(*socket_, 
-                                  net::buffer(*send_permission), 
-                                  net::as_tuple(net::use_awaitable));
-    if(ec) {
-        throw std::runtime_error("failed to write send permission");
-    }
+    co_await socket_manager_->send_response(std::move(*send_permission));
 }
 bool FileProcessor::ask_file_confirmation(const SendRequest& send_request) {
     if(auto callback = callback_.lock()) {
@@ -50,19 +35,10 @@ std::ofstream FileProcessor::open_file_for_writing(const std::string& initial_fi
     return ofs;
 }
 net::awaitable<void> FileProcessor::handle_file(std::ofstream& os, const SendRequest& send_request) {
-    constexpr size_t buffer_size = 4096;
-    size_t bytes; ErrorCode ec;
     size_t bytes_remaining = send_request.filesize;
-    std::array<char, buffer_size> buffer;
+    SocketManager::BufferType buffer;
     while (bytes_remaining) {
-        std::tie(ec, bytes) 
-            = co_await net::async_read(*socket_, 
-                                       net::buffer(buffer, std::min(buffer_size, bytes_remaining)),
-                                       net::as_tuple(net::use_awaitable));
-        bytes_remaining -= bytes;
-        if(ec && bytes_remaining) {
-            throw std::runtime_error("failed to read file: " + ec.what());
-        }
+        size_t bytes = co_await socket_manager_->read_file_part_to(buffer, bytes_remaining);
         os.write(buffer.data(), bytes);
         calculate_notify_progressbar(bytes_remaining, send_request.filesize);
     }
