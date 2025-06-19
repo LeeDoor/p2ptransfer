@@ -1,96 +1,76 @@
 #include "file_processor.hpp"
-#include "logger.hpp"
 #include "request_deserializer.hpp"
 #include "request_serializer.hpp"
 
-net::awaitable<int> FileProcessor::read_remote_file() {
-    std::string data;
-    auto send_request = co_await handle_send_request(data);
-    if(!send_request) {
-        Logger::log() << "failed to perform send request. shutting down." << std::endl;
-        co_return 1;
-    }
-    if(auto callback = callback_.lock()) {
-        if(!callback->verify_file(*send_request)) 
-            co_return 5;
-    }
-    if(!co_await send_permission(*send_request)) {
-        Logger::log() << "failed to perform send permission. shutting down." << std::endl;
-        co_return 2;
-    }
-    std::ofstream ofs("READED_" + send_request->filename, std::ios::binary);
-    if(!ofs.is_open()) {
-        Logger::log() << "failed to open file for writing." << std::endl;
-        co_return 3;
-    }
-    if(!co_await handle_file(ofs, *send_request)) {
-        Logger::log() << "failed to read file." << std::endl;
-        co_return 4;
-    }
-    Logger::log() << "file written successfully." << std::endl;
-    co_return 0;
+net::awaitable<void> FileProcessor::read_remote_file() {
+    auto send_request = co_await handle_send_request();
+    co_await send_permission(send_request);
+    ask_file_confirmation(send_request);
+    std::ofstream output_file = open_file_for_writing(send_request.filename);
+    co_await handle_file(output_file , send_request);
 }
 
-template<typename OStream>
-net::awaitable<bool> FileProcessor::handle_file(OStream& os, const SendRequest& send_request) {
-    constexpr size_t buffer_size = 4096;
+net::awaitable<SendRequest> FileProcessor::handle_send_request() {
+    std::string buffer;
     size_t bytes;
-    ErrorCode ec;
-    size_t bytes_remaining = send_request.filesize;
-    std::array<char, buffer_size> buffer;
-    Logger::progressbar_init();
-    while (bytes_remaining) {
-        std::tie(ec, bytes) 
-            = co_await net::async_read(*socket_, net::buffer(buffer, std::min(buffer_size, bytes_remaining)),
-                                       net::as_tuple(net::use_awaitable));
-        bytes_remaining -= bytes;
-        if(ec && bytes_remaining) {
-            Logger::progressbar_stop();
-            Logger::log() << bytes_remaining << " bytes remaining. failed to read file: " << ec.what() << std::endl;
-            co_return false;
-        }
-        os.write(buffer.data(), bytes);
-        double progress = 100.0 - (bytes_remaining * 100.0 / send_request.filesize);
-        Logger::log_progressbar(progress);
-        if(auto callback = callback_.lock()) {
-            callback->set_progressbar(progress);
-        }
-    }
-    Logger::progressbar_stop();
-    co_return true;
-} 
-net::awaitable<bool> FileProcessor::send_permission(const SendRequest& send_request) {
+    auto dynamic_buffer = net::dynamic_buffer(buffer, MAX_SEND_REQUEST_SIZE);
+    bytes = 
+        co_await net::async_read_until(*socket_, dynamic_buffer, 
+                                       REQUEST_COMPLETION, 
+                                       net::use_awaitable);
+    std::string request = buffer.substr(0, bytes);
+    RequestDeserializer deserializer;
+    auto send_request = deserializer.deserialize_send_request(request);
+    co_return send_request;
+}
+
+net::awaitable<void> FileProcessor::send_permission(const SendRequest& send_request) {
     auto send_permission = RequestSerializer::serialize_send_permission(send_request.filename);
-    if(!send_permission) {
-        Logger::log() << "failed to serialize send permission." << std::endl;
-        co_return false;
-    }
     ErrorCode ec;
     size_t bytes;
     std::tie(ec, bytes) =
-        co_await net::async_write(*socket_, net::buffer(*send_permission), net::as_tuple(net::use_awaitable));
+        co_await net::async_write(*socket_, 
+                                  net::buffer(*send_permission), 
+                                  net::as_tuple(net::use_awaitable));
     if(ec) {
-        Logger::log() << "failed to write send permission." << std::endl;
-        co_return false;
+        throw std::runtime_error("failed to write send permission");
     }
-    co_return true;
 }
-net::awaitable<std::optional<SendRequest>> FileProcessor::handle_send_request(std::string& buffer) {
-    size_t bytes;
-    ErrorCode ec;
-    std::tie(ec, bytes) = 
-        co_await net::async_read_until(*socket_, net::dynamic_buffer(buffer, MAX_SEND_REQUEST_SIZE), 
-                                       REQUEST_COMPLETION, net::as_tuple(net::use_awaitable));
-    if(ec && ec != boost::asio::error::eof) {
-        Logger::log() << "failed to read line: " << ec.what() << std::endl;
-        co_return std::nullopt;
+bool FileProcessor::ask_file_confirmation(const SendRequest& send_request) {
+    if(auto callback = callback_.lock()) {
+        return callback->verify_file(send_request);
     }
-    std::string request;
-    request = buffer.substr(0, bytes);
-    buffer.erase(0, bytes);
-    RequestDeserializer deserializer;
-    if(auto send_request = deserializer.deserialize_send_request(request)) {
-        co_return *send_request;
+    throw std::runtime_error("callback of FileProcessor is dead");
+}
+std::ofstream FileProcessor::open_file_for_writing(const std::string& initial_filename) {
+    std::ofstream ofs("READED_" + initial_filename, std::ios::binary);
+    if(!ofs.is_open()) {
+        throw std::runtime_error("failed to open file for writing");
     }
-    co_return std::nullopt;
+    return ofs;
+}
+net::awaitable<void> FileProcessor::handle_file(std::ofstream& os, const SendRequest& send_request) {
+    constexpr size_t buffer_size = 4096;
+    size_t bytes; ErrorCode ec;
+    size_t bytes_remaining = send_request.filesize;
+    std::array<char, buffer_size> buffer;
+    while (bytes_remaining) {
+        std::tie(ec, bytes) 
+            = co_await net::async_read(*socket_, 
+                                       net::buffer(buffer, std::min(buffer_size, bytes_remaining)),
+                                       net::as_tuple(net::use_awaitable));
+        bytes_remaining -= bytes;
+        if(ec && bytes_remaining) {
+            throw std::runtime_error("failed to read file: " + ec.what());
+        }
+        os.write(buffer.data(), bytes);
+        calculate_notify_progressbar(bytes_remaining, send_request.filesize);
+    }
+} 
+
+void FileProcessor::calculate_notify_progressbar(size_t bytes_remaining, size_t filesize) {
+    if(auto callback = callback_.lock()) {
+        double progress = 100.0 - (bytes_remaining * 100.0 / filesize);
+        callback->set_progressbar(progress);
+    }
 }
