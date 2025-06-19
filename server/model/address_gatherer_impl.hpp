@@ -2,11 +2,10 @@
 #include "i_address_gatherer.hpp"
 #include "common_types.hpp"
 
-class AddressGatherer: public IAddressGatherer {
+class AddressGathererImpl : public IAddressGatherer {
 public:
-    ~AddressGatherer();
     void gather_local_address() override;
 private:
     net::io_context context_;
-    std::thread gather_thread_;
+    std::jthread gather_thread_;
 };

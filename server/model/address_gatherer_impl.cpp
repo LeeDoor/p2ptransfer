@@ -1,12 +1,8 @@
-#include "address_gatherer.hpp"
+#include "address_gatherer_impl.hpp"
 
-AddressGatherer::~AddressGatherer() {
-    if(gather_thread_.joinable()) 
-        gather_thread_.join();
-}
-void AddressGatherer::gather_local_address() {
+void AddressGathererImpl::gather_local_address() {
     using udp = net::ip::udp;
-    gather_thread_ = std::thread([this] {
+    gather_thread_ = std::jthread([this] {
         const udp::endpoint ep (net::ip::make_address("192.168.0.1"), 8080);
         udp::socket socket(context_, udp::endpoint(udp::v4(), 8081));
         ErrorCode ec;

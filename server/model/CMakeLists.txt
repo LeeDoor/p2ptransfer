@@ -1,5 +1,5 @@
 add_library(server_model
-    address_gatherer.cpp
+    address_gatherer_impl.cpp
     file_processor.cpp
     connection_handler.cpp
     socket_manager.cpp

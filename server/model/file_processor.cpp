@@ -5,7 +5,8 @@
 net::awaitable<void> FileProcessor::read_remote_file() {
     auto send_request = co_await handle_send_request();
     co_await send_permission(send_request);
-    ask_file_confirmation(send_request);
+    if(!ask_file_confirmation(send_request))
+        co_return;
     std::ofstream output_file = open_file_for_writing(send_request.filename);
     co_await handle_file(output_file , send_request);
 }
