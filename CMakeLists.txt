@@ -5,26 +5,41 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON) # require C++20
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1) # exporting compile_commands.json for neovim
 set(CMAKE_BUILD_TYPE Debug)
 
+option(TESTING "Build tests" ON)
 option(GRAPHICS "Build with Qt" ON) # graphics executable
 
-set(LINKAGE_PARAMS ) # libraries to link
-set(INCLUDE_PARAMS ${CMAKE_SOURCE_DIR}/headers) # directories to include
+set(LINK_LIBRARIES ) # libraries to link
+set(INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/headers) # directories to include
 
 if(WIN32) 
-    set(LINKAGE_PARAMS ws2_32 -lmswsock) 
+    set(LINK_LIBRARIES ws2_32 -lmswsock) 
 endif()
 
 find_package(Boost REQUIRED)
-set(INCLUDE_PARAMS ${INCLUDE_PARAMS} ${Boost_INCLUDE_DIRS})
+set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} ${Boost_INCLUDE_DIRS})
 
 if(${GRAPHICS})
     find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets Core)
     find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Core)
     qt_standard_project_setup()
-    set(LINKAGE_PARAMS ${LINKAGE_PARAMS} ${Qt6Widgets_LIBRARIES} ${Qt6Core_LIBRARIES})
-    set(INCLUDE_PARAMS ${INCLUDE_PARAMS} ${Qt6Widgets_INCLUDE_DIRS} ${Qt6Core_INCLUDE_DIRS})
+    set(LINK_LIBRARIES ${LINK_LIBRARIES} ${Qt6Widgets_LIBRARIES} ${Qt6Core_LIBRARIES})
+    set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} ${Qt6Widgets_INCLUDE_DIRS} ${Qt6Core_INCLUDE_DIRS})
+endif()
+
+if(${TESTING})
+    find_package(GTest REQUIRED)
+    define_property(GLOBAL PROPERTY TESTING_SOURCES)
+    enable_testing()
 endif()
 
 add_subdirectory(headers)
 add_subdirectory(server)
 add_subdirectory(client)
+
+if(${TESTING}) 
+    get_property(TEST_SOURCES GLOBAL PROPERTY TESTING_SOURCES)
+    add_executable(tests ${TEST_SOURCES})
+    target_link_libraries(tests PUBLIC server GTest::gtest_main GTest::gmock ${LINK_LIBRARIES})
+    target_include_directories(tests PUBLIC ${INCLUDE_DIRECTORIES})
+    gtest_discover_tests(tests)
+endif()
