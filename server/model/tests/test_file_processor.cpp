@@ -9,17 +9,18 @@ TEST(FileProcessor, testingOk) {
     net::io_context io;
     SocketManager socket_manager;
     SockPtr listener, sender;
-    std::jthread thread1 ([&]{
+    std::jthread thread ([&]{
         listener = socket_manager.get_connection_sync(TEST_PORT);
-        std::cout << "listened\n";
     }); 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    std::jthread thread2 ([&]{
-        sender = socket_manager.connect_sync(TEST_ADDRESS, TEST_PORT);
-        std::cout << "connected\n";
-    }); 
-    thread1.join(); thread2.join();
+    sender = socket_manager.connect_sync(TEST_ADDRESS, TEST_PORT);
+    thread.join(); 
     ASSERT_EQ(listener->local_endpoint().port(), TEST_PORT);
     ASSERT_EQ(sender->remote_endpoint().port(), TEST_PORT);
     FileProcessor file_processor(io, std::move(listener));
+    thread = std::jthread([&]{
+        std::string message = "REQUEST\nFILE aboba.txt\nSIZE 1488\n\n";
+        net::write(*sender, net::buffer(message));
+    });
+    co_spawn(io, file_processor.read_remote_file(), [](std::exception_ptr ptr){});
 }
