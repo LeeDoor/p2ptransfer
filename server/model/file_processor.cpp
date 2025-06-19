@@ -21,7 +21,7 @@ net::awaitable<SendRequest> FileProcessor::handle_send_request() {
     std::string request = buffer.substr(0, bytes);
     RequestDeserializer deserializer;
     auto send_request = deserializer.deserialize_send_request(request);
-    co_return send_request;
+    co_return *send_request;
 }
 
 net::awaitable<void> FileProcessor::send_permission(const SendRequest& send_request) {
