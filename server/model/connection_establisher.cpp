@@ -30,7 +30,7 @@ void ConnectionEstablisher::listen_if_not_already(Port port) {
     return;
 }
 net::awaitable<void> ConnectionEstablisher::listen_async(Port port) {
-    SockPtr tcp_socket = co_await socket_manager_->get_connection(port);
+    SockPtr tcp_socket = co_await socket_manager_->get_connection_async(port);
     auto callback = callback_.lock();
     if(!callback) co_return;
     if(!tcp_socket) {
