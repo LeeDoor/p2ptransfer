@@ -1,18 +1,16 @@
 #pragma once
-#include "common_types.hpp"
+
 #include "listener.hpp"
-#include "port.hpp"
-#include "socket_manager.hpp"
-class ConnectionEstablisher : public IListener {
+class ListenerImpl : public IListener {
 public:
-    ~ConnectionEstablisher();
+    ~ListenerImpl();
     void listen_if_not_already(Port port) override;
 private:
     void try_join_context_thread();
-    void run_context_thread();
+    void listen(Port port);
     net::awaitable<void> listen_async(Port port);
-
+    void run_context_thread();
     net::io_context context_;
-    std::thread context_thread_;
+    std::jthread context_thread_;
     bool is_running_ = false;
 };

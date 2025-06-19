@@ -16,10 +16,9 @@ public:
 
     SocketManager(net::io_context& context) :
         context_(context){}
-    net::awaitable<void> get_connection_async(Port port);
-    SockPtr get_connection_sync(Port port);
+    net::awaitable<void> open_connection_async(Port port);
+    SockPtr open_connection_sync(Port port);
     RemoteEndpoint get_remote_endpoint();
-
 
     net::awaitable<std::string> read_request();
     net::awaitable<void> send_response(std::string&& response);
