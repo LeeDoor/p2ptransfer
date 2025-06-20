@@ -13,8 +13,7 @@ net::awaitable<void> FileProcessor::read_remote_file() {
 
 net::awaitable<SendRequest> FileProcessor::handle_send_request() {
     std::string request = co_await socket_manager_->read_request();
-    RequestDeserializer deserializer;
-    auto send_request = deserializer.deserialize_send_request(request);
+    auto send_request = RequestDeserializer::deserialize_send_request(request);
     co_return send_request;
 }
 

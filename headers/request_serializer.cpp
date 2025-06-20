@@ -1,4 +1,5 @@
 #include "request_serializer.hpp"
+#include "request_header_names.hpp"
 std::string RequestSerializer::serialize_send_request(const std::string& filename, 
                                    size_t filesize){
     std::ostringstream os;

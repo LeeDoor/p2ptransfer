@@ -1,5 +1,4 @@
 #pragma once
-#include "request_header_names.hpp"
 
 class RequestSerializer {
 public:
@@ -7,6 +6,7 @@ public:
     static std::string serialize_send_permission(const std::string filename);
 
 private:
+    RequestSerializer() = delete;
     static void serialize_send_request_header(std::ostringstream& os);
     static void serialize_permission_header(std::ostringstream& os);
     static void serialize_footer(std::ostringstream& os);

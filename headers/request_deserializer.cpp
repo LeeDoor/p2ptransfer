@@ -1,12 +1,10 @@
 #include "request_deserializer.hpp"
-RequestDeserializer::RequestDeserializer(){
-    request_methods_ = {
+const std::unordered_map<HeaderType, RequestMethod> RequestDeserializer::request_methods_ = {
         { REQUEST_HEADER, RequestMethod::REQUEST },
         { FILE_HEADER, RequestMethod::FILENAME },
         { SIZE_HEADER, RequestMethod::FILESIZE },
         { PERMISSION_HEADER, RequestMethod::PERMISSION },
     };
-}
 
 SendRequest RequestDeserializer::deserialize_send_request(const std::string request_str){
     std::istringstream is(request_str);

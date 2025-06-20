@@ -9,12 +9,11 @@ template<typename T>
 concept DeserializableOrVoid = Deserializable<T> || std::is_same_v<T, std::monostate>;
 class RequestDeserializer {
 public:
-    RequestDeserializer();
-
-    SendRequest deserialize_send_request(const std::string request_str);
+    static SendRequest deserialize_send_request(const std::string request_str);
 private:
+    RequestDeserializer() = delete;
     template<DeserializableOrVoid ValueType> // if you don't need a value, use std::monostate
-    ValueType deserialize_line(std::istringstream& is, RequestMethod required_method){
+    static ValueType deserialize_line(std::istringstream& is, RequestMethod required_method){
         RequestMethod method = deserialize_method(is);
         if(method != required_method) 
             throw std::runtime_error("failed while deserializing the method of header " + std::string(typeid(ValueType).name()));
@@ -28,6 +27,7 @@ private:
             return value;
         }
     }
-    RequestMethod deserialize_method(std::istringstream& is);
-    std::unordered_map<HeaderType, RequestMethod> request_methods_;
+    static RequestMethod deserialize_method(std::istringstream& is);
+
+    static const std::unordered_map<HeaderType, RequestMethod> request_methods_;
 };
