@@ -1,12 +1,12 @@
-#include "socket_manager.hpp"
+#include "socket_manager_impl.hpp"
 
-SockPtr SocketManager::open_connection_sync(Port port) {
+SockPtr SocketManagerImpl::open_connection_sync(Port port) {
     SockPtr sock_;
     co_spawn(context_, open_connection_async(port), [&](std::exception_ptr a){});
     context_.run();
     return sock_;
 }
-net::awaitable<void> SocketManager::open_connection_async(Port port) {
+net::awaitable<void> SocketManagerImpl::open_connection_async(Port port) {
     tcpip::endpoint endpoint(tcpip::v4(), port);
     SocketCloser socketCloser = [] (tcpip::socket* socket) {
         ErrorCode ec;
@@ -17,7 +17,7 @@ net::awaitable<void> SocketManager::open_connection_async(Port port) {
     socket_ = {new tcpip::socket(context_), socketCloser};
     co_await acceptor.async_accept(*socket_, net::use_awaitable);
 }
-SocketManager::RemoteEndpoint SocketManager::get_remote_endpoint() {
+SocketManagerImpl::RemoteEndpoint SocketManagerImpl::get_remote_endpoint() {
     if(socket_ == nullptr) 
         throw std::logic_error("get_remote_endpoint while socket is nullptr is illegal");
     return {
@@ -25,7 +25,7 @@ SocketManager::RemoteEndpoint SocketManager::get_remote_endpoint() {
         socket_->remote_endpoint().port()
     };
 }
-net::awaitable<std::string> SocketManager::read_request() {
+net::awaitable<std::string> SocketManagerImpl::read_request() {
     std::string buffer;
     size_t bytes;
     auto dynamic_buffer = net::dynamic_buffer(buffer, MAX_SEND_REQUEST_SIZE);
@@ -35,13 +35,13 @@ net::awaitable<std::string> SocketManager::read_request() {
                                        net::use_awaitable);
     co_return buffer.substr(0, bytes);
 }
-net::awaitable<void> SocketManager::send_response(std::string&& response) {
+net::awaitable<void> SocketManagerImpl::send_response(std::string&& response) {
     size_t bytes;
     co_await net::async_write(*socket_, 
                               net::buffer(response), 
                               net::use_awaitable);
 }
-net::awaitable<size_t> SocketManager::read_file_part_to(BufferType& buffer, size_t& bytes_remaining) {
+net::awaitable<size_t> SocketManagerImpl::read_file_part_to(BufferType& buffer, size_t& bytes_remaining) {
     size_t bytes; ErrorCode ec;
     std::tie(ec, bytes) 
         = co_await net::async_read(*socket_, 

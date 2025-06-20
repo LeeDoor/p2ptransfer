@@ -4,7 +4,7 @@
 #include "common_types.hpp"
 
 
-class SocketManager {
+class SocketManagerImpl {
 public:
     struct RemoteEndpoint {
         Address address;
@@ -14,7 +14,7 @@ public:
     static constexpr size_t BUFFER_SIZE = 4096;
     using BufferType = std::array<char, BUFFER_SIZE>;
 
-    SocketManager(net::io_context& context) :
+    SocketManagerImpl(net::io_context& context) :
         context_(context){}
     net::awaitable<void> open_connection_async(Port port);
     SockPtr open_connection_sync(Port port);
