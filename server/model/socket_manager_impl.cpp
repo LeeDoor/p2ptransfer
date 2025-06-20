@@ -19,7 +19,8 @@ net::awaitable<void> SocketManagerImpl::open_connection_async(Port port) {
 }
 SocketManagerImpl::RemoteEndpoint SocketManagerImpl::get_remote_endpoint() {
     if(socket_ == nullptr) 
-        throw std::logic_error("get_remote_endpoint while socket is nullptr is illegal");
+        throw std::logic_error("get_remote_endpoint called while socket is nullptr. "
+                               "Use open_connection first");
     return {
         socket_->remote_endpoint().address().to_string(), 
         socket_->remote_endpoint().port()

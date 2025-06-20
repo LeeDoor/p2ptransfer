@@ -2,6 +2,7 @@
 #include "common_types.hpp"
 #include "connection_handler.hpp"
 #include "logger.hpp"
+#include "socket_manager_impl.hpp"
 
 ListenerImpl::~ListenerImpl() {
     if(is_running_) {
@@ -30,7 +31,7 @@ void ListenerImpl::listen(Port port) {
 }
 
 net::awaitable<void> ListenerImpl::listen_async(Port port) {
-    ConnectionHandler handler(context_);
+    ConnectionHandler handler(std::make_unique<SocketManagerImpl>(context_));
     handler.set_callback(callback());
     co_await handler.handle(port);
 }
