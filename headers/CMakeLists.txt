@@ -7,5 +7,9 @@ if(${GRAPHICS})
         qt_headers.hpp
     )
 endif()
-add_library(base INTERFACE)
-target_precompile_headers(base INTERFACE ${PRECOMPILED_HEADERS})
+add_library(base 
+    request_serializer.cpp
+    request_deserializer.cpp
+)
+target_precompile_headers(base PUBLIC ${PRECOMPILED_HEADERS})
+target_link_libraries(base PUBLIC ${LINK_LIBRARIES})

@@ -53,13 +53,8 @@ net::awaitable<bool> FileProcessor::send_file(IStream& is, size_t filesize) {
     co_return true;
 }
 net::awaitable<bool> FileProcessor::send_request(const std::string& filename, size_t filesize) {
-    auto send_request_opt = 
+    std::string send_request = 
         RequestSerializer::serialize_send_request(filename, filesize);
-    if(!send_request_opt) { 
-        Logger::log() << "failed to serialize send_request." << std::endl;
-        co_return false;
-    }
-    std::string send_request(std::move(*send_request_opt));
     ErrorCode ec;
     size_t bytes;
     std::tie(ec, bytes) = co_await net::async_write(*socket_, net::buffer(send_request),

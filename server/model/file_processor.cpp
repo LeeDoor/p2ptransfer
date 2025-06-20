@@ -15,12 +15,12 @@ net::awaitable<SendRequest> FileProcessor::handle_send_request() {
     std::string request = co_await socket_manager_->read_request();
     RequestDeserializer deserializer;
     auto send_request = deserializer.deserialize_send_request(request);
-    co_return *send_request;
+    co_return send_request;
 }
 
 net::awaitable<void> FileProcessor::send_permission(const SendRequest& send_request) {
     auto send_permission = RequestSerializer::serialize_send_permission(send_request.filename);
-    co_await socket_manager_->send_response(std::move(*send_permission));
+    co_await socket_manager_->send_response(std::move(send_permission));
 }
 bool FileProcessor::ask_file_confirmation(const SendRequest& send_request) {
     if(auto callback = callback_.lock()) {
