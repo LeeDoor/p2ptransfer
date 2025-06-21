@@ -28,7 +28,7 @@ protected:
     ConnectionEstablisher establisher;
 };
 
-TEST_F(ConnectionEstablisherFixture, connected) {
+TEST_F(ConnectionEstablisherFixture, establish_connection_successfully) {
     EXPECT_CALL(*socket_mock, establish_connection_async(TEST_PORT))
         .WillOnce(Return(return_immediately()));
     EXPECT_CALL(*socket_mock, get_remote_endpoint())
