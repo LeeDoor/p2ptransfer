@@ -8,9 +8,8 @@ if(${GRAPHICS})
     )
 endif()
 if(${TESTING}) 
-    set(PRECOMPILED_HEADERS ${PRECOMPILED_HEADERS}
-        gtest_headers.hpp
-    )
+    add_library(test_headers INTERFACE)
+    target_precompile_headers(test_headers INTERFACE gtest_headers.hpp)
 endif()
 add_library(base 
     request_serializer.cpp

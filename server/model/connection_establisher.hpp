@@ -4,13 +4,13 @@
 #include "port.hpp"
 #include "remote_interaction_callback.hpp"
 #include "socket_manager.hpp"
-class ConnectionHandler : public WithCallback<IRemoteInteractionCallback> {
+class ConnectionEstablisher : public WithCallback<IRemoteInteractionCallback> {
 public:
-    ConnectionHandler(std::shared_ptr<ISocketManager> socket_manager) :
+    ConnectionEstablisher(std::shared_ptr<ISocketManager> socket_manager) :
         socket_manager_(socket_manager){}
-    net::awaitable<void> handle(Port port);
+    net::awaitable<void> establish_connection(Port port);
 private:
-    net::awaitable<void> try_open_connection(Port port);
+    net::awaitable<void> try_establish_connection(Port port);
     net::awaitable<void> try_read_file();
 
     std::shared_ptr<ISocketManager> socket_manager_;

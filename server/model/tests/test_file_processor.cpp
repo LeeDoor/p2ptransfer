@@ -1,8 +1,11 @@
-#include "connection_handler.hpp"
+#include "connection_establisher.hpp"
+#include "file_processor.hpp"
 #include "remote_interaction_callback_mock.hpp"
 #include "request_serializer.hpp"
 #include "socket_manager_mock.hpp"
 #include "gtest_headers.hpp"
+
+using ::testing::Return;
 
 constexpr size_t TEST_PORT = 8080;
 constexpr std::string TEST_ADDRESS = "127.0.0.1";
@@ -15,14 +18,17 @@ protected:
     ConnectionHandlerFixture() :
         socket_mock(std::make_shared<SocketManagerMock>()),
         callback_mock(std::make_shared<RemoteInteractionCallbackMock>()),
-        handler(socket_mock)    
+        establisher(socket_mock),
+        file_processor(socket_mock)    
     {
-        handler.set_callback(callback_mock);
+        establisher.set_callback(callback_mock);
+        file_processor.set_callback(callback_mock);
     }
 
     std::shared_ptr<SocketManagerMock> socket_mock;
     std::shared_ptr<RemoteInteractionCallbackMock> callback_mock;
-    ConnectionHandler handler;
+    ConnectionEstablisher establisher;
+    FileProcessor file_processor;
 };
 
 template<typename Type>
@@ -34,7 +40,7 @@ net::awaitable<void> return_immediately() {
 }
 
 TEST_F(ConnectionHandlerFixture, connected_successfully) {
-    EXPECT_CALL(*socket_mock, accept_connection_async(TEST_PORT))
+    EXPECT_CALL(*socket_mock, establish_connection_async(TEST_PORT))
         .WillOnce(Return(return_immediately()));
     EXPECT_CALL(*socket_mock, get_remote_endpoint())
         .WillRepeatedly(Return(ISocketManager::RemoteEndpoint{TEST_ADDRESS, TEST_PORT}));
@@ -58,7 +64,10 @@ TEST_F(ConnectionHandlerFixture, connected_successfully) {
     EXPECT_CALL(*callback_mock, file_transfered());
 
     net::io_context context;
-    net::co_spawn(context, handler.handle(TEST_PORT), [](std::exception_ptr ptr) {
+    net::co_spawn(context, establisher.establish_connection(TEST_PORT), [](std::exception_ptr ptr) {
+        if(ptr) std::rethrow_exception(ptr);
+    });
+    net::co_spawn(context, file_processor.try_read_file(), [](std::exception_ptr ptr) {
         if(ptr) std::rethrow_exception(ptr);
     });
     EXPECT_NO_THROW({

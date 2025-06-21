@@ -4,9 +4,9 @@
 #include "port.hpp"
 #include "address.hpp"
 
-class ConnectionHandler {  
+class ConnectionEstablisher {  
 public:
-    ConnectionHandler(): context_{}, resolver_(context_) {}
+    ConnectionEstablisher(): context_{}, resolver_(context_) {}
     int initialize_connection(Address address, Port port, std::string message);
 private:
     net::awaitable<void> connect_and_send(Address address, Port port, std::string message);

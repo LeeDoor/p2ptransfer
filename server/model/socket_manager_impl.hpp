@@ -6,8 +6,8 @@ class SocketManagerImpl : public ISocketManager {
 public:
     SocketManagerImpl(net::io_context& context) :
         context_(context){}
-    net::awaitable<void> accept_connection_async(Port port) override;
-    SockPtr accept_connection_sync(Port port);
+    net::awaitable<void> establish_connection_async(Port port) override;
+    SockPtr establish_connection_sync(Port port);
     RemoteEndpoint get_remote_endpoint() override;
  
     net::awaitable<std::string> read_request() override;

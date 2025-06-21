@@ -2,7 +2,19 @@
 #include "request_deserializer.hpp"
 #include "request_serializer.hpp"
 
-net::awaitable<void> FileProcessor::read_remote_file() {
+net::awaitable<void> FileProcessor::try_read_file() {
+    FileProcessor file_processor(socket_manager_);
+    file_processor.set_callback(static_pointer_cast<IFileTransferCallback>(callback()));
+    try {
+        co_await file_processor.read_file();
+        callback()->file_transfered();
+    } catch (const std::exception& ex) {
+        auto remote_endpoint = socket_manager_->get_remote_endpoint();
+        callback()->connection_aborted(remote_endpoint.address, remote_endpoint.port);
+        throw;
+    }
+}
+net::awaitable<void> FileProcessor::read_file() {
     auto send_request = co_await handle_send_request();
     co_await send_permission(send_request);
     if(!ask_file_confirmation(send_request))

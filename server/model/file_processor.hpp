@@ -11,9 +11,10 @@ public:
     FileProcessor(std::shared_ptr<ISocketManager> socket_manager_) :
         socket_manager_(socket_manager_){}
 
-    net::awaitable<void> read_remote_file();
+    net::awaitable<void> try_read_file();
 
 private:
+    net::awaitable<void> read_file();
     net::awaitable<SendRequest> handle_send_request();
     bool ask_file_confirmation(const SendRequest& send_request);
     std::ofstream open_file_for_writing(const std::string& initial_filename);

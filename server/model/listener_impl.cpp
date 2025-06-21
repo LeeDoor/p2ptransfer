@@ -1,6 +1,7 @@
 #include "listener_impl.hpp"
 #include "common_types.hpp"
-#include "connection_handler.hpp"
+#include "connection_establisher.hpp"
+#include "file_processor.hpp"
 #include "logger.hpp"
 #include "socket_manager_impl.hpp"
 
@@ -31,9 +32,12 @@ void ListenerImpl::listen(Port port) {
 }
 
 net::awaitable<void> ListenerImpl::listen_async(Port port) {
-    ConnectionHandler handler(std::make_unique<SocketManagerImpl>(context_));
-    handler.set_callback(callback());
-    co_await handler.handle(port);
+    auto socket_manager = std::make_shared<SocketManagerImpl>(context_);
+    ConnectionEstablisher establisher(socket_manager);
+    establisher.set_callback(callback());
+    co_await establisher.establish_connection(port);
+    FileProcessor file_processor(socket_manager);
+    co_await file_processor.try_read_file();
 }
 
 void ListenerImpl::run_context_thread() {

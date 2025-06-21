@@ -11,7 +11,7 @@ public:
     static constexpr size_t BUFFER_SIZE = 4096;
     using BufferType = std::array<char, BUFFER_SIZE>;
 
-    virtual net::awaitable<void> accept_connection_async(Port port) = 0;
+    virtual net::awaitable<void> establish_connection_async(Port port) = 0;
     virtual RemoteEndpoint get_remote_endpoint() = 0;
     virtual net::awaitable<std::string> read_request() = 0;
     virtual net::awaitable<void> send_response(const std::string& response) = 0;
