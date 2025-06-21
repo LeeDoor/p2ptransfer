@@ -8,9 +8,16 @@ protected:
     ConnectionEstablisherFixture() :
         socket_mock(std::make_shared<SocketManagerMock>()),
         callback_mock(std::make_shared<RemoteInteractionCallbackMock>()),
-        establisher(socket_mock)
-    {
+        establisher(socket_mock) {
         establisher.set_callback(callback_mock);
+    }
+    
+    void run_establish_connection() {
+        net::io_context context;
+        net::co_spawn(context, establisher.establish_connection(TEST_PORT), [](std::exception_ptr ptr) {
+            if(ptr) std::rethrow_exception(ptr);
+        });
+        context.run();
     }
 
     std::shared_ptr<SocketManagerMock> socket_mock;
@@ -25,11 +32,16 @@ TEST_F(ConnectionEstablisherFixture, connected) {
         .WillRepeatedly(Return(ISocketManager::RemoteEndpoint{TEST_ADDRESS, TEST_PORT}));
 
     EXPECT_CALL(*callback_mock, connected(TEST_ADDRESS, TEST_PORT));
-    net::io_context context;
-    net::co_spawn(context, establisher.establish_connection(TEST_PORT), [](std::exception_ptr ptr) {
-        if(ptr) std::rethrow_exception(ptr);
-    });
-    EXPECT_NO_THROW({
-        context.run();
-    });
+    EXPECT_NO_THROW(run_establish_connection());
+}
+
+TEST_F(ConnectionEstablisherFixture, establishThrows_shouldCall_cantOpenSocket) {
+    EXPECT_CALL(*socket_mock, establish_connection_async(TEST_PORT))
+        .WillOnce(
+            [] () -> net::awaitable<void> { 
+                throw std::runtime_error("imitating socket opening failure"); 
+            });
+
+    EXPECT_CALL(*callback_mock, cant_open_socket());
+    EXPECT_THROW(run_establish_connection(), std::runtime_error);
 }
