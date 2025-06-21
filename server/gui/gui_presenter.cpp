@@ -68,10 +68,10 @@ void GUIPresenter::file_transfered() {
         window_->on_file_transfered();   
     });
 }
-bool GUIPresenter::verify_file(SendRequest send_request) {
+bool GUIPresenter::verify_file(const Filename& filename, Filesize filesize) {
     bool result;
-    QMetaObject::invokeMethod(window_.get(), [this, &result, send_request] {
-        result = window_->verify_file(send_request.filename.c_str(), filesize_to_qstring(send_request.filesize));
+    QMetaObject::invokeMethod(window_.get(), [&, this] {
+        result = window_->verify_file(filename.c_str(), filesize_to_qstring(filesize));
     }, Qt::BlockingQueuedConnection);
     return result;
 }

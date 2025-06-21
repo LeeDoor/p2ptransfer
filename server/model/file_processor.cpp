@@ -19,11 +19,11 @@ net::awaitable<SendRequest> FileProcessor::handle_send_request() {
 
 net::awaitable<void> FileProcessor::send_permission(const SendRequest& send_request) {
     auto send_permission = RequestSerializer::serialize_send_permission(send_request.filename);
-    co_await socket_manager_->send_response(std::move(send_permission));
+    co_await socket_manager_->send_response(send_permission);
 }
 bool FileProcessor::ask_file_confirmation(const SendRequest& send_request) {
     if(auto callback = callback_.lock()) {
-        return callback->verify_file(send_request);
+        return callback->verify_file(send_request.filename, send_request.filesize);
     }
     throw std::runtime_error("callback of FileProcessor is dead");
 }

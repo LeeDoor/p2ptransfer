@@ -6,12 +6,12 @@ class SocketManagerImpl : public ISocketManager {
 public:
     SocketManagerImpl(net::io_context& context) :
         context_(context){}
-    net::awaitable<void> open_connection_async(Port port) override;
-    SockPtr open_connection_sync(Port port);
+    net::awaitable<void> accept_connection_async(Port port) override;
+    SockPtr accept_connection_sync(Port port);
     RemoteEndpoint get_remote_endpoint() override;
  
     net::awaitable<std::string> read_request() override;
-    net::awaitable<void> send_response(std::string&& response) override;
+    net::awaitable<void> send_response(const std::string& response) override;
     net::awaitable<size_t> read_file_part_to(BufferType& buffer, size_t& bytes_remaining) override;
 protected:
     constexpr static size_t MAX_SEND_REQUEST_SIZE = 512;

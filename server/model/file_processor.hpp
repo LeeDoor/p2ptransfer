@@ -8,8 +8,8 @@
 class Presenter;
 class FileProcessor : public WithCallback<IFileTransferCallback> {
 public:
-    FileProcessor(std::unique_ptr<ISocketManager> socket_manager_) :
-        socket_manager_(std::move(socket_manager_)){}
+    FileProcessor(std::shared_ptr<ISocketManager> socket_manager_) :
+        socket_manager_(socket_manager_){}
 
     net::awaitable<void> read_remote_file();
 
@@ -21,5 +21,5 @@ private:
     net::awaitable<void> handle_file(std::ofstream& os, const SendRequest& send_request);
     void calculate_notify_progressbar(size_t bytes_remaining, size_t filesize);
 
-    std::unique_ptr<ISocketManager> socket_manager_;
+    std::shared_ptr<ISocketManager> socket_manager_;
 };

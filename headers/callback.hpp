@@ -10,7 +10,7 @@ protected:
     std::shared_ptr<CallbackType> callback() {
         if(auto callback = callback_.lock())
             return callback;
-        throw std::runtime_error("callback is dead");
+        throw std::logic_error("callback is dead");
     }
     std::weak_ptr<CallbackType> callback_;
 };

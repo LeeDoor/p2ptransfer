@@ -1,12 +1,12 @@
 #include "socket_manager_impl.hpp"
 
-SockPtr SocketManagerImpl::open_connection_sync(Port port) {
+SockPtr SocketManagerImpl::accept_connection_sync(Port port) {
     SockPtr sock_;
-    co_spawn(context_, open_connection_async(port), [&](std::exception_ptr a){});
+    co_spawn(context_, accept_connection_async(port), [&](std::exception_ptr a){});
     context_.run();
     return sock_;
 }
-net::awaitable<void> SocketManagerImpl::open_connection_async(Port port) {
+net::awaitable<void> SocketManagerImpl::accept_connection_async(Port port) {
     tcpip::endpoint endpoint(tcpip::v4(), port);
     SocketCloser socketCloser = [] (tcpip::socket* socket) {
         ErrorCode ec;
@@ -36,7 +36,7 @@ net::awaitable<std::string> SocketManagerImpl::read_request() {
                                        net::use_awaitable);
     co_return buffer.substr(0, bytes);
 }
-net::awaitable<void> SocketManagerImpl::send_response(std::string&& response) {
+net::awaitable<void> SocketManagerImpl::send_response(const std::string& response) {
     size_t bytes;
     co_await net::async_write(*socket_, 
                               net::buffer(response), 

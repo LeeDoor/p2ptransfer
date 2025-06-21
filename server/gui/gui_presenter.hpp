@@ -24,7 +24,7 @@ public:
     void connection_aborted(const Address& address, Port port) override;
     void connected(const Address& address, Port port) override;
     void file_transfered() override;
-    bool verify_file(SendRequest send_request) override;
+    bool verify_file(const Filename& filename, Filesize filesize) override;
 protected:
     void setup_callbacks();
     void setup_ui();

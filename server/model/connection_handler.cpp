@@ -11,7 +11,7 @@ net::awaitable<void> ConnectionHandler::handle(Port port) {
 
 net::awaitable<void> ConnectionHandler::try_open_connection(Port port) {
     try {
-        co_await socket_manager_->open_connection_async(port);
+        co_await socket_manager_->accept_connection_async(port);
     } catch(...) {
         callback()->cant_open_socket();
         throw;
@@ -19,7 +19,7 @@ net::awaitable<void> ConnectionHandler::try_open_connection(Port port) {
 }
 net::awaitable<void> ConnectionHandler::try_read_file() {
     auto remote_endpoint = socket_manager_->get_remote_endpoint();
-    FileProcessor file_processor(std::move(socket_manager_));
+    FileProcessor file_processor(socket_manager_);
     file_processor.set_callback(static_pointer_cast<IFileTransferCallback>(callback()));
     try {
         co_await file_processor.read_remote_file();
