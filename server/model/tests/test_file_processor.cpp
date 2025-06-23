@@ -28,24 +28,23 @@ protected:
         }
         check_file_transfered_callback();
     }
-    void immitate_send_request(std::string filename, size_t filesize) {
+    void immitate_send_request(const std::string& filename, size_t filesize) {
         EXPECT_CALL(*socket_mock, read_request())
             .WillOnce(Return(return_immediately(
                 RequestSerializer::serialize_send_request(filename, filesize))));
     }
-    void immitate_user_confirmation(std::string filename, size_t filesize, bool is_confirming) {
+    void immitate_user_confirmation(const std::string& filename, size_t filesize, bool is_confirming) {
         EXPECT_CALL(*callback_mock, verify_file(filename, filesize))
             .WillOnce(Return(is_confirming));
     }
-    void check_response_sending(std::string filename) {
+    void check_response_sending(const std::string& filename) {
         EXPECT_CALL(*socket_mock, send_response(RequestSerializer::serialize_send_permission(filename)))
             .WillOnce(Return(return_immediately()));
     }
-    void immitate_file_content_sending(std::string file_content) {
+    void immitate_file_content_sending(const std::string& file_content) {
         size_t filesize = file_content.size();
-        size_t bytes_remaining = filesize;
         ASSERT_LE(filesize, std::tuple_size<ISocketManager::BufferType>::value);
-        EXPECT_CALL(*socket_mock, read_file_part_to(testing::_, bytes_remaining))
+        EXPECT_CALL(*socket_mock, read_file_part_to(testing::_, filesize))
             .WillOnce([=](ISocketManager::BufferType& buffer, size_t& bytes_remaining) {
                 std::copy(file_content.begin(), file_content.end(), buffer.begin());
                 bytes_remaining = 0;
@@ -66,14 +65,14 @@ protected:
         });
         context.run();
     }
-    void verify_file_content(std::string filename, std::string file_content) {
-        size_t filesize = file_content.size();
+    void verify_file_content(const std::string& filename, const std::string& expected_file_content) {
+        size_t filesize = expected_file_content.size();
         EXPECT_EQ(std::filesystem::file_size("READED_" + filename), filesize);
         std::ifstream ifstream("READED_" + filename);
         ASSERT_TRUE(ifstream.is_open());
         std::stringstream ss;
         ss << ifstream.rdbuf();
-        EXPECT_EQ(ss.str(), file_content);
+        EXPECT_EQ(ss.str(), expected_file_content);
         ifstream.close();
         std::filesystem::remove(filename);
     }
@@ -138,7 +137,63 @@ TEST_F(FileProcessorFixture, emptyContent_successFileProcessing) {
     verify_file_content(filename, filecontent);
 }
 
-TEST_F(FileProcessorFixture, readSendRequestThrowsException_AbortConnectionAndRethrow) {
+TEST_F(FileProcessorFixture, sentTooMuch_readOnlyGivenData) {
+    const std::string filename = "new_file.txt";
+    const std::string filecontent = "some content\n";
+    size_t filesize = filecontent.size();
+    immitate_send_request(filename, filesize);
+    immitate_user_confirmation(filename, filesize, true); 
+    check_response_sending(filename);
+    ASSERT_LE(filesize * 2, std::tuple_size<ISocketManager::BufferType>::value);
+    EXPECT_CALL(*socket_mock, read_file_part_to(testing::_, filesize))
+        .WillOnce([=](ISocketManager::BufferType& buffer, size_t& bytes_remaining) {
+            std::copy(filecontent.begin(), filecontent.end(), buffer.begin());
+            // copying extra data
+            std::copy(filecontent.begin(), filecontent.end(), buffer.begin() + filecontent.size());
+            bytes_remaining = 0;
+            return return_immediately(filesize);
+        });
+    check_progressbar_callbacks();
+    check_file_transfered_callback();
+
+    EXPECT_NO_THROW(run_read_file());
+
+    verify_file_content(filename, filecontent);
+}
+
+TEST_F(FileProcessorFixture, contentOutOfBufferSize_successFileProcessing) {
+    const std::string filename = "new_file.txt";
+    size_t buffer_size = std::tuple_size<ISocketManager::BufferType>::value;
+    size_t filesize = buffer_size * 2;
+    immitate_send_request(filename, filesize);
+    immitate_user_confirmation(filename, filesize, true); 
+    check_response_sending(filename);
+    testing::Sequence buffer_sequence;
+    EXPECT_CALL(*socket_mock, read_file_part_to(testing::_, filesize))
+        .InSequence(buffer_sequence)
+        .WillOnce([=](ISocketManager::BufferType& buffer, size_t& bytes_remaining) {
+            buffer.fill('f');
+            bytes_remaining -= buffer.size();
+            return return_immediately(buffer.size());
+        });
+    EXPECT_CALL(*socket_mock, read_file_part_to(testing::_, buffer_size))
+        .InSequence(buffer_sequence)
+        .WillOnce([=](ISocketManager::BufferType& buffer, size_t& bytes_remaining) {
+            buffer.fill('s');
+            bytes_remaining = 0;
+            return return_immediately(buffer.size());
+        });
+    check_progressbar_callbacks();
+    check_file_transfered_callback();
+
+    EXPECT_NO_THROW(run_read_file());
+
+    std::string file_content(filesize, 'f');
+    std::fill(file_content.begin() + buffer_size, file_content.end(), 's');
+    verify_file_content(filename, file_content); 
+}
+
+TEST_F(FileProcessorFixture, readSendRequestThrowsException_abortRethrow) {
     const std::string filename = "new_file.txt";
     const std::string filecontent = "some content\n";
     size_t filesize = filecontent.size();
@@ -151,6 +206,16 @@ TEST_F(FileProcessorFixture, readSendRequestThrowsException_AbortConnectionAndRe
 
     EXPECT_FALSE(std::filesystem::exists(filename));
 }
+
+TEST_F(FileProcessorFixture, invalidRequestGiven_abortRethrow) {
+    EXPECT_CALL(*socket_mock, read_request())
+        .WillOnce([=]() -> net::awaitable<std::string> 
+                  { using namespace std::literals; return return_immediately("INVALID_REQUEST\nFILEisbad\nSIZETOO\n\n"s); });
+    check_connection_aborted_callback();
+
+    EXPECT_THROW(run_read_file(), std::runtime_error);
+}
+
 TEST_F(FileProcessorFixture, userDeclined_exceptionWithoutFile) {
     const std::string filename = "new_file.txt";
     const std::string filecontent = "some content\n";
@@ -164,3 +229,35 @@ TEST_F(FileProcessorFixture, userDeclined_exceptionWithoutFile) {
     EXPECT_FALSE(std::filesystem::exists(filename));
 }
 
+TEST_F(FileProcessorFixture, sendResponseException_abortRethrow) {
+    const std::string filename = "new_file.txt";
+    const std::string filecontent = "some content\n";
+    size_t filesize = filecontent.size();
+    immitate_send_request(filename, filesize);
+    immitate_user_confirmation(filename, filesize, true); 
+    EXPECT_CALL(*socket_mock, send_response(RequestSerializer::serialize_send_permission(filename)))
+        .WillOnce([]() -> net::awaitable<void> { 
+            throw std::runtime_error("imitating exception while sending permission"); 
+        });
+    check_connection_aborted_callback();
+
+    EXPECT_THROW(run_read_file(), std::runtime_error);
+}
+
+TEST_F(FileProcessorFixture, exceptionWhileReadingFile_abortRethrow) {
+    const std::string filename = "new_file.txt";
+    const std::string filecontent = "some content\n";
+    size_t filesize = filecontent.size();
+    immitate_send_request(filename, filesize);
+    immitate_user_confirmation(filename, filesize, true); 
+    check_response_sending(filename);
+    ASSERT_LE(filesize, std::tuple_size<ISocketManager::BufferType>::value);
+    EXPECT_CALL(*socket_mock, read_file_part_to(testing::_, filesize))
+        .WillOnce([=](ISocketManager::BufferType& buffer, size_t& bytes_remaining) 
+                  -> net::awaitable<size_t> {
+            throw std::runtime_error("immitating reading data exception");
+        });
+    check_connection_aborted_callback();
+
+    EXPECT_THROW(run_read_file(), std::runtime_error);
+}
