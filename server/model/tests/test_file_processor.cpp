@@ -20,6 +20,18 @@ protected:
         file_processor.set_callback(callback_mock);
     }
 
+    void success_lifecycle(const std::string& filename, const std::string& file_content) {
+        size_t filesize = file_content.size();
+
+        immitate_send_request(filename, filesize);
+        immitate_user_verification(filename, filesize);
+        check_response_sending(filename);
+        if(filesize) {
+            immitate_file_content_sending(file_content);
+            check_progressbar_callbacks();
+        }
+        check_file_transfered_callback();
+    }
     void immitate_send_request(std::string filename, size_t filesize) {
         EXPECT_CALL(*socket_mock, read_request())
             .WillOnce(Return(return_immediately(
@@ -73,24 +85,52 @@ protected:
     FileProcessor file_processor;
 };
 
-TEST_F(FileProcessorFixture, process_file_successfully) {
-    const std::list<std::string> filenames = { "file.txt", "with space.txt", "noextention", "..." };
-    const std::list<std::string> filecontents = { "some short content!\n", "", "terminated\n\n   aboba" };
-    for(const std::string& filename : filenames) {
-        for(const std::string& file_content : filecontents) {
-            std::cerr << filename << ": " << file_content << std::endl;
-            size_t filesize = file_content.size();
-            immitate_send_request(filename, filesize);
-            immitate_user_verification(filename, filesize);
-            check_response_sending(filename);
-            immitate_file_content_sending(file_content);
-            check_progressbar_callbacks();
-            check_file_transfered_callback();
-            EXPECT_NO_THROW(run_read_file());
-            verify_file_content(filename, file_content);
-        }
-    }
-}
-TEST_F(FileProcessorFixture, invalidSendRequest_should_abortConnection) {
+TEST_F(FileProcessorFixture, averageData_successFileProcessing) {
+    const std::string filename = "file.txt"; //{ "file.txt", "with space.txt", "noextention", "..." };
+    const std::string filecontent = "short content"; //{ "some short content!\n", "", "LFLF\n\n   aboba" };
+    success_lifecycle(filename, filecontent); 
 
+    EXPECT_NO_THROW(run_read_file());
+
+    verify_file_content(filename, filecontent);
+}
+
+TEST_F(FileProcessorFixture, LFinContent_successFileProcessing) {
+    const std::string filename = "file.txt";
+    const std::string filecontent = "too many spaces\n\n and LFs\n\n\n\n\n aboba\n";
+    success_lifecycle(filename, filecontent); 
+
+    EXPECT_NO_THROW(run_read_file());
+
+    verify_file_content(filename, filecontent);
+}
+
+TEST_F(FileProcessorFixture, spacedFilename_successFileProcessing) {
+    const std::string filename = "file name with spaces.txt";
+    const std::string filecontent = "Text with\r\n\r\nCRLFS aboba\n";
+    success_lifecycle(filename, filecontent); 
+
+    EXPECT_NO_THROW(run_read_file());
+
+    verify_file_content(filename, filecontent);
+}
+
+TEST_F(FileProcessorFixture, dottedFilename_successFileProcessing) {
+    const std::string filename = "...";
+    const std::string filecontent = "Text with\r\n\r\nCRLFS aboba\n";
+    success_lifecycle(filename, filecontent); 
+
+    EXPECT_NO_THROW(run_read_file());
+
+    verify_file_content(filename, filecontent);
+}
+
+TEST_F(FileProcessorFixture, emptyContent_successFileProcessing) {
+    const std::string filename = "filename.txt";
+    const std::string filecontent = "";
+    success_lifecycle(filename, filecontent); 
+
+    EXPECT_NO_THROW(run_read_file());
+
+    verify_file_content(filename, filecontent);
 }
