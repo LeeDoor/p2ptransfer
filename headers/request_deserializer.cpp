@@ -7,18 +7,35 @@ const std::unordered_map<HeaderType, RequestMethod> RequestDeserializer::request
     };
 
 SendRequest RequestDeserializer::deserialize_send_request(const std::string request_str){
-    std::istringstream is(request_str);
     SendRequest send_request;
-    deserialize_line<std::monostate>(is, RequestMethod::REQUEST);
-    send_request.filename = deserialize_line<Filename>(is, RequestMethod::FILENAME);
-    send_request.filesize = deserialize_line<Filesize>(is, RequestMethod::FILESIZE);
+    std::string_view request_sv(request_str);
+    deserialize_line<void>(SVMethods::pop_line(request_sv), RequestMethod::REQUEST);
+    send_request.filename = deserialize_line<Filename>(SVMethods::pop_line(request_sv), RequestMethod::FILENAME);
+    send_request.filesize = deserialize_line<Filesize>(SVMethods::pop_line(request_sv), RequestMethod::FILESIZE);
     return send_request;
 }
-RequestMethod RequestDeserializer::deserialize_method(std::istringstream& is){
-    std::string method_line;
-    is >> method_line;
-    if(!request_methods_.contains(method_line))
-        throw std::runtime_error("deserialized header " + method_line + " cant be matched with any header");
-    return request_methods_.at(method_line);
+
+RequestMethod RequestDeserializer::deserialize_method(std::string_view method_sv) {
+    if(!request_methods_.contains(method_sv)) 
+        throw std::runtime_error("no such method: " + SVMethods::to_string(method_sv));
+    return request_methods_.at(method_sv);
+}
+template<>
+size_t RequestDeserializer::deserialize_value(std::string_view line_sv) {
+    auto line_end_ptr = line_sv.data() + line_sv.size();
+    size_t conversion_result;
+    auto result = std::from_chars(line_sv.data(), line_end_ptr, conversion_result);
+    if(result.ec != std::errc() || result.ptr != line_end_ptr) 
+        throw std::runtime_error("invalid unsigned long value: " + SVMethods::to_string(line_sv));
+    return conversion_result;
+}
+template<>
+std::string RequestDeserializer::deserialize_value(std::string_view line_sv) {
+    return SVMethods::to_string(line_sv);
 }
 
+template<>
+void RequestDeserializer::deserialize_value(std::string_view line_sv) {
+    if(!line_sv.empty())
+        throw std::runtime_error("expected empty data is not empty");
+}

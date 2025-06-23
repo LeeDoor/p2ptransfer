@@ -10,6 +10,7 @@ endif()
 if(${TESTING}) 
     add_library(test_headers INTERFACE)
     target_precompile_headers(test_headers INTERFACE gtest_headers.hpp)
+    add_subdirectory(tests)
 endif()
 add_library(base 
     request_serializer.cpp
