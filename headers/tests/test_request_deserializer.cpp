@@ -85,3 +85,152 @@ TEST(RequestDeserializer, SuccessSerializing_max_filesizesize) {
     EXPECT_EQ(result.filename, "aboba.txt");
     EXPECT_EQ(result.filesize, SIZE_MAX);
 }
+TEST(RequestDeserializer, noFilenameHeaderPassed_shouldThrowRuntimeError) {
+    std::string request = 
+        "REQUEST\n"
+        "SIZE 123\n"
+        "\n";
+
+    EXPECT_THROW({
+        auto result = RequestDeserializer::deserialize_send_request(request);
+    }, std::runtime_error);
+}
+
+TEST(RequestDeserializer, FileStickToFilename_shouldThrowRuntimeError) {
+    std::string request = 
+        "REQUEST\n"
+        "FILEabo ba.txt\n"
+        "SIZE 123\n"
+        "\n";
+
+    EXPECT_THROW({
+        auto result = RequestDeserializer::deserialize_send_request(request);
+    }, std::runtime_error);
+}
+TEST(RequestDeserializer, FILEafterSIZE_shouldThrowRuntimeError) {
+    std::string request = 
+        "REQUEST\n"
+        "SIZE 123\n"
+        "FILE aboba.txt\n"
+        "\n";
+
+    EXPECT_THROW({
+        auto result = RequestDeserializer::deserialize_send_request(request);
+    }, std::runtime_error);
+}
+TEST(RequestDeserializer, FILEbeforeREQUEST_shouldThrowRuntimeError) {
+    std::string request = 
+        "FILE aboba.txt\n"
+        "REQUEST\n"
+        "SIZE 123\n"
+        "\n";
+
+    EXPECT_THROW({
+        auto result = RequestDeserializer::deserialize_send_request(request);
+    }, std::runtime_error);
+}
+TEST(RequestDeserializer, SpacesAfterREQUEST_shouldThrowRuntimeError) {
+    std::string request = 
+        "REQUEST  \n"
+        "FILE aboba.txt\n"
+        "SIZE 123\n"
+        "\n";
+
+    EXPECT_THROW({
+        auto result = RequestDeserializer::deserialize_send_request(request);
+    }, std::runtime_error);
+}
+TEST(RequestDeserializer, SpaceBeforeREQUEST_shouldThrowRuntimeError) {
+    std::string request = 
+        " REQUEST\n"
+        "FILE aboba.txt\n"
+        "SIZE 123\n"
+        "\n";
+
+    EXPECT_THROW({
+        auto result = RequestDeserializer::deserialize_send_request(request);
+    }, std::runtime_error);
+}
+TEST(RequestDeserializer, NoLFatLineEnd_shouldThrowRuntimeError) {
+    std::string request = 
+        "REQUEST"
+        "FILE aboba.txt"
+        "SIZE 123"
+        "";
+
+    EXPECT_THROW({
+        auto result = RequestDeserializer::deserialize_send_request(request);
+    }, std::runtime_error);
+}
+TEST(RequestDeserializer, NoLFaferREQUEST_shouldThrowRuntimeError) {
+    std::string request = 
+        "REQUEST"
+        "FILE aboba.txt\n"
+        "SIZE 123\n"
+        "\n";
+
+    EXPECT_THROW({
+        auto result = RequestDeserializer::deserialize_send_request(request);
+    }, std::runtime_error);
+}
+TEST(RequestDeserializer, sizeNegative_shouldThrowRuntimeError) {
+    std::string request = 
+        "REQUEST\n"
+        "FILE aboba.txt\n"
+        "SIZE -123\n"
+        "\n";
+
+    EXPECT_THROW({
+        auto result = RequestDeserializer::deserialize_send_request(request);
+    }, std::runtime_error);
+}
+TEST(RequestDeserializer, noHeaderSIZEprovided_shouldThrowRuntimeError) {
+    std::string request = 
+        "REQUEST\n"
+        "FILE aboba.txt\n"
+        "\n";
+
+    EXPECT_THROW({
+        auto result = RequestDeserializer::deserialize_send_request(request);
+    }, std::runtime_error);
+}
+TEST(RequestDeserializer, SIZEisTooBig_shouldThrowRuntimeError) {
+    std::string request = 
+        "REQUEST\n"
+        "FILE aboba.txt\n"
+        "SIZE 18446744073709551616\n"
+        "\n";
+    EXPECT_THROW({
+        auto result = RequestDeserializer::deserialize_send_request(request);
+    }, std::runtime_error);
+}
+TEST(RequestDeserializer, SIZEcontainsTrailingLiterals_shouldThrowRuntimeError) {
+    std::string request = 
+        "REQUEST\n"
+        "FILE aboba.txt\n"
+        "SIZE 123e\n"
+        "\n";
+    EXPECT_THROW({
+        auto result = RequestDeserializer::deserialize_send_request(request);
+    }, std::runtime_error);
+}
+TEST(RequestDeserializer, SIZEcontainsInnerLiterals_shouldThrowRuntimeError) {
+    std::string request = 
+        "REQUEST\n"
+        "FILE aboba.txt\n"
+        "SIZE 12a3\n"
+        "\n";
+    EXPECT_THROW({
+        auto result = RequestDeserializer::deserialize_send_request(request);
+    }, std::runtime_error);
+}
+TEST(RequestDeserializer, SIZEcontainsLeadingLiterals_shouldThrowRuntimeError) {
+    std::string request = 
+        "REQUEST\n"
+        "FILE aboba.txt\n"
+        "SIZE a123\n"
+        "\n";
+    EXPECT_THROW({
+        auto result = RequestDeserializer::deserialize_send_request(request);
+    }, std::runtime_error);
+}

@@ -1,5 +1,11 @@
 #pragma once
 
+template<typename T>
+concept Deserializable = requires(std::istringstream& is, T& v){
+is >> v;
+};
+template<typename T>
+concept DeserializableOrVoid = Deserializable<T> || std::is_same_v<T, void>;
 class SVMethods {
 public:
     static std::string_view pop_substr_skip_delim(std::string_view& sv, std::string_view delim) {
@@ -28,6 +34,8 @@ public:
     static std::string to_string(std::string_view sv) {
         return std::string(sv.data(), sv.size());
     }
+    template<DeserializableOrVoid ValueType>
+    static ValueType deserialize_value(std::string_view line_sv);
 
 private:
     static std::string_view move_itself(std::string_view& sv) {

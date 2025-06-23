@@ -15,6 +15,7 @@ endif()
 add_library(base 
     request_serializer.cpp
     request_deserializer.cpp
+    string_view_methods.cpp
 )
 target_precompile_headers(base PUBLIC ${PRECOMPILED_HEADERS})
 target_link_libraries(base PUBLIC ${LINK_LIBRARIES})
