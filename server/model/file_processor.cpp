@@ -3,10 +3,8 @@
 #include "request_serializer.hpp"
 
 net::awaitable<void> FileProcessor::try_read_file() {
-    FileProcessor file_processor(socket_manager_);
-    file_processor.set_callback(static_pointer_cast<IFileTransferCallback>(callback()));
     try {
-        co_await file_processor.read_file();
+        co_await read_file();
         callback()->file_transfered();
     } catch (const std::exception& ex) {
         auto remote_endpoint = socket_manager_->get_remote_endpoint();
@@ -16,9 +14,9 @@ net::awaitable<void> FileProcessor::try_read_file() {
 }
 net::awaitable<void> FileProcessor::read_file() {
     auto send_request = co_await handle_send_request();
-    co_await send_permission(send_request);
     if(!ask_file_confirmation(send_request))
-        co_return;
+        throw std::runtime_error("User denied file gathering");
+    co_await send_permission(send_request);
     std::ofstream output_file = open_file_for_writing(send_request.filename);
     co_await handle_file(output_file , send_request);
 }

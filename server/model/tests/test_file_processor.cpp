@@ -6,9 +6,6 @@
 
 constexpr size_t TEST_PORT = 8080;
 constexpr std::string TEST_ADDRESS = "127.0.0.1";
-constexpr std::string TEST_FILENAME = "test_file.txt";
-const std::string TEST_FILE_CONTENT = "This is the test file@@@ content??? !!! \n\n";
-const size_t TEST_FILESIZE = TEST_FILE_CONTENT.size();
 
 class FileProcessorFixture : public ::testing::Test {
 protected:
@@ -22,9 +19,8 @@ protected:
 
     void success_lifecycle(const std::string& filename, const std::string& file_content) {
         size_t filesize = file_content.size();
-
         immitate_send_request(filename, filesize);
-        immitate_user_verification(filename, filesize);
+        immitate_user_confirmation(filename, filesize, true);
         check_response_sending(filename);
         if(filesize) {
             immitate_file_content_sending(file_content);
@@ -37,9 +33,9 @@ protected:
             .WillOnce(Return(return_immediately(
                 RequestSerializer::serialize_send_request(filename, filesize))));
     }
-    void immitate_user_verification(std::string filename, size_t filesize) {
+    void immitate_user_confirmation(std::string filename, size_t filesize, bool is_confirming) {
         EXPECT_CALL(*callback_mock, verify_file(filename, filesize))
-            .WillOnce(Return(true));
+            .WillOnce(Return(is_confirming));
     }
     void check_response_sending(std::string filename) {
         EXPECT_CALL(*socket_mock, send_response(RequestSerializer::serialize_send_permission(filename)))
@@ -50,11 +46,11 @@ protected:
         size_t bytes_remaining = filesize;
         ASSERT_LE(filesize, std::tuple_size<ISocketManager::BufferType>::value);
         EXPECT_CALL(*socket_mock, read_file_part_to(testing::_, bytes_remaining))
-            .WillOnce(([=](ISocketManager::BufferType& buffer, size_t& bytes_remaining) {
+            .WillOnce([=](ISocketManager::BufferType& buffer, size_t& bytes_remaining) {
                 std::copy(file_content.begin(), file_content.end(), buffer.begin());
                 bytes_remaining = 0;
                 return return_immediately(filesize);
-            }));    
+            });
     }
     void check_progressbar_callbacks() {
         EXPECT_CALL(*callback_mock, set_progressbar(::testing::_))
@@ -78,6 +74,13 @@ protected:
         std::stringstream ss;
         ss << ifstream.rdbuf();
         EXPECT_EQ(ss.str(), file_content);
+        ifstream.close();
+        std::filesystem::remove(filename);
+    }
+    void check_connection_aborted_callback() {
+        EXPECT_CALL(*socket_mock, get_remote_endpoint())
+            .WillOnce(Return(ISocketManager::RemoteEndpoint{TEST_ADDRESS, TEST_PORT}));
+        EXPECT_CALL(*callback_mock, connection_aborted(TEST_ADDRESS, TEST_PORT));
     }
 
     std::shared_ptr<SocketManagerMock> socket_mock;
@@ -86,8 +89,8 @@ protected:
 };
 
 TEST_F(FileProcessorFixture, averageData_successFileProcessing) {
-    const std::string filename = "file.txt"; //{ "file.txt", "with space.txt", "noextention", "..." };
-    const std::string filecontent = "short content"; //{ "some short content!\n", "", "LFLF\n\n   aboba" };
+    const std::string filename = "file.txt";
+    const std::string filecontent = "short content";
     success_lifecycle(filename, filecontent); 
 
     EXPECT_NO_THROW(run_read_file());
@@ -134,3 +137,30 @@ TEST_F(FileProcessorFixture, emptyContent_successFileProcessing) {
 
     verify_file_content(filename, filecontent);
 }
+
+TEST_F(FileProcessorFixture, readSendRequestThrowsException_AbortConnectionAndRethrow) {
+    const std::string filename = "new_file.txt";
+    const std::string filecontent = "some content\n";
+    size_t filesize = filecontent.size();
+    EXPECT_CALL(*socket_mock, read_request())
+        .WillOnce([=]() -> net::awaitable<std::string> 
+                  { throw std::runtime_error("immitating send_request reading error"); });
+    check_connection_aborted_callback();
+
+    EXPECT_THROW(run_read_file(), std::runtime_error);
+
+    EXPECT_FALSE(std::filesystem::exists(filename));
+}
+TEST_F(FileProcessorFixture, userDeclined_exceptionWithoutFile) {
+    const std::string filename = "new_file.txt";
+    const std::string filecontent = "some content\n";
+    size_t filesize = filecontent.size();
+    immitate_send_request(filename, filesize);
+    immitate_user_confirmation(filename, filesize, false); 
+    check_connection_aborted_callback();
+
+    EXPECT_THROW(run_read_file(), std::runtime_error);
+
+    EXPECT_FALSE(std::filesystem::exists(filename));
+}
+
