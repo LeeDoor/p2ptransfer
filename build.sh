@@ -1,1 +1,1 @@
-mkdir build; cd build && cmake -DENABLE_TESTING=ON $@ .. && cmake --build . -j4
+mkdir build; cd build && cmake -DTESTING=ON $@ .. && cmake --build . -j4

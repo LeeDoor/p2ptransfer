@@ -28,18 +28,9 @@ endif()
 
 if(${TESTING})
     find_package(GTest REQUIRED)
-    define_property(GLOBAL PROPERTY TESTING_SOURCES)
     enable_testing()
 endif()
 
 add_subdirectory(headers)
 add_subdirectory(server)
 add_subdirectory(client)
-
-if(${TESTING}) 
-    get_property(TEST_SOURCES GLOBAL PROPERTY TESTING_SOURCES)
-        add_executable(tests ${TEST_SOURCES})
-    target_link_libraries(tests PUBLIC server ${LINK_LIBRARIES} test_headers GTest::gtest_main GTest::gmock)
-    target_include_directories(tests PUBLIC ${INCLUDE_DIRECTORIES})
-    gtest_discover_tests(tests)
-endif()

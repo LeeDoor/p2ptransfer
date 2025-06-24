@@ -1,1 +1,1 @@
-./build/tests $@
+./build/server/tests/tests $@

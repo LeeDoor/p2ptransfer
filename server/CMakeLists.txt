@@ -6,6 +6,9 @@ set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES}
 add_subdirectory(model)
 add_subdirectory(view)
 add_subdirectory(presenter)
+if(${TESTING}) 
+    add_subdirectory(tests)
+endif()
 
 add_library(server INTERFACE)
 target_link_libraries(server INTERFACE 
