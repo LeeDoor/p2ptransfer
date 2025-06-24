@@ -2,7 +2,7 @@
 #include "address.hpp"
 #include "port.hpp"
 
-class ISocketManager {
+class SocketManager {
 public:
     struct RemoteEndpoint {
         Address address;

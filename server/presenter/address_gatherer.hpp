@@ -2,8 +2,8 @@
 
 #include "callback.hpp"
 #include "gather_address_callback.hpp"
-class IAddressGatherer : public WithCallback<IGatherAddressCallback> {
+class AddressGatherer : public WithCallback<GatherAddressCallback> {
 public:
-    virtual ~IAddressGatherer() = default;
+    virtual ~AddressGatherer() = default;
     virtual void gather_local_address() = 0;
 };

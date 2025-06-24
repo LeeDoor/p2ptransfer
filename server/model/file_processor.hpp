@@ -6,9 +6,9 @@
 #include "socket_manager.hpp"
 
 class Presenter;
-class FileProcessor : public WithCallback<IFileTransferCallback> {
+class FileProcessor : public WithCallback<FileTransferCallback> {
 public:
-    FileProcessor(std::shared_ptr<ISocketManager> socket_manager_) :
+    FileProcessor(std::shared_ptr<SocketManager> socket_manager_) :
         socket_manager_(socket_manager_){}
 
     net::awaitable<void> try_read_file();
@@ -22,5 +22,5 @@ private:
     net::awaitable<void> handle_file(std::ofstream& os, const SendRequest& send_request);
     void calculate_notify_progressbar(size_t bytes_remaining, size_t filesize);
 
-    std::shared_ptr<ISocketManager> socket_manager_;
+    std::shared_ptr<SocketManager> socket_manager_;
 };

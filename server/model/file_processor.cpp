@@ -46,7 +46,7 @@ std::ofstream FileProcessor::open_file_for_writing(const std::string& initial_fi
 }
 net::awaitable<void> FileProcessor::handle_file(std::ofstream& os, const SendRequest& send_request) {
     size_t bytes_remaining = send_request.filesize;
-    ISocketManager::BufferType buffer;
+    SocketManager::BufferType buffer;
     while (bytes_remaining) {
         size_t bytes = co_await socket_manager_->read_file_part_to(buffer, bytes_remaining);
         os.write(buffer.data(), bytes);

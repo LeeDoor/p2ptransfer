@@ -32,7 +32,7 @@ TEST_F(ConnectionEstablisherFixture, establish_connection_successfully) {
     EXPECT_CALL(*socket_mock, establish_connection_async(TEST_PORT))
         .WillOnce(Return(return_immediately()));
     EXPECT_CALL(*socket_mock, get_remote_endpoint())
-        .WillRepeatedly(Return(ISocketManager::RemoteEndpoint{TEST_ADDRESS, TEST_PORT}));
+        .WillRepeatedly(Return(SocketManager::RemoteEndpoint{TEST_ADDRESS, TEST_PORT}));
 
     EXPECT_CALL(*callback_mock, connected(TEST_ADDRESS, TEST_PORT));
     EXPECT_NO_THROW(run_establish_connection());

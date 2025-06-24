@@ -43,9 +43,9 @@ protected:
     }
     void immitate_file_content_sending(const std::string& file_content) {
         size_t filesize = file_content.size();
-        ASSERT_LE(filesize, std::tuple_size<ISocketManager::BufferType>::value);
+        ASSERT_LE(filesize, std::tuple_size<SocketManager::BufferType>::value);
         EXPECT_CALL(*socket_mock, read_file_part_to(testing::_, filesize))
-            .WillOnce([=](ISocketManager::BufferType& buffer, size_t& bytes_remaining) {
+            .WillOnce([=](SocketManager::BufferType& buffer, size_t& bytes_remaining) {
                 std::copy(file_content.begin(), file_content.end(), buffer.begin());
                 bytes_remaining = 0;
                 return return_immediately(filesize);
@@ -78,7 +78,7 @@ protected:
     }
     void check_connection_aborted_callback() {
         EXPECT_CALL(*socket_mock, get_remote_endpoint())
-            .WillOnce(Return(ISocketManager::RemoteEndpoint{TEST_ADDRESS, TEST_PORT}));
+            .WillOnce(Return(SocketManager::RemoteEndpoint{TEST_ADDRESS, TEST_PORT}));
         EXPECT_CALL(*callback_mock, connection_aborted(TEST_ADDRESS, TEST_PORT));
     }
 
@@ -144,9 +144,9 @@ TEST_F(FileProcessorFixture, sentTooMuch_readOnlyGivenData) {
     immitate_send_request(filename, filesize);
     immitate_user_confirmation(filename, filesize, true); 
     check_response_sending(filename);
-    ASSERT_LE(filesize * 2, std::tuple_size<ISocketManager::BufferType>::value);
+    ASSERT_LE(filesize * 2, std::tuple_size<SocketManager::BufferType>::value);
     EXPECT_CALL(*socket_mock, read_file_part_to(testing::_, filesize))
-        .WillOnce([=](ISocketManager::BufferType& buffer, size_t& bytes_remaining) {
+        .WillOnce([=](SocketManager::BufferType& buffer, size_t& bytes_remaining) {
             std::copy(filecontent.begin(), filecontent.end(), buffer.begin());
             // copying extra data
             std::copy(filecontent.begin(), filecontent.end(), buffer.begin() + filecontent.size());
@@ -163,7 +163,7 @@ TEST_F(FileProcessorFixture, sentTooMuch_readOnlyGivenData) {
 
 TEST_F(FileProcessorFixture, contentOutOfBufferSize_successFileProcessing) {
     const std::string filename = "new_file.txt";
-    size_t buffer_size = std::tuple_size<ISocketManager::BufferType>::value;
+    size_t buffer_size = std::tuple_size<SocketManager::BufferType>::value;
     size_t filesize = buffer_size * 2;
     immitate_send_request(filename, filesize);
     immitate_user_confirmation(filename, filesize, true); 
@@ -171,14 +171,14 @@ TEST_F(FileProcessorFixture, contentOutOfBufferSize_successFileProcessing) {
     testing::Sequence buffer_sequence;
     EXPECT_CALL(*socket_mock, read_file_part_to(testing::_, filesize))
         .InSequence(buffer_sequence)
-        .WillOnce([=](ISocketManager::BufferType& buffer, size_t& bytes_remaining) {
+        .WillOnce([=](SocketManager::BufferType& buffer, size_t& bytes_remaining) {
             buffer.fill('f');
             bytes_remaining -= buffer.size();
             return return_immediately(buffer.size());
         });
     EXPECT_CALL(*socket_mock, read_file_part_to(testing::_, buffer_size))
         .InSequence(buffer_sequence)
-        .WillOnce([=](ISocketManager::BufferType& buffer, size_t& bytes_remaining) {
+        .WillOnce([=](SocketManager::BufferType& buffer, size_t& bytes_remaining) {
             buffer.fill('s');
             bytes_remaining = 0;
             return return_immediately(buffer.size());
@@ -251,9 +251,9 @@ TEST_F(FileProcessorFixture, exceptionWhileReadingFile_abortRethrow) {
     immitate_send_request(filename, filesize);
     immitate_user_confirmation(filename, filesize, true); 
     check_response_sending(filename);
-    ASSERT_LE(filesize, std::tuple_size<ISocketManager::BufferType>::value);
+    ASSERT_LE(filesize, std::tuple_size<SocketManager::BufferType>::value);
     EXPECT_CALL(*socket_mock, read_file_part_to(testing::_, filesize))
-        .WillOnce([=](ISocketManager::BufferType& buffer, size_t& bytes_remaining) 
+        .WillOnce([=](SocketManager::BufferType& buffer, size_t& bytes_remaining) 
                   -> net::awaitable<size_t> {
             throw std::runtime_error("immitating reading data exception");
         });

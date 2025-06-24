@@ -1,7 +1,7 @@
 #pragma once
 
 #include "view.hpp"
-class ViewMock : public IView {
+class ViewMock : public View {
 public:
     MOCK_METHOD(int, run, (), (override));
     MOCK_METHOD(void, show_address, (const Address& address), (override));

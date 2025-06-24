@@ -4,7 +4,7 @@
 class ViewGUIFactory : public ViewFactory {
 public:
     ViewGUIFactory(int& argc, char** argv);
-    std::shared_ptr<IView> create_view() override;
+    std::shared_ptr<View> create_view() override;
 
 private:
     int& argc_; 

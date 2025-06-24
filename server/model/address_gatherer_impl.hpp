@@ -1,8 +1,8 @@
 #pragma once
-#include "i_address_gatherer.hpp"
+#include "address_gatherer.hpp"
 #include "common_types.hpp"
 
-class AddressGathererImpl : public IAddressGatherer {
+class AddressGathererImpl : public AddressGatherer {
 public:
     void gather_local_address() override;
 private:

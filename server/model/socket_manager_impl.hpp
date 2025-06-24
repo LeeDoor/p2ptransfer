@@ -2,7 +2,7 @@
 #include "common_types.hpp"
 #include "socket_manager.hpp"
 
-class SocketManagerImpl : public ISocketManager {
+class SocketManagerImpl : public SocketManager {
 public:
     SocketManagerImpl(net::io_context& context) :
         context_(context){}

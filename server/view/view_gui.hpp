@@ -8,7 +8,7 @@ namespace Ui {
 class ViewGUI;
 }
 
-class ViewGUI : public QMainWindow, public IView {
+class ViewGUI : public QMainWindow, public View {
     Q_OBJECT
 
 public:

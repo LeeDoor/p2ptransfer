@@ -23,7 +23,7 @@ public:
     bool verify_file(const Filename& filename, Filesize filesize) override;
 
 private:
-    std::shared_ptr<IView> view_;
+    std::shared_ptr<View> view_;
     std::shared_ptr<IListener> listener_;
-    std::shared_ptr<IAddressGatherer> gatherer_;
+    std::shared_ptr<AddressGatherer> gatherer_;
 };

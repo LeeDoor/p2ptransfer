@@ -3,5 +3,5 @@
 
 class ViewMockFactory : public ViewFactory {
 public:
-    std::shared_ptr<IView> create_view() override;
+    std::shared_ptr<View> create_view() override;
 };

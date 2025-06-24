@@ -1,7 +1,7 @@
 #pragma once
 #include "gtest_headers.hpp"
 #include "socket_manager.hpp"
-class SocketManagerMock : public ISocketManager {
+class SocketManagerMock : public SocketManager {
 public:
     MOCK_METHOD(net::awaitable<void>, establish_connection_async, (Port port), (override));
     MOCK_METHOD(RemoteEndpoint, get_remote_endpoint, (), (override));

@@ -5,7 +5,7 @@
 #include "port.hpp"
 #include "request_structures.hpp"
 #include "view_callback.hpp"
-class IView : public WithCallback<IViewCallback> {
+class View : public WithCallback<ViewCallback> {
 public:
     virtual int run() = 0;
 

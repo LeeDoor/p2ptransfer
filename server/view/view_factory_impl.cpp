@@ -3,7 +3,7 @@
 
 ViewGUIFactory::ViewGUIFactory(int& argc, char** argv) 
 : argc_(argc), argv_(argv){}
-std::shared_ptr<IView> ViewGUIFactory::create_view() {
+std::shared_ptr<View> ViewGUIFactory::create_view() {
     auto application = std::make_unique<QApplication>(argc_, argv_);
     auto view = std::make_shared<ViewGUI>(std::move(application));
     return view;

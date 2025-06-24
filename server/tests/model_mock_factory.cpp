@@ -5,6 +5,6 @@
 std::shared_ptr<IListener> ModelMockFactory::create_listener() {
     return std::make_shared<ListenerMock>();
 }
-std::shared_ptr<IAddressGatherer> ModelMockFactory::create_address_gatherer() {
+std::shared_ptr<AddressGatherer> ModelMockFactory::create_address_gatherer() {
     return std::make_shared<AddressGathererMock>();
 }

@@ -2,9 +2,9 @@
 
 #include "address.hpp"
 #include "port.hpp"
-class IConnectionStatusCallback {
+class ConnectionStatusCallback {
 public:
-    virtual ~IConnectionStatusCallback() = default;
+    virtual ~ConnectionStatusCallback() = default;
     virtual void connected(const Address& address, Port port) = 0;
     virtual void cant_open_socket() = 0;
 };

@@ -4,7 +4,7 @@
 #include "port.hpp"
 #include "remote_interaction_callback.hpp"
 
-class RemoteInteractionCallbackMock : public IRemoteInteractionCallback { 
+class RemoteInteractionCallbackMock : public RemoteInteractionCallback { 
 public:
     MOCK_METHOD(void, connected, (const Address& address, Port port), (override));
     MOCK_METHOD(void, file_transfered, (), (override));

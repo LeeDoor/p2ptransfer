@@ -3,5 +3,5 @@
 #include "view.hpp"
 class ViewFactory {
 public:
-    virtual std::shared_ptr<IView> create_view() = 0;
+    virtual std::shared_ptr<View> create_view() = 0;
 };
