@@ -52,11 +52,13 @@ void ViewGUI::show_file_success() {
 bool ViewGUI::ask_file_verification(const Filename& filename, Filesize filesize) {
     QString qfilename = filename.c_str();
     QString qfilesize = FilesizeFormatter::to_string(filesize).c_str();
-    return run_sync<bool>([=, this] {
+    bool confirmed;
+    run_sync([=, &confirmed, this] {
         auto result = QMessageBox::question(this, "File request", 
                                             "Do you want to get a file: " + qfilename + " (" + qfilesize + ")?");
-        return result == QMessageBox::Yes;
+        confirmed = result == QMessageBox::Yes;
     });
+    return confirmed;
 }
 void ViewGUI::show_socket_error() {
     run_sync([=, this] {

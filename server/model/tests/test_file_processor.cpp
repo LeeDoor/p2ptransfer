@@ -74,7 +74,7 @@ protected:
         ss << ifstream.rdbuf();
         EXPECT_EQ(ss.str(), expected_file_content);
         ifstream.close();
-        std::filesystem::remove(filename);
+        std::filesystem::remove("READED_" + filename);
     }
     void check_connection_aborted_callback() {
         EXPECT_CALL(*socket_mock, get_remote_endpoint())

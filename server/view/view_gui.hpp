@@ -35,12 +35,7 @@ private:
 
     template<typename Func>
     void run_sync(Func&& function) {
-        QMetaObject::invokeMethod(this, std::move(function));
-    }
-
-    template<typename Ret, typename Func>
-    Ret run_sync(Func&& function) {
-        return QMetaObject::invokeMethod(this, std::move(function), Qt::BlockingQueuedConnection);
+        QMetaObject::invokeMethod(this, std::move(function), Qt::BlockingQueuedConnection);
     }
 
     std::unique_ptr<QApplication> application_;
