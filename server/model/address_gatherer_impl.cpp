@@ -7,12 +7,10 @@ void AddressGathererImpl::gather_local_address() {
         udp::socket socket(context_, udp::endpoint(udp::v4(), 8081));
         ErrorCode ec;
         socket.connect(ep, ec);
-        if(auto callback = callback_.lock()) {
-            if(ec) {
-                callback->set_address("Unable to gather LAN address");
-            } else {
-                callback->set_address(socket.local_endpoint().address().to_string());
-            }
+        if(ec) {
+            callback()->set_address("Unable to gather LAN address");
+        } else {
+            callback()->set_address(socket.local_endpoint().address().to_string());
         }
     });
 }

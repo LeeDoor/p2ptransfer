@@ -37,6 +37,7 @@ net::awaitable<void> ListenerImpl::listen_async(Port port) {
     establisher.set_callback(callback());
     co_await establisher.establish_connection(port);
     FileProcessor file_processor(socket_manager);
+    file_processor.set_callback(callback());
     co_await file_processor.try_read_file();
 }
 

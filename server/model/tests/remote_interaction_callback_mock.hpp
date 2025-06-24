@@ -6,7 +6,6 @@
 
 class RemoteInteractionCallbackMock : public IRemoteInteractionCallback { 
 public:
-    MOCK_METHOD(void, connection_opened, (const Address& address, Port port), (override));
     MOCK_METHOD(void, connected, (const Address& address, Port port), (override));
     MOCK_METHOD(void, file_transfered, (), (override));
     MOCK_METHOD(void, connection_aborted, (const Address& address, Port port), (override));

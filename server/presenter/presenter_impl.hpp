@@ -1,0 +1,29 @@
+#pragma once
+
+#include "model_factory.hpp"
+#include "view_factory.hpp"
+#include "presenter.hpp"
+class PresenterImpl : 
+    public Presenter, 
+    public std::enable_shared_from_this<PresenterImpl> {
+public:
+    PresenterImpl(std::shared_ptr<ModelFactory> model_factory,
+                  std::shared_ptr<ViewFactory> view_factory);
+    void setup() override;
+    int run() override;
+
+    void listen(Port port) override;
+    void set_progressbar(double persent) override;
+    void set_address(const Address& address) override;
+    void cant_open_socket() override;
+
+    void connection_aborted(const Address& address, Port port) override;
+    void connected(const Address& address, Port port) override;
+    void file_transfered() override;
+    bool verify_file(const Filename& filename, Filesize filesize) override;
+
+private:
+    std::shared_ptr<IView> view_;
+    std::shared_ptr<IListener> listener_;
+    std::shared_ptr<IAddressGatherer> gatherer_;
+};

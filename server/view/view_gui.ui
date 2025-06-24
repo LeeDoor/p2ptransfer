@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>ViewGUI</class>
+ <widget class="QMainWindow" name="ViewGUI">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -88,7 +88,7 @@
   <connection>
    <sender>buttonListen</sender>
    <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
+   <receiver>ViewGUI</receiver>
    <slot>listen_pressed()</slot>
    <hints>
     <hint type="sourcelabel">

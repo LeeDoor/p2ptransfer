@@ -1,14 +1,14 @@
-#include "address_gatherer_impl.hpp"
-#include "gui_presenter.hpp"
-#include "listener_impl.hpp"
 #include "logger.hpp"
+#include "presenter_impl.hpp"
+#include "view_factory_impl.hpp"
+#include "model_factory_impl.hpp"
 
 int main(int argc, char** argv) {
     LoggerInitializer init;
-    auto presenter 
-        = std::make_shared<GUIPresenter>(argc, argv,
-                                         std::make_shared<ListenerImpl>(), 
-                                         std::make_shared<AddressGathererImpl>());
+    auto presenter = std::make_shared<PresenterImpl>(
+        std::make_shared<ModelFactoryImpl>(),
+        std::make_shared<ViewGUIFactory>(argc, argv)
+    );
     presenter->setup();
     return presenter->run();
 }

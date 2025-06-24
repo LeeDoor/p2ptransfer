@@ -4,12 +4,14 @@
 #include "i_address_gatherer.hpp"
 #include "listener.hpp"
 #include "remote_interaction_callback.hpp"
+#include "view_callback.hpp"
 class Presenter :
     public IRemoteInteractionCallback, 
     public IGatherAddressCallback,
-    public std::enable_shared_from_this<Presenter> {
+    public IViewCallback {
 public:
     virtual ~Presenter() = default;
+    virtual void setup() = 0;
     virtual int run() = 0;
 protected:
     std::shared_ptr<IListener> listener_;
