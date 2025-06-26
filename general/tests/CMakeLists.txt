@@ -1,5 +1,7 @@
-set_property(GLOBAL APPEND PROPERTY TESTING_SOURCES 
-    ${CMAKE_CURRENT_SOURCE_DIR}/test_request_deserializer.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/test_request_serializer.cpp
+add_executable(general_tests 
+    test_request_serializer.cpp
+    test_request_deserializer.cpp
 )
-
+target_link_libraries(general_tests PUBLIC server ${LINK_LIBRARIES} test_headers GTest::gtest_main GTest::gmock)
+target_include_directories(general_tests PUBLIC ${INCLUDE_DIRECTORIES})
+gtest_discover_tests(general_tests)

@@ -13,9 +13,13 @@ if(${TESTING})
     add_subdirectory(tests)
 endif()
 add_library(base 
-    request_serializer.cpp
-    request_deserializer.cpp
-    string_view_methods.cpp
+    serializer/request_serializer.cpp
+    serializer/request_deserializer.cpp
+    string_view/string_view_methods.cpp
+    #thread_wrapper/thread_wrapper_impl.cpp
 )
+set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} serializer string_view)
 target_precompile_headers(base PUBLIC ${PRECOMPILED_HEADERS})
 target_link_libraries(base PUBLIC ${LINK_LIBRARIES})
+target_include_directories(base PUBLIC ${INCLUDE_DIRECTORIES})
+set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} PARENT_SCOPE)

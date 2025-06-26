@@ -1,4 +1,4 @@
-add_executable(tests 
+add_executable(server_tests 
     model_mock_factory.cpp
     view_mock_factory.cpp
 
@@ -7,6 +7,6 @@ add_executable(tests
     test_presenter.cpp
     test_listener.cpp
 )
-target_link_libraries(tests PUBLIC server ${LINK_LIBRARIES} test_headers GTest::gtest_main GTest::gmock)
-target_include_directories(tests PUBLIC ${INCLUDE_DIRECTORIES})
-gtest_discover_tests(tests)
+target_link_libraries(server_tests PUBLIC server ${LINK_LIBRARIES} test_headers GTest::gtest_main GTest::gmock)
+target_include_directories(server_tests PUBLIC ${INCLUDE_DIRECTORIES})
+gtest_discover_tests(server_tests)
