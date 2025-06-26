@@ -6,9 +6,9 @@
 #include "socket_manager.hpp"
 
 class Presenter;
-class FileProcessor : public WithCallback<FileTransferCallback> {
+class FileProcessorImpl : public WithCallback<FileTransferCallback> {
 public:
-    FileProcessor(std::shared_ptr<SocketManager> socket_manager_) :
+    FileProcessorImpl(std::shared_ptr<SocketManager> socket_manager_) :
         socket_manager_(socket_manager_){}
 
     net::awaitable<void> try_read_file();

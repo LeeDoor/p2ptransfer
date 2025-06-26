@@ -19,10 +19,10 @@ std::shared_ptr<ConnectionEstablisherImpl> ModelImplFactory::create_connection_e
     connection_establisher->set_callback(callback);
     return connection_establisher;
 }
-std::shared_ptr<FileProcessor> ModelImplFactory::create_file_processor(
+std::shared_ptr<FileProcessorImpl> ModelImplFactory::create_file_processor(
     std::shared_ptr<SocketManager> socket_manager, 
     std::shared_ptr<FileTransferCallback> callback) {
-    auto file_processor = std::make_shared<FileProcessor>(socket_manager);
+    auto file_processor = std::make_shared<FileProcessorImpl>(socket_manager);
     file_processor->set_callback(callback);
     return file_processor;
 }

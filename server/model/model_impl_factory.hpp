@@ -9,7 +9,7 @@ public:
     std::shared_ptr<ConnectionEstablisherImpl> create_connection_establisher(
         std::shared_ptr<SocketManager> socket_manager, 
         std::shared_ptr<ConnectionStatusCallback> callback) override;
-    std::shared_ptr<FileProcessor> create_file_processor(
+    std::shared_ptr<FileProcessorImpl> create_file_processor(
         std::shared_ptr<SocketManager> socket_manager, 
         std::shared_ptr<FileTransferCallback> callback) override;
 };
