@@ -9,7 +9,7 @@ public:
     std::shared_ptr<ConnectionEstablisherImpl> create_connection_establisher(
         std::shared_ptr<SocketManager> socket_manager, 
         std::shared_ptr<ConnectionStatusCallback> callback) override;
-    std::shared_ptr<FileProcessor> create_file_processor(
+    std::shared_ptr<FileProcessorImpl> create_file_processor(
         std::shared_ptr<SocketManager> socket_manager, 
         std::shared_ptr<FileTransferCallback> callback) override;
 
@@ -17,11 +17,11 @@ public:
     void set_address_gatherer(std::shared_ptr<AddressGatherer> value);
     void set_socket_manager(std::shared_ptr<SocketManager> value);
     void set_connection_establisher(std::shared_ptr<ConnectionEstablisherImpl> value);
-    void set_file_processor(std::shared_ptr<FileProcessor> value);
+    void set_file_processor(std::shared_ptr<FileProcessorImpl> value);
 private:
-    std::shared_ptr<Listener> listener_;
-    std::shared_ptr<AddressGatherer> address_gatherer_;
-    std::shared_ptr<SocketManager> socket_manager_;
-    std::shared_ptr<ConnectionEstablisherImpl> connection_establisher_;
-    std::shared_ptr<FileProcessor> file_processor_;
+    std::shared_ptr<Listener> listener_ = nullptr;
+    std::shared_ptr<AddressGatherer> address_gatherer_ = nullptr;
+    std::shared_ptr<SocketManager> socket_manager_ = nullptr;
+    std::shared_ptr<ConnectionEstablisherImpl> connection_establisher_ = nullptr;
+    std::shared_ptr<FileProcessorImpl> file_processor_ = nullptr;
 };

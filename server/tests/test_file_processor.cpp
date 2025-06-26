@@ -81,7 +81,7 @@ protected:
 
     std::shared_ptr<SocketManagerMock> socket_mock;
     std::shared_ptr<RemoteInteractionCallbackMock> callback_mock;
-    FileProcessor file_processor;
+    FileProcessorImpl file_processor;
 };
 
 TEST_F(FileProcessorFixture, averageData_successFileProcessing) {
