@@ -3,12 +3,12 @@
 #include "common_types.hpp"
 #include "logger.hpp"
 
-int ConnectionEstablisher::initialize_connection(Address address, Port port, std::string filename) {
+int ConnectionEstablisherImpl::initialize_connection(Address address, Port port, std::string filename) {
     co_spawn(context_, connect_and_send(address, port, std::move(filename)), net::detached);
     context_.run();
     return 0;
 }
-net::awaitable<void> ConnectionEstablisher::connect_and_send(Address address, Port port, std::string filename) {
+net::awaitable<void> ConnectionEstablisherImpl::connect_and_send(Address address, Port port, std::string filename) {
     SockPtr tcp_socket = co_await try_connect(address, port);
     if(!tcp_socket) {
         Logger::log() << "failed to open socket." << std::endl;
@@ -20,7 +20,7 @@ net::awaitable<void> ConnectionEstablisher::connect_and_send(Address address, Po
         co_return;
     }
 }
-net::awaitable<SockPtr> ConnectionEstablisher::try_connect(Address address, Port port) {
+net::awaitable<SockPtr> ConnectionEstablisherImpl::try_connect(Address address, Port port) {
     auto [resolve_ec, endpoint] =
         co_await resolver_.async_resolve(address, std::to_string(port), net::as_tuple(net::use_awaitable));
     if(resolve_ec) {

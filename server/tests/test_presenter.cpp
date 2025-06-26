@@ -13,8 +13,11 @@ protected:
         address_gatherer_(std::make_shared<AddressGathererMock>()),
         view_(std::make_shared<ViewMock>())
     {
+        auto model_factory = std::make_shared<ModelMockFactory>();
+        model_factory->set_listener(listener_);
+        model_factory->set_address_gatherer(address_gatherer_);
         presenter_ = std::make_shared<PresenterImpl>(
-            std::make_shared<ModelMockFactory>(listener_, address_gatherer_),
+            model_factory,
             std::make_shared<ViewMockFactory>(view_)
         );
     }

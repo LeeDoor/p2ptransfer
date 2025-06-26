@@ -22,7 +22,7 @@ protected:
 
     std::shared_ptr<SocketManagerMock> socket_mock;
     std::shared_ptr<RemoteInteractionCallbackMock> callback_mock;
-    ConnectionEstablisher establisher;
+    ConnectionEstablisherImpl establisher;
 };
 
 TEST_F(ConnectionEstablisherFixture, establish_connection_successfully) {
