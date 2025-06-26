@@ -9,7 +9,7 @@ option(TESTING "Build tests" ON)
 option(GRAPHICS "Build with Qt" ON) # graphics executable
 
 set(LINK_LIBRARIES ) # libraries to link
-set(INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/headers) # directories to include
+set(INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/general) # directories to include
 
 if(WIN32) 
     set(LINK_LIBRARIES ws2_32 -lmswsock) 
@@ -31,6 +31,6 @@ if(${TESTING})
     enable_testing()
 endif()
 
-add_subdirectory(headers)
+add_subdirectory(general)
 add_subdirectory(server)
 add_subdirectory(client)
