@@ -4,9 +4,6 @@
 #include "socket_manager_mock.hpp"
 #include "request_serializer.hpp"
 
-constexpr size_t TEST_PORT = 8080;
-constexpr std::string TEST_ADDRESS = "127.0.0.1";
-
 class FileProcessorFixture : public ::testing::Test {
 protected:
     FileProcessorFixture() :

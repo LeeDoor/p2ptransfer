@@ -11,4 +11,7 @@ public:
     MOCK_METHOD(bool, ask_file_verification, (const Filename& filename, Filesize filesize), (override));
     MOCK_METHOD(void, show_file_success, (), (override));
     MOCK_METHOD(void, show_connection_aborted, (const Address& address, Port port), (override));
+    std::weak_ptr<ViewCallback> get_callback() {
+        return callback_;
+    }
 };

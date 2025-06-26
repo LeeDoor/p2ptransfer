@@ -7,11 +7,14 @@ PresenterImpl::PresenterImpl(std::shared_ptr<ModelFactory> model_factory,
 }
 
 void PresenterImpl::setup() {
+    is_initialized_ = true;
     view_->set_callback(shared_from_this());
     listener_->set_callback(shared_from_this());
     address_gatherer_->set_callback(shared_from_this());
 }
 int PresenterImpl::run() {
+    if(!is_initialized_) 
+        throw std::runtime_error("Should call Presenter::setup() before run");
     address_gatherer_->gather_local_address();
     return view_->run();
 }

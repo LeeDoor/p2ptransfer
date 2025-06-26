@@ -4,4 +4,7 @@
 class AddressGathererMock : public AddressGatherer {
 public:
     MOCK_METHOD(void, gather_local_address, (), (override));
+    std::weak_ptr<GatherAddressCallback> get_callback() {
+        return callback_;
+    }
 };

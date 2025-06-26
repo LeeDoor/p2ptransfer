@@ -3,9 +3,6 @@
 #include "socket_manager_mock.hpp"
 #include "gtest_headers.hpp"
 
-constexpr size_t TEST_PORT = 8080;
-constexpr std::string TEST_ADDRESS = "127.0.0.1";
-
 class ConnectionEstablisherFixture : public ::testing::Test {
 protected:
     ConnectionEstablisherFixture() :

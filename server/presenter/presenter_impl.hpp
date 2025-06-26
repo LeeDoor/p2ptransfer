@@ -23,7 +23,8 @@ public:
     bool verify_file(const Filename& filename, Filesize filesize) override;
 
 private:
+    bool is_initialized_ = false;
     std::shared_ptr<View> view_;
-    std::shared_ptr<IListener> listener_;
+    std::shared_ptr<Listener> listener_;
     std::shared_ptr<AddressGatherer> gatherer_;
 };

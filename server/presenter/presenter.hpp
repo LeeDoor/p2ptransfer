@@ -14,6 +14,6 @@ public:
     virtual void setup() = 0;
     virtual int run() = 0;
 protected:
-    std::shared_ptr<IListener> listener_;
+    std::shared_ptr<Listener> listener_;
     std::shared_ptr<AddressGatherer> address_gatherer_;
 };

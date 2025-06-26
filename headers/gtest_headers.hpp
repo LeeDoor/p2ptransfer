@@ -11,3 +11,6 @@ net::awaitable<Type> return_immediately(Type t) {
 inline net::awaitable<void> return_immediately(){
     co_return;
 }
+
+constexpr size_t TEST_PORT = 8080;
+constexpr std::string TEST_ADDRESS = "127.0.0.1";

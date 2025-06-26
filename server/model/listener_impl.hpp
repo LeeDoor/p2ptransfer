@@ -1,7 +1,7 @@
 #pragma once
 
 #include "listener.hpp"
-class ListenerImpl : public IListener {
+class ListenerImpl : public Listener {
 public:
     ~ListenerImpl();
     void listen_if_not_already(Port port) override;
