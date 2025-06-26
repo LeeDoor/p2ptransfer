@@ -12,4 +12,5 @@ public:
     std::shared_ptr<FileProcessor> create_file_processor(
         std::shared_ptr<SocketManager> socket_manager, 
         std::shared_ptr<FileTransferCallback> callback) override;
+    std::shared_ptr<ThreadWrapper> create_thread_wrapper() override;
 };

@@ -4,6 +4,7 @@
 #include "listener_impl.hpp"
 #include "socket_manager_impl.hpp"
 #include "connection_establisher_impl.hpp"
+#include "thread_wrapper_impl.hpp"
 
 std::shared_ptr<Listener> ModelImplFactory::create_listener() {
     return std::make_shared<ListenerImpl>(shared_from_this());
@@ -27,4 +28,8 @@ std::shared_ptr<FileProcessor> ModelImplFactory::create_file_processor(
     auto file_processor = std::make_shared<FileProcessorImpl>(socket_manager);
     file_processor->set_callback(callback);
     return file_processor;
+}
+
+std::shared_ptr<ThreadWrapper> ModelImplFactory::create_thread_wrapper() {
+    return std::make_shared<ThreadWrapperImpl>();
 }

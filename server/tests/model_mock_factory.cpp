@@ -29,6 +29,12 @@ std::shared_ptr<FileProcessor> ModelMockFactory::create_file_processor(
         throw std::runtime_error("File Processor is not set as a mock");
     return file_processor_;
 }
+std::shared_ptr<ThreadWrapper> ModelMockFactory::create_thread_wrapper() {
+    if(!thread_wrapper_)
+        throw std::runtime_error("ThreadWrapper is not set as a mock");
+    return thread_wrapper_;
+}
+
 void ModelMockFactory::set_listener(std::shared_ptr<Listener> value) {
     listener_ = value;
 }
@@ -43,4 +49,7 @@ void ModelMockFactory::set_connection_establisher(std::shared_ptr<ConnectionEsta
 }
 void ModelMockFactory::set_file_processor(std::shared_ptr<FileProcessor> value) {
     file_processor_ = value;
+}
+void ModelMockFactory::set_thread_wrapper(std::shared_ptr<ThreadWrapper> value) {
+    thread_wrapper_ = value;
 }

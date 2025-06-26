@@ -5,6 +5,7 @@
 #include "file_processor.hpp"
 #include "socket_manager.hpp"
 #include "listener.hpp"
+#include "thread_wrapper.hpp"
 class ModelFactory {
 public:
     virtual std::shared_ptr<Listener> create_listener() = 0;
@@ -16,4 +17,5 @@ public:
     virtual std::shared_ptr<FileProcessor> create_file_processor(
         std::shared_ptr<SocketManager> socket_manager, 
         std::shared_ptr<FileTransferCallback> callback) = 0;
+    virtual std::shared_ptr<ThreadWrapper> create_thread_wrapper() = 0;
 };

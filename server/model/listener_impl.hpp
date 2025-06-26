@@ -1,20 +1,19 @@
 #pragma once
-
 #include "listener.hpp"
 #include "model_factory.hpp"
+#include "thread_wrapper.hpp"
+
 class ListenerImpl : public Listener {
 public:
     ListenerImpl(std::shared_ptr<ModelFactory> model_factory);
-    ~ListenerImpl();
     void listen_if_not_already(Port port) override;
+
 private:
-    void try_join_context_thread();
-    void listen(Port port);
+    void spawn_listen_coroutine(Port port);
     net::awaitable<void> listen_async(Port port);
     void run_context_thread();
 
     std::shared_ptr<ModelFactory> factory_;
+    std::shared_ptr<ThreadWrapper> thread_wrapper_;
     net::io_context context_;
-    std::jthread context_thread_;
-    bool is_running_ = false;
 };

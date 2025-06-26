@@ -1,4 +1,5 @@
 add_executable(server_tests 
+    main.cpp
     model_mock_factory.cpp
     view_mock_factory.cpp
 

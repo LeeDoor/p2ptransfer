@@ -3,27 +3,16 @@
 #include "logger.hpp"
 
 ListenerImpl::ListenerImpl(std::shared_ptr<ModelFactory> model_factory) :
-    factory_(model_factory){}
-ListenerImpl::~ListenerImpl() {
-    if(is_running_) {
-        context_.stop();
+    factory_(model_factory),
+    thread_wrapper_(factory_->create_thread_wrapper()){}
+void ListenerImpl::listen_if_not_already(Port port) {
+    if(!thread_wrapper_->is_running()) { 
+        spawn_listen_coroutine(port);
+        run_context_thread();
     }
 }
-void ListenerImpl::listen_if_not_already(Port port) {
-    if(is_running_) return;
-    try_join_context_thread();
-    is_running_ = true;
-    listen(port);
-    run_context_thread();
-    return;
-}
 
-void ListenerImpl::try_join_context_thread() {
-    if(context_thread_.joinable())
-        context_thread_.join();
-}
-
-void ListenerImpl::listen(Port port) {
+void ListenerImpl::spawn_listen_coroutine(Port port) {
     auto rethrow_functor = [](std::exception_ptr ptr) {
         if(ptr) std::rethrow_exception(ptr);
     };
@@ -39,11 +28,10 @@ net::awaitable<void> ListenerImpl::listen_async(Port port) {
 }
 
 void ListenerImpl::run_context_thread() {
-    context_thread_ = std::jthread([this] {
+    thread_wrapper_->execute([this] {
         Logger::catch_log([&]{
             context_.run();
         });
         context_.restart();
-        is_running_ = false;
     });
 }
