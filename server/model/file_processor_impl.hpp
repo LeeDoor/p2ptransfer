@@ -1,17 +1,18 @@
 #pragma once
 #include "callback.hpp"
 #include "common_types.hpp"
+#include "file_processor.hpp"
 #include "request_structures.hpp"
 #include "file_transfer_callback.hpp"
 #include "socket_manager.hpp"
 
 class Presenter;
-class FileProcessorImpl : public WithCallback<FileTransferCallback> {
+class FileProcessorImpl : public FileProcessor, public WithCallback<FileTransferCallback> {
 public:
     FileProcessorImpl(std::shared_ptr<SocketManager> socket_manager_) :
         socket_manager_(socket_manager_){}
 
-    net::awaitable<void> try_read_file();
+    net::awaitable<void> try_read_file() override;
 
 private:
     net::awaitable<void> read_file();

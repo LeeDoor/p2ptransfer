@@ -15,14 +15,14 @@ std::shared_ptr<SocketManager> ModelMockFactory::create_socket_manager(net::io_c
         throw std::runtime_error("Socket manager is not set as a mock");
     return socket_manager_;
 }
-std::shared_ptr<ConnectionEstablisherImpl> ModelMockFactory::create_connection_establisher(
+std::shared_ptr<ConnectionEstablisher> ModelMockFactory::create_connection_establisher(
     std::shared_ptr<SocketManager> socket_manager, 
     std::shared_ptr<ConnectionStatusCallback> callback) {
     if(!connection_establisher_)
         throw std::runtime_error("Connection Establisher is not set as a mock");
     return connection_establisher_;
 }
-std::shared_ptr<FileProcessorImpl> ModelMockFactory::create_file_processor(
+std::shared_ptr<FileProcessor> ModelMockFactory::create_file_processor(
     std::shared_ptr<SocketManager> socket_manager, 
     std::shared_ptr<FileTransferCallback> callback) {
     if(!file_processor_)
@@ -38,9 +38,9 @@ void ModelMockFactory::set_address_gatherer(std::shared_ptr<AddressGatherer> val
 void ModelMockFactory::set_socket_manager(std::shared_ptr<SocketManager> value) {
     socket_manager_ = value;
 }
-void ModelMockFactory::set_connection_establisher(std::shared_ptr<ConnectionEstablisherImpl> value) {
+void ModelMockFactory::set_connection_establisher(std::shared_ptr<ConnectionEstablisher> value) {
     connection_establisher_ = value;
 }
-void ModelMockFactory::set_file_processor(std::shared_ptr<FileProcessorImpl> value) {
+void ModelMockFactory::set_file_processor(std::shared_ptr<FileProcessor> value) {
     file_processor_ = value;
 }
