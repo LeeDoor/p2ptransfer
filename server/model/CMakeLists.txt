@@ -1,7 +1,6 @@
 add_library(server_model
     model_impl_factory.cpp
     address_gatherer_impl.cpp
-    socket_manager_impl.cpp
     listener_impl.cpp
     file_processor_impl.cpp
     connection_establisher_impl.cpp

@@ -75,7 +75,7 @@ protected:
     }
     void check_connection_aborted_callback() {
         EXPECT_CALL(*socket_mock, get_remote_endpoint())
-            .WillOnce(Return(SocketManager::RemoteEndpoint{TEST_ADDRESS, TEST_PORT}));
+            .WillOnce(Return(SocketManager::Endpoint{TEST_ADDRESS, TEST_PORT}));
         EXPECT_CALL(*callback_mock, connection_aborted(TEST_ADDRESS, TEST_PORT));
     }
 
