@@ -11,6 +11,7 @@ public:
     void gather_local_address() override;
 private:
     net::awaitable<void> gather_async();
+    net::awaitable<std::shared_ptr<SocketManager>> build_socket_manager(const Address& address, Port port);
     std::shared_ptr<ModelFactory> factory_;
     std::shared_ptr<ThreadWrapper> thread_wrapper_;
     net::io_context context_;

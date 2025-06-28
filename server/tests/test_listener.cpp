@@ -5,7 +5,7 @@
 #include "logger.hpp"
 #include "model_mock_factory.hpp"
 #include "remote_interaction_callback_mock.hpp"
-#include "socket_manager_mock.hpp"
+#include "socket_manager_mock_factory.hpp"
 #include "thread_wrapper_mock.hpp"
 
 class ListenerFixture : public ::testing::Test {
@@ -20,7 +20,7 @@ protected:
         factory_->set_connection_establisher(connection_establisher_);
         factory_->set_file_processor(file_processor_);
         factory_->set_thread_wrapper(thread_wrapper_);
-        factory_->set_socket_manager(std::make_shared<SocketManagerMock>());
+        factory_->set_socket_manager(std::make_shared<SocketManagerMockFactory>());
         listener_ = std::make_shared<ListenerImpl>(factory_);
         listener_->set_callback(callback_);
     }

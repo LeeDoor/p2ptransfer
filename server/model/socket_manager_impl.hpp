@@ -11,29 +11,18 @@ public:
     using EndpointType = net::ip::basic_endpoint<InternetProtocol>;
     using AcceptorType = net::basic_socket_acceptor<InternetProtocol>;
 
-    SocketManagerImpl(net::io_context& context) :
-        context_(context){}
-    
-    net::awaitable<void> listen_connection_at(Port port) override {
-        EndpointType endpoint(InternetProtocol::v4(), port);
-        AcceptorType acceptor(context_, endpoint);
-        socket_ = SocketPtr(new SocketType(context_), get_socket_deleter());
-        co_await acceptor.async_accept(*socket_, net::use_awaitable);
+    static net::awaitable<std::shared_ptr<SocketManagerImpl>> open_for_listening(net::io_context& context, Port port) {
+        auto sm = std::shared_ptr<SocketManagerImpl>(new SocketManagerImpl(context));
+        co_await sm->listen_connection_at(port);
+        co_return sm;
     }
 
-    net::awaitable<void> connect_to(const Address& address, Port port) override {
-        const EndpointType ep (net::ip::make_address(address), port);
-        socket_ = SocketPtr(new SocketType(context_, InternetProtocol::v4()), get_socket_deleter());
-        co_await socket_->async_connect(ep, net::use_awaitable);
+    static net::awaitable<std::shared_ptr<SocketManagerImpl>> open_for_connecting(net::io_context& context, const Address& address, Port port) {
+        auto sm = std::shared_ptr<SocketManagerImpl>(new SocketManagerImpl(context));
+        co_await sm->connect_to(address, port);
+        co_return sm;
     }
-    
-    SocketPtr listen_connection_at_sync(Port port) {
-        SocketPtr sock;
-        co_spawn(context_, listen_connection_at(port), [&](std::exception_ptr a){});
-        context_.run();
-        return sock;
-    }
-    
+
     Endpoint get_remote_endpoint() override{
         if(socket_ == nullptr) 
             throw std::logic_error("get_remote_endpoint called while socket is nullptr. "
@@ -86,6 +75,9 @@ public:
     }
 
 protected:
+    SocketManagerImpl(net::io_context& context) :
+        context_(context){}
+
     SocketDeleter get_socket_deleter() {
         return [] (SocketType* socket) {
             ErrorCode ec;
@@ -93,6 +85,20 @@ protected:
             socket->close();
         };
     }
+
+    net::awaitable<void> listen_connection_at(Port port) override {
+        EndpointType endpoint(InternetProtocol::v4(), port);
+        AcceptorType acceptor(context_, endpoint);
+        socket_ = SocketPtr(new SocketType(context_), get_socket_deleter());
+        co_await acceptor.async_accept(*socket_, net::use_awaitable);
+    }
+
+    net::awaitable<void> connect_to(const Address& address, Port port) override {
+        const EndpointType ep (net::ip::make_address(address), port);
+        socket_ = SocketPtr(new SocketType(context_, InternetProtocol::v4()), get_socket_deleter());
+        co_await socket_->async_connect(ep, net::use_awaitable);
+    }
+    
 
     constexpr static size_t MAX_SEND_REQUEST_SIZE = 512;
     constexpr static std::string_view REQUEST_COMPLETION = "\n\n";

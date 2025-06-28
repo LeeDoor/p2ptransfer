@@ -10,16 +10,10 @@ std::shared_ptr<AddressGatherer> ModelMockFactory::create_address_gatherer() {
         throw std::runtime_error("Address Gatherer is not set as a mock");
     return address_gatherer_;
 }
-std::shared_ptr<SocketManager> ModelMockFactory::create_socket_manager_tcp(net::io_context& context) {
-    return create_socket_manager(context);
-}
-std::shared_ptr<SocketManager> ModelMockFactory::create_socket_manager_udp(net::io_context& context) {
-    return create_socket_manager(context);
-}
-std::shared_ptr<SocketManager> ModelMockFactory::create_socket_manager(net::io_context& context) {
-    if(!socket_manager_)
+std::shared_ptr<SocketManagerFactory> ModelMockFactory::create_socket_manager(net::io_context& context) {
+    if(!socket_manager_factory_)
         throw std::runtime_error("Socket manager is not set as a mock");
-    return socket_manager_;
+    return socket_manager_factory_;
 }
 std::shared_ptr<ConnectionEstablisher> ModelMockFactory::create_connection_establisher(
     std::shared_ptr<SocketManager> socket_manager, 
@@ -47,8 +41,8 @@ void ModelMockFactory::set_listener(std::shared_ptr<Listener> value) {
 void ModelMockFactory::set_address_gatherer(std::shared_ptr<AddressGatherer> value) {
     address_gatherer_ = value;
 }
-void ModelMockFactory::set_socket_manager(std::shared_ptr<SocketManager> value) {
-    socket_manager_ = value;
+void ModelMockFactory::set_socket_manager(std::shared_ptr<SocketManagerFactory> value) {
+    socket_manager_factory_ = value;
 }
 void ModelMockFactory::set_connection_establisher(std::shared_ptr<ConnectionEstablisher> value) {
     connection_establisher_ = value;

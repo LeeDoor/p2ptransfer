@@ -6,12 +6,19 @@
 #include "socket_manager.hpp"
 #include "listener.hpp"
 #include "thread_wrapper.hpp"
+
+class SocketManagerFactory {
+public:
+    virtual net::awaitable<std::shared_ptr<SocketManager>> tcp_listening_at(Port port) = 0;
+    virtual net::awaitable<std::shared_ptr<SocketManager>> udp_listening_at(Port port) = 0;
+    virtual net::awaitable<std::shared_ptr<SocketManager>> tcp_connecting_to(const Address& address, Port port) = 0;
+    virtual net::awaitable<std::shared_ptr<SocketManager>> udp_connecting_to(const Address& address, Port port) = 0;
+};
 class ModelFactory {
 public:
     virtual std::shared_ptr<Listener> create_listener() = 0;
     virtual std::shared_ptr<AddressGatherer> create_address_gatherer() = 0;
-    virtual std::shared_ptr<SocketManager> create_socket_manager_tcp(net::io_context& context) = 0;
-    virtual std::shared_ptr<SocketManager> create_socket_manager_udp(net::io_context& context) = 0;
+    virtual std::shared_ptr<SocketManagerFactory> create_socket_manager(net::io_context& context) = 0;
     virtual std::shared_ptr<ConnectionEstablisher> create_connection_establisher(
         std::shared_ptr<SocketManager> socket_manager, 
         std::shared_ptr<ConnectionStatusCallback> callback) = 0;
