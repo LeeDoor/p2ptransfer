@@ -5,9 +5,9 @@
 template<typename InternetProtocol>
 class SocketManagerImpl : public SocketManager {
 public:
-    using SockType = net::basic_stream_socket<InternetProtocol>;
-    using SockDeleter = std::function<void(SockType*)>;
-    using SockPtr = std::unique_ptr<SockType, SockDeleter>;
+    using SocketType = net::basic_stream_socket<InternetProtocol>;
+    using SocketDeleter = std::function<void(SocketType*)>;
+    using SocketPtr = std::unique_ptr<SocketType, SocketDeleter>;
     using EndpointType = net::ip::basic_endpoint<InternetProtocol>;
     using AcceptorType = net::basic_socket_acceptor<InternetProtocol>;
 
@@ -16,29 +16,19 @@ public:
     
     net::awaitable<void> listen_connection_at(Port port) override {
         EndpointType endpoint(InternetProtocol::v4(), port);
-        auto socketCloser = [] (SockType* socket) {
-            ErrorCode ec;
-            socket->shutdown(SockType::shutdown_both, ec);
-            socket->close();
-        };
         AcceptorType acceptor(context_, endpoint);
-        socket_ = SockPtr(new SockType(context_), socketCloser);
+        socket_ = SocketPtr(new SocketType(context_), get_socket_deleter());
         co_await acceptor.async_accept(*socket_, net::use_awaitable);
     }
 
     net::awaitable<void> connect_to(const Address& address, Port port) override {
         const EndpointType ep (net::ip::make_address(address), port);
-        auto socketCloser = [] (SockType* socket) {
-            ErrorCode ec;
-            socket->shutdown(SockType::shutdown_both, ec);
-            socket->close();
-        };
-        socket_ = SockPtr(new SockType(context_, InternetProtocol::v4()), socketCloser);
+        socket_ = SocketPtr(new SocketType(context_, InternetProtocol::v4()), get_socket_deleter());
         co_await socket_->async_connect(ep, net::use_awaitable);
     }
     
-    SockPtr listen_connection_at_sync(Port port) {
-        SockPtr sock;
+    SocketPtr listen_connection_at_sync(Port port) {
+        SocketPtr sock;
         co_spawn(context_, listen_connection_at(port), [&](std::exception_ptr a){});
         context_.run();
         return sock;
@@ -47,7 +37,7 @@ public:
     Endpoint get_remote_endpoint() override{
         if(socket_ == nullptr) 
             throw std::logic_error("get_remote_endpoint called while socket is nullptr. "
-                                   "Use open_connection first");
+                                   "Connect first");
         return {
             socket_->remote_endpoint().address().to_string(), 
             socket_->remote_endpoint().port()
@@ -57,7 +47,7 @@ public:
     Endpoint get_local_endpoint() override {
         if(socket_ == nullptr) 
             throw std::logic_error("get_local_endpoint called while socket is nullptr. "
-                                   "Use open_connection first");
+                                   "Connect first");
         return {
             socket_->local_endpoint().address().to_string(), 
             socket_->local_endpoint().port()
@@ -96,10 +86,18 @@ public:
     }
 
 protected:
+    SocketDeleter get_socket_deleter() {
+        return [] (SocketType* socket) {
+            ErrorCode ec;
+            socket->shutdown(SocketType::shutdown_both, ec);
+            socket->close();
+        };
+    }
+
     constexpr static size_t MAX_SEND_REQUEST_SIZE = 512;
     constexpr static std::string_view REQUEST_COMPLETION = "\n\n";
     net::io_context& context_;
-    SockPtr socket_;
+    SocketPtr socket_;
 };
 
 using SocketManagerTcp = SocketManagerImpl<tcpip>;
