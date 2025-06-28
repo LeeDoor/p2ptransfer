@@ -26,7 +26,7 @@ protected:
 };
 
 TEST_F(ConnectionEstablisherFixture, establish_connection_successfully) {
-    EXPECT_CALL(*socket_mock, establish_connection_async(TEST_PORT))
+    EXPECT_CALL(*socket_mock, listen_connection_at(TEST_PORT))
         .WillOnce(Return(return_immediately()));
     EXPECT_CALL(*socket_mock, get_remote_endpoint())
         .WillRepeatedly(Return(SocketManager::Endpoint{TEST_ADDRESS, TEST_PORT}));
@@ -36,7 +36,7 @@ TEST_F(ConnectionEstablisherFixture, establish_connection_successfully) {
 }
 
 TEST_F(ConnectionEstablisherFixture, establishThrows_shouldCall_cantOpenSocket) {
-    EXPECT_CALL(*socket_mock, establish_connection_async(TEST_PORT))
+    EXPECT_CALL(*socket_mock, listen_connection_at(TEST_PORT))
         .WillOnce(
             [] () -> net::awaitable<void> { 
                 throw std::runtime_error("imitating socket opening failure"); 

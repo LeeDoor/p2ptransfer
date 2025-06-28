@@ -14,7 +14,7 @@ public:
     SocketManagerImpl(net::io_context& context) :
         context_(context){}
     
-    net::awaitable<void> establish_connection_async(Port port) override {
+    net::awaitable<void> listen_connection_at(Port port) override {
         EndpointType endpoint(InternetProtocol::v4(), port);
         auto socketCloser = [] (SockType* socket) {
             ErrorCode ec;
@@ -25,10 +25,21 @@ public:
         socket_ = SockPtr(new SockType(context_), socketCloser);
         co_await acceptor.async_accept(*socket_, net::use_awaitable);
     }
+
+    net::awaitable<void> connect_to(const Address& address, Port port) override {
+        const EndpointType ep (net::ip::make_address(address), port);
+        auto socketCloser = [] (SockType* socket) {
+            ErrorCode ec;
+            socket->shutdown(SockType::shutdown_both, ec);
+            socket->close();
+        };
+        socket_ = SockPtr(new SockType(context_, InternetProtocol::v4()), socketCloser);
+        co_await socket_->async_connect(ep, net::use_awaitable);
+    }
     
-    SockPtr establish_connection_sync(Port port) {
+    SockPtr listen_connection_at_sync(Port port) {
         SockPtr sock;
-        co_spawn(context_, establish_connection_async(port), [&](std::exception_ptr a){});
+        co_spawn(context_, listen_connection_at(port), [&](std::exception_ptr a){});
         context_.run();
         return sock;
     }

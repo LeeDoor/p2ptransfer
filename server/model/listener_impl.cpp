@@ -21,7 +21,7 @@ void ListenerImpl::spawn_listen_coroutine(Port port) {
 }
 
 net::awaitable<void> ListenerImpl::listen_async(Port port) {
-    auto socket_manager = factory_->create_socket_manager(context_);
+    auto socket_manager = factory_->create_socket_manager_tcp(context_);
     auto establisher = factory_->create_connection_establisher(socket_manager, callback());
     co_await establisher->establish_connection(port);
     auto file_processor = factory_->create_file_processor(socket_manager, callback());

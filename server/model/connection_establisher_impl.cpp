@@ -9,7 +9,7 @@ net::awaitable<void> ConnectionEstablisherImpl::establish_connection(Port port) 
 
 net::awaitable<void> ConnectionEstablisherImpl::try_establish_connection(Port port) {
     try {
-        co_await socket_manager_->establish_connection_async(port);
+        co_await socket_manager_->listen_connection_at(port);
     } catch(...) {
         callback()->cant_open_socket();
         throw;

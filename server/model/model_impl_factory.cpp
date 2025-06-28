@@ -10,10 +10,14 @@ std::shared_ptr<Listener> ModelImplFactory::create_listener() {
     return std::make_shared<ListenerImpl>(shared_from_this());
 }
 std::shared_ptr<AddressGatherer> ModelImplFactory::create_address_gatherer() {
-    return std::make_shared<AddressGathererImpl>(create_thread_wrapper());
+    return std::make_shared<AddressGathererImpl>(shared_from_this());
 }
-std::shared_ptr<SocketManager> ModelImplFactory::create_socket_manager(net::io_context& context) {
+std::shared_ptr<SocketManager> ModelImplFactory::create_socket_manager_tcp(net::io_context& context) {
     return std::make_shared<SocketManagerTcp>(context);
+}
+std::shared_ptr<SocketManager> ModelImplFactory::create_socket_manager_udp(net::io_context& context) {
+    return std::make_shared<SocketManagerUdp>(context);
+
 }
 std::shared_ptr<ConnectionEstablisher> ModelImplFactory::create_connection_establisher(
     std::shared_ptr<SocketManager> socket_manager, 
