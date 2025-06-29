@@ -28,6 +28,6 @@ net::awaitable<void> AddressGathererImpl::gather_async() {
 }
 
 net::awaitable<std::shared_ptr<SocketManager>> AddressGathererImpl::build_socket_manager(const Address& address, Port port) {
-    auto socket_manager_factory = factory_->create_socket_manager(context_);
+    auto socket_manager_factory = factory_->create_socket_builder(context_);
     co_return co_await socket_manager_factory->udp_connecting_to(address, port);;
 }

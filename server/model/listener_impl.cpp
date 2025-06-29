@@ -12,6 +12,14 @@ void ListenerImpl::listen_if_not_already(Port port) {
     }
 }
 
+void ListenerImpl::spawn_and_run(Port port) {
+    thread_wrapper_->execute([=, this] {
+        spawn_listen_coroutine(port);
+        context_.run();
+        context_.restart();
+    });
+}
+
 void ListenerImpl::spawn_listen_coroutine(Port port) {
     auto rethrow_functor = [](std::exception_ptr ptr) {
         if(ptr) std::rethrow_exception(ptr);
@@ -20,24 +28,25 @@ void ListenerImpl::spawn_listen_coroutine(Port port) {
 }
 
 net::awaitable<void> ListenerImpl::listen_async(Port port) {
-    auto socket_manager = co_await build_socket_manager(port);
-    auto establisher = factory_->create_connection_establisher(socket_manager, callback());
-    co_await establisher->establish_connection(port);
-    auto file_processor = factory_->create_file_processor(socket_manager, callback());
-    co_await file_processor->try_read_file();
+    try {
+        auto socket_manager = co_await connect_and_listen(port);
+        auto file_processor = factory_->create_file_processor(socket_manager, callback());
+        co_await file_processor->try_read_file();
+    } catch(const std::exception& ex) {
+        Logger::log() << ex.what() << std::endl;
+    }
 }
 
-void ListenerImpl::spawn_and_run(Port port) {
-    thread_wrapper_->execute([=, this] {
-        Logger::catch_log([&]{
-            spawn_listen_coroutine(port);
-            context_.run();
-        });
-        context_.restart();
-    });
-}
-
-net::awaitable<std::shared_ptr<SocketManager>> ListenerImpl::build_socket_manager(Port port) {
-    auto socket_builder = factory_->create_socket_manager(context_);
-    co_return co_await socket_builder->tcp_listening_at(port);
+net::awaitable<std::shared_ptr<SocketManager>> ListenerImpl::connect_and_listen(Port port) {
+    try {
+        auto socket_builder = factory_->create_socket_builder(context_);
+        auto socket_manager = co_await socket_builder->tcp_listening_at(port);
+        auto endpoint = socket_manager->get_remote_endpoint();
+        callback()->connected(endpoint.address, endpoint.port);
+        co_return socket_manager;
+    } catch(const std::exception& ex) {
+        callback()->cant_open_socket();
+        Logger::log() << ex.what() << std::endl;
+        throw;
+    }
 }

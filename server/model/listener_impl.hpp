@@ -12,6 +12,7 @@ private:
     void spawn_listen_coroutine(Port port);
     net::awaitable<void> listen_async(Port port);
     void spawn_and_run(Port port);
+    net::awaitable<std::shared_ptr<SocketManager>> connect_and_listen(Port port);
     net::awaitable<std::shared_ptr<SocketManager>> build_socket_manager(Port port);
 
     std::shared_ptr<ModelFactory> factory_;

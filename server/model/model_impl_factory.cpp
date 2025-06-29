@@ -3,7 +3,6 @@
 #include "file_processor_impl.hpp"
 #include "listener_impl.hpp"
 #include "socket_manager_impl_factory.hpp"
-#include "connection_establisher_impl.hpp"
 #include "thread_wrapper_impl.hpp"
 
 std::shared_ptr<Listener> ModelImplFactory::create_listener() {
@@ -12,15 +11,8 @@ std::shared_ptr<Listener> ModelImplFactory::create_listener() {
 std::shared_ptr<AddressGatherer> ModelImplFactory::create_address_gatherer() {
     return std::make_shared<AddressGathererImpl>(shared_from_this());
 }
-std::shared_ptr<SocketManagerFactory> ModelImplFactory::create_socket_manager(net::io_context& context) {
+std::shared_ptr<SocketManagerFactory> ModelImplFactory::create_socket_builder(net::io_context& context) {
     return std::make_shared<SocketManagerImplFactory>(context);
-}
-std::shared_ptr<ConnectionEstablisher> ModelImplFactory::create_connection_establisher(
-    std::shared_ptr<SocketManager> socket_manager, 
-    std::shared_ptr<ConnectionStatusCallback> callback) {
-    auto connection_establisher = std::make_shared<ConnectionEstablisherImpl>(socket_manager);
-    connection_establisher->set_callback(callback);
-    return connection_establisher;
 }
 std::shared_ptr<FileProcessor> ModelImplFactory::create_file_processor(
     std::shared_ptr<SocketManager> socket_manager, 

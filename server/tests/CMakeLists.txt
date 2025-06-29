@@ -3,7 +3,6 @@ add_executable(server_tests
     model_mock_factory.cpp
     view_mock_factory.cpp
 
-    test_connection_establisher.cpp
     test_file_processor.cpp
     test_presenter.cpp
     test_listener.cpp

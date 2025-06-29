@@ -86,14 +86,14 @@ protected:
         };
     }
 
-    net::awaitable<void> listen_connection_at(Port port) override {
+    net::awaitable<void> listen_connection_at(Port port) {
         EndpointType endpoint(InternetProtocol::v4(), port);
         AcceptorType acceptor(context_, endpoint);
         socket_ = SocketPtr(new SocketType(context_), get_socket_deleter());
         co_await acceptor.async_accept(*socket_, net::use_awaitable);
     }
 
-    net::awaitable<void> connect_to(const Address& address, Port port) override {
+    net::awaitable<void> connect_to(const Address& address, Port port) {
         const EndpointType ep (net::ip::make_address(address), port);
         socket_ = SocketPtr(new SocketType(context_, InternetProtocol::v4()), get_socket_deleter());
         co_await socket_->async_connect(ep, net::use_awaitable);

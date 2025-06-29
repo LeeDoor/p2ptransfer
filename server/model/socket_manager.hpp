@@ -16,8 +16,4 @@ public:
     virtual net::awaitable<std::string> read_request() = 0;
     virtual net::awaitable<void> send_response(const std::string& response) = 0;
     virtual net::awaitable<size_t> read_file_part_to(BufferType& buffer, size_t& bytes_remaining) = 0;
-
-protected:
-    virtual net::awaitable<void> listen_connection_at(Port port) = 0;
-    virtual net::awaitable<void> connect_to(const Address& address, Port port) = 0;
 };
