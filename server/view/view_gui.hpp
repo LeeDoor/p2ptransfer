@@ -29,6 +29,8 @@ public slots:
     void listen_pressed();
 
 private:
+    void closeEvent(QCloseEvent* e) override;
+
     void setup_ui();
     Port get_port();
     void disable_ui();

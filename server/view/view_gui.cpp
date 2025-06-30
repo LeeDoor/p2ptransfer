@@ -95,3 +95,7 @@ void ViewGUI::enable_ui() {
     ui->portLineEdit->setEnabled(true);
     ui->progressBar->setValue(0);
 }
+
+void ViewGUI::closeEvent([[maybe_unused]] QCloseEvent* e) {
+    std::raise(SIGINT);
+}
