@@ -212,6 +212,18 @@ TEST_F(FileProcessorFixture, invalidRequestGiven_abortRethrow) {
     EXPECT_THROW(run_read_file(), std::runtime_error);
 }
 
+TEST_F(FileProcessorFixture, requestFilenameIsDirectory_abortRethrow) {
+    const std::string filename = "directory/new_file.txt";
+    const std::string filecontent = "some content\n";
+    size_t filesize = filecontent.size();
+    immitate_send_request(filename, filesize);
+    check_connection_aborted_callback();
+
+    EXPECT_THROW(run_read_file(), std::runtime_error);
+
+    EXPECT_FALSE(std::filesystem::exists(filename));
+}
+
 TEST_F(FileProcessorFixture, userDeclined_exceptionWithoutFile) {
     const std::string filename = "new_file.txt";
     const std::string filecontent = "some content\n";

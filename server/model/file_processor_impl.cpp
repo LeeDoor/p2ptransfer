@@ -27,7 +27,18 @@ net::awaitable<SendRequest> FileProcessorImpl::header_handshake() {
 net::awaitable<SendRequest> FileProcessorImpl::handle_send_request() {
     std::string request = co_await socket_manager_->read_request();
     auto send_request = RequestDeserializer::deserialize_send_request(request);
+    validate_send_request(send_request);
     co_return send_request;
+}
+
+void FileProcessorImpl::validate_send_request(const SendRequest& send_request) {
+    validate_filename(send_request.filename);
+}
+
+void FileProcessorImpl::validate_filename(const Filename& filename) {
+    std::filesystem::path path_filename(filename);
+    if (path_filename.has_parent_path())
+        throw std::runtime_error("filename should not contain directories: " + filename);
 }
 
 bool FileProcessorImpl::ask_file_confirmation(const SendRequest& send_request) {

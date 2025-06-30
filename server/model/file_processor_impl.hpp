@@ -16,6 +16,8 @@ public:
 private:
     net::awaitable<SendRequest> header_handshake();
     net::awaitable<SendRequest> handle_send_request();
+    void validate_send_request(const SendRequest& send_request);
+    void validate_filename(const Filename& filename);
     bool ask_file_confirmation(const SendRequest& send_request);
     net::awaitable<void> send_permission(const SendRequest& send_request);
     net::awaitable<void> read_file(const SendRequest& send_request);
