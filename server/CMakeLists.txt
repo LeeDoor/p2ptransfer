@@ -27,5 +27,4 @@ target_link_libraries(p2plisten PUBLIC
     server
 )
 target_include_directories(p2plisten PUBLIC ${INCLUDE_DIRECTORIES})
-target_compile_options(p2plisten PUBLIC -frtti -Wall -Wextra -Wpedantic)
 set(SERVER_INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} PARENT_SCOPE)

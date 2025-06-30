@@ -10,7 +10,7 @@ private:
     RequestDeserializer() = delete;
     template<DeserializableOrVoid ValueType>
     static ValueType deserialize_line(std::string_view line, RequestMethod required_method){
-        RequestMethod method = validate_method(SVMethods::pop_word(line), required_method);
+        validate_method(SVMethods::pop_word(line), required_method);
         std::string_view value_sv = SVMethods::pop_line(line);
         if constexpr (std::is_same_v<ValueType, void>) {
             return SVMethods::deserialize_value<ValueType>(value_sv);
@@ -19,7 +19,7 @@ private:
             return value;
         }
     }
-    static RequestMethod validate_method(std::string_view method_sv, RequestMethod required_method);
+    static void validate_method(std::string_view method_sv, RequestMethod required_method);
 
     static const std::unordered_map<HeaderType, RequestMethod> request_methods_;
 };

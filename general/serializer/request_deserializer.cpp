@@ -15,10 +15,9 @@ SendRequest RequestDeserializer::deserialize_send_request(const std::string requ
     return send_request;
 }
 
-RequestMethod RequestDeserializer::validate_method(std::string_view method_sv, RequestMethod required_method) {
+void RequestDeserializer::validate_method(std::string_view method_sv, RequestMethod required_method) {
     if(!request_methods_.contains(method_sv)) 
         throw std::runtime_error("no such method: " + SVMethods::to_string(method_sv));
     if(request_methods_.at(method_sv) != required_method) 
         throw std::runtime_error("Unexpected header found: " + SVMethods::to_string(method_sv));
-    return request_methods_.at(method_sv);
 }

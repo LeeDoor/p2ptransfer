@@ -10,14 +10,14 @@ std::shared_ptr<AddressGatherer> ModelMockFactory::create_address_gatherer() {
         throw std::runtime_error("Address Gatherer is not set as a mock");
     return address_gatherer_;
 }
-std::shared_ptr<SocketManagerFactory> ModelMockFactory::create_socket_builder(net::io_context& context) {
+std::shared_ptr<SocketManagerFactory> ModelMockFactory::create_socket_builder([[maybe_unused]] net::io_context& context) {
     if(!socket_manager_factory_)
         throw std::runtime_error("Socket manager is not set as a mock");
     return socket_manager_factory_;
 }
 std::shared_ptr<FileProcessor> ModelMockFactory::create_file_processor(
-    std::shared_ptr<SocketManager> socket_manager, 
-    std::shared_ptr<FileTransferCallback> callback) {
+    [[maybe_unused]] std::shared_ptr<SocketManager> socket_manager, 
+    [[maybe_unused]] std::shared_ptr<FileTransferCallback> callback) {
     if(!file_processor_)
         throw std::runtime_error("File Processor is not set as a mock");
     return file_processor_;

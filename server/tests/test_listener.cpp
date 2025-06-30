@@ -4,6 +4,7 @@
 #include "logger.hpp"
 #include "model_mock_factory.hpp"
 #include "remote_interaction_callback_mock.hpp"
+#include "socket_manager_mock.hpp"
 #include "socket_manager_mock_factory.hpp"
 #include "thread_wrapper_mock.hpp"
 
@@ -11,8 +12,8 @@ class ListenerFixture : public ::testing::Test {
 protected:
     ListenerFixture() :
         factory_(std::make_shared<ModelMockFactory>()),
-        socket_builder_(std::make_shared<SocketManagerMockFactory>()),
         socket_manager_(std::make_shared<SocketManagerMock>()),
+        socket_builder_(std::make_shared<SocketManagerMockFactory>(socket_manager_)),
         file_processor_(std::make_shared<FileProcessorMock>()),
         thread_wrapper_(std::make_shared<ThreadWrapperMock>()),
         callback_(std::make_shared<RemoteInteractionCallbackMock>())
@@ -23,14 +24,23 @@ protected:
         listener_ = std::make_shared<ListenerImpl>(factory_);
         listener_->set_callback(callback_);
 
+        expect_remote_endpoint_as_required();
+    }
+
+    void expect_remote_endpoint_as_required() {
         EXPECT_CALL(*socket_manager_, get_remote_endpoint())
             .Times(::testing::AtLeast(0))
             .WillRepeatedly(Return(SocketManager::Endpoint{TEST_ADDRESS, TEST_PORT}));
     }
+    void check_thread_wrapper_executing() {
+        EXPECT_CALL(*thread_wrapper_, is_running())
+            .WillOnce(Return(false));
+        EXPECT_CALL(*thread_wrapper_, mock_execute());
+    }
 
     std::shared_ptr<ModelMockFactory> factory_;
-    std::shared_ptr<SocketManagerMockFactory> socket_builder_;
     std::shared_ptr<SocketManagerMock> socket_manager_;
+    std::shared_ptr<SocketManagerMockFactory> socket_builder_;
     std::shared_ptr<FileProcessorMock> file_processor_;
     std::shared_ptr<ThreadWrapperMock> thread_wrapper_;
     std::shared_ptr<RemoteInteractionCallbackMock> callback_;
@@ -47,13 +57,8 @@ TEST_F(ListenerFixture, ifListeningAlready_doNothing) {
 }
 
 TEST_F(ListenerFixture, ifNotListening_connectAndReadFile) {
-    EXPECT_CALL(*thread_wrapper_, is_running())
-        .WillOnce(Return(false));
-    EXPECT_CALL(*thread_wrapper_, mock_execute());
-    EXPECT_CALL(*socket_builder_, tcp_listening_at(TEST_PORT))
-        .WillOnce([this]()->net::awaitable<std::shared_ptr<SocketManager>> {
-            co_return static_pointer_cast<SocketManager>(socket_manager_);
-        });
+    check_thread_wrapper_executing();
+    EXPECT_CALL(*socket_builder_, mock_tcp_listening_at(TEST_PORT));
     EXPECT_CALL(*file_processor_, try_read_file())
         .WillOnce(Return(return_immediately()));
     EXPECT_CALL(*callback_, connected(TEST_ADDRESS, TEST_PORT));
@@ -66,8 +71,8 @@ TEST_F(ListenerFixture, connectingAttemptThrewException_HandleWithoutRethrow) {
         .WillOnce(Return(false));
     EXPECT_CALL(*thread_wrapper_, mock_execute())
         .Times(testing::AtMost(1));
-    EXPECT_CALL(*socket_builder_, tcp_listening_at(TEST_PORT))
-        .WillOnce([]() -> net::awaitable<std::shared_ptr<SocketManager>> {
+    EXPECT_CALL(*socket_builder_, mock_tcp_listening_at(TEST_PORT))
+        .WillOnce([]() {
             throw std::runtime_error("immitating connection problem");
         });
     EXPECT_CALL(*callback_, cant_open_socket());
@@ -79,8 +84,7 @@ TEST_F(ListenerFixture, FileProcessorThrew_HandleWithoutRethrow) {
     EXPECT_CALL(*thread_wrapper_, is_running())
         .WillOnce(Return(false));
     EXPECT_CALL(*thread_wrapper_, mock_execute());
-    EXPECT_CALL(*socket_builder_, tcp_listening_at(TEST_PORT))
-        .WillOnce(Return(return_immediately(static_pointer_cast<SocketManager>(socket_manager_))));
+    EXPECT_CALL(*socket_builder_, mock_tcp_listening_at(TEST_PORT));
     EXPECT_CALL(*file_processor_, try_read_file())
         .WillOnce([]() -> net::awaitable<void> {
             throw std::runtime_error("immitating filing problem");

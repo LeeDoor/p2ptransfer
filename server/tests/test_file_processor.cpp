@@ -193,7 +193,6 @@ TEST_F(FileProcessorFixture, contentOutOfBufferSize_successFileProcessing) {
 TEST_F(FileProcessorFixture, readSendRequestThrowsException_abortRethrow) {
     const std::string filename = "new_file.txt";
     const std::string filecontent = "some content\n";
-    size_t filesize = filecontent.size();
     EXPECT_CALL(*socket_mock, read_request())
         .WillOnce([=]() -> net::awaitable<std::string> 
                   { throw std::runtime_error("immitating send_request reading error"); });
@@ -250,10 +249,10 @@ TEST_F(FileProcessorFixture, exceptionWhileReadingFile_abortRethrow) {
     check_response_sending(filename);
     ASSERT_LE(filesize, std::tuple_size<SocketManager::BufferType>::value);
     EXPECT_CALL(*socket_mock, read_file_part_to(testing::_, filesize))
-        .WillOnce([=](SocketManager::BufferType& buffer, size_t& bytes_remaining) 
+        .WillOnce(::testing::WithoutArgs([=]() 
                   -> net::awaitable<size_t> {
             throw std::runtime_error("immitating reading data exception");
-        });
+        }));
     check_connection_aborted_callback();
 
     EXPECT_THROW(run_read_file(), std::runtime_error);

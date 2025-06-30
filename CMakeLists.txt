@@ -10,7 +10,7 @@ option(GRAPHICS "Build with Qt" ON) # graphics executable
 
 set(LINK_LIBRARIES ) # libraries to link
 set(INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/general) # directories to include
-set(CMAKE_CXX_FLAGS "-O0")
+set(CMAKE_CXX_FLAGS "-O0 -frtti -Wall -Wextra -Wpedantic -Werror")
 if(WIN32) 
     set(LINK_LIBRARIES ws2_32 -lmswsock) 
 endif()

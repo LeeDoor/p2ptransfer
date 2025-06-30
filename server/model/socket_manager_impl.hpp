@@ -55,7 +55,6 @@ public:
     }
 
     net::awaitable<void> send_response(const std::string& response) override {
-        size_t bytes;
         co_await net::async_write(*socket_, 
                                   net::buffer(response), 
                                   net::use_awaitable);
