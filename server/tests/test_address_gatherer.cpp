@@ -56,6 +56,12 @@ TEST_F(AddressGathererFixture, gatheringAddress_success) {
     address_gatherer_->gather_local_address();
 }
 
+TEST_F(AddressGathererFixture, stopped_joinThread) {
+    EXPECT_CALL(*thread_wrapper_, join());
+
+    address_gatherer_->stop();
+}
+
 TEST_F(AddressGathererFixture, gatheringTwice_shouldThrow) {
     EXPECT_CALL(*thread_wrapper_, is_running())
         .WillOnce(Return(true));

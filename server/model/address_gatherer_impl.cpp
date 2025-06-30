@@ -30,5 +30,6 @@ net::awaitable<std::shared_ptr<SocketManager>> AddressGathererImpl::build_socket
 }
 
 void AddressGathererImpl::stop() {
-
+    context_.stop();
+    thread_wrapper_->join();
 }
