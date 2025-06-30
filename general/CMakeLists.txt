@@ -17,12 +17,14 @@ add_library(base
     serializer/request_deserializer.cpp
     string_view/string_view_methods.cpp
     thread_wrapper/thread_wrapper_impl.cpp
+    signal_handler/signal_handler.cpp
 )
 set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} 
     headers 
     serializer 
     string_view 
     thread_wrapper
+    signal_handler
 )
 target_precompile_headers(base PUBLIC ${PRECOMPILED_HEADERS})
 target_link_libraries(base PUBLIC ${LINK_LIBRARIES})

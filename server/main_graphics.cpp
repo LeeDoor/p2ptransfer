@@ -2,6 +2,7 @@
 #include "presenter_impl.hpp"
 #include "view_factory_impl.hpp"
 #include "model_impl_factory.hpp"
+#include "signal_handler.hpp"
 
 int main(int argc, char** argv) {
     LoggerInitializer init;
@@ -9,6 +10,9 @@ int main(int argc, char** argv) {
         std::make_shared<ModelImplFactory>(),
         std::make_shared<ViewGUIFactory>(argc, argv)
     );
+    SignalHandler::handle_SIGINT([&presenter]() {
+        presenter->stop();
+    });
     presenter->setup();
     return presenter->run();
 }
