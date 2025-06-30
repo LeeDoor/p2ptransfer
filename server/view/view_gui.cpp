@@ -17,6 +17,9 @@ int ViewGUI::run() {
     QMainWindow::show();
     return application_->exec();
 }
+void ViewGUI::stop() {
+    application_->quit();
+}
 void ViewGUI::show_address(const Address& address) {
     QString qaddress = address.c_str();
     run_sync([=, this] {

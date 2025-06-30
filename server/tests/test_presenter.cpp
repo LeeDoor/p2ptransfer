@@ -41,6 +41,14 @@ TEST_F(PresenterFixture, setup_InstallsCallbacks) {
     check_callbacks_installed();
 }
 
+TEST_F(PresenterFixture, stop_sendsStopCalls) {
+    EXPECT_CALL(*listener_, stop());
+    EXPECT_CALL(*address_gatherer_, stop());
+    EXPECT_CALL(*view_, stop());
+
+    presenter_->stop();
+}
+
 TEST_F(PresenterFixture, runWithoutSetup_ThrowsException) {
     EXPECT_THROW(presenter_->run(), std::runtime_error);
 }

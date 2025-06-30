@@ -18,6 +18,11 @@ int PresenterImpl::run() {
     address_gatherer_->gather_local_address();
     return view_->run();
 }
+void PresenterImpl::stop() {
+    listener_->stop();
+    address_gatherer_->stop();
+    view_->stop();
+}
 
 void PresenterImpl::listen(Port port) {
     listener_->listen_if_not_already(port);

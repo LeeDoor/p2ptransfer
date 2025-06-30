@@ -47,3 +47,8 @@ net::awaitable<std::shared_ptr<SocketManager>> ListenerImpl::connect_and_listen(
         throw;
     }
 }
+
+void ListenerImpl::stop() {
+    context_.stop();
+    thread_wrapper_->join();
+}

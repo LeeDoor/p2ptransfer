@@ -23,3 +23,7 @@ void ThreadWrapperImpl::try_join_thread() {
         thread_.join();
     }
 }
+
+void ThreadWrapperImpl::join() {
+    try_join_thread();
+}

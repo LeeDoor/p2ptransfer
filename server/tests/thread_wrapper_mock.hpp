@@ -4,6 +4,7 @@
 class ThreadWrapperMock : public ThreadWrapper {
 public:
     MOCK_METHOD(bool, is_running, (), (override));
+    MOCK_METHOD(void, join, (), (override));
     MOCK_METHOD(void, mock_execute, (), ());
 
 protected:

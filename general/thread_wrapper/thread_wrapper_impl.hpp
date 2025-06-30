@@ -6,6 +6,7 @@ public:
     ThreadWrapperImpl();
     bool is_running() override;
     void execute(Functor&& func) override;
+    void join() override;
 
 private:
     void try_join_thread();

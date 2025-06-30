@@ -8,6 +8,7 @@
 class View : public WithCallback<ViewCallback> {
 public:
     virtual int run() = 0;
+    virtual void stop() = 0;
 
     virtual void show_address(const Address& address) = 0;
 

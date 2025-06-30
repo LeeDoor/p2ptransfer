@@ -13,6 +13,7 @@ public:
     virtual ~Presenter() = default;
     virtual void setup() = 0;
     virtual int run() = 0;
+    virtual void stop() = 0;
 protected:
     std::shared_ptr<Listener> listener_;
     std::shared_ptr<AddressGatherer> address_gatherer_;

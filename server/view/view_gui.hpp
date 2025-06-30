@@ -16,6 +16,7 @@ public:
     ~ViewGUI();
 
     int run() override;
+    void stop() override;
 
     void show_address(const Address& ipaddress) override;
     void update_progressbar_status(double persent) override;

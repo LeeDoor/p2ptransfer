@@ -11,6 +11,7 @@ public:
                   std::shared_ptr<ViewFactory> view_factory);
     void setup() override;
     int run() override;
+    void stop() override;
 
     void listen(Port port) override;
     void set_progressbar(double persent) override;

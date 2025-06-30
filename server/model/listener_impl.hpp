@@ -7,6 +7,7 @@ class ListenerImpl : public Listener {
 public:
     ListenerImpl(std::shared_ptr<ModelFactory> model_factory);
     void listen_if_not_already(Port port) override;
+    void stop() override;
 
 private:
     void spawn_listen_coroutine(Port port);

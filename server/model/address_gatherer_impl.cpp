@@ -28,3 +28,7 @@ net::awaitable<std::shared_ptr<SocketManager>> AddressGathererImpl::build_socket
     auto socket_manager_factory = factory_->create_socket_builder(context_);
     co_return co_await socket_manager_factory->udp_connecting_to(address, port);;
 }
+
+void AddressGathererImpl::stop() {
+
+}

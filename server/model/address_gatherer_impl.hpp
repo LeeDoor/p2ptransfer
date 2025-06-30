@@ -9,6 +9,7 @@ public:
     AddressGathererImpl(std::shared_ptr<ModelFactory> factory);
 
     void gather_local_address() override;
+    void stop() override;
 private:
     net::awaitable<void> gather_async();
     net::awaitable<std::shared_ptr<SocketManager>> build_socket_manager(const Address& address, Port port);

@@ -6,6 +6,7 @@
 #include "remote_interaction_callback_mock.hpp"
 #include "socket_manager_mock.hpp"
 #include "socket_manager_mock_factory.hpp"
+#include "thread_wrapper_impl.hpp"
 #include "thread_wrapper_mock.hpp"
 
 class ListenerFixture : public ::testing::Test {
@@ -101,4 +102,10 @@ TEST_F(ListenerFixture, FileProcessorThrew_HandleWithoutRethrow) {
     check_connection_success_callback();
 
     EXPECT_NO_THROW(listener_->listen_if_not_already(TEST_PORT));
+}
+
+TEST_F(ListenerFixture, stoppingWhileThreadOff_doNothing) {
+    EXPECT_CALL(*thread_wrapper_, join());
+
+    listener_->stop();
 }
