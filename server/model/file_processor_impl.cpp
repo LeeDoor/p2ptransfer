@@ -1,10 +1,13 @@
 #include "file_processor_impl.hpp"
 #include "request_deserializer.hpp"
 #include "request_serializer.hpp"
+FileProcessorImpl::FileProcessorImpl(std::shared_ptr<SocketManager> socket_manager) :
+    socket_manager_(socket_manager) {}
 
 net::awaitable<void> FileProcessorImpl::try_read_file() {
     try {
-        co_await read_file();
+        auto send_request = co_await header_handshake();
+        co_await read_file(send_request);
         callback()->file_transfered();
     } catch (const std::exception& ex) {
         auto remote_endpoint = socket_manager_->get_remote_endpoint();
@@ -12,13 +15,13 @@ net::awaitable<void> FileProcessorImpl::try_read_file() {
         throw;
     }
 }
-net::awaitable<void> FileProcessorImpl::read_file() {
+
+net::awaitable<SendRequest> FileProcessorImpl::header_handshake() {
     auto send_request = co_await handle_send_request();
     if(!ask_file_confirmation(send_request))
         throw std::runtime_error("User denied file gathering");
     co_await send_permission(send_request);
-    std::ofstream output_file = open_file_for_writing(send_request.filename);
-    co_await handle_file(output_file , send_request);
+    co_return send_request;
 }
 
 net::awaitable<SendRequest> FileProcessorImpl::handle_send_request() {
@@ -27,16 +30,23 @@ net::awaitable<SendRequest> FileProcessorImpl::handle_send_request() {
     co_return send_request;
 }
 
-net::awaitable<void> FileProcessorImpl::send_permission(const SendRequest& send_request) {
-    auto send_permission = RequestSerializer::serialize_send_permission(send_request.filename);
-    co_await socket_manager_->send_response(send_permission);
-}
 bool FileProcessorImpl::ask_file_confirmation(const SendRequest& send_request) {
     if(auto callback = callback_.lock()) {
         return callback->verify_file(send_request.filename, send_request.filesize);
     }
     throw std::runtime_error("callback of FileProcessor is dead");
 }
+
+net::awaitable<void> FileProcessorImpl::send_permission(const SendRequest& send_request) {
+    auto send_permission = RequestSerializer::serialize_send_permission(send_request.filename);
+    co_await socket_manager_->send_response(send_permission);
+}
+
+net::awaitable<void> FileProcessorImpl::read_file(const SendRequest& send_request) {
+    std::ofstream output_file = open_file_for_writing(send_request.filename);
+    co_await handle_file(output_file, send_request.filesize);
+}
+
 std::ofstream FileProcessorImpl::open_file_for_writing(const std::string& initial_filename) {
     std::ofstream ofs("READED_" + initial_filename, std::ios::binary);
     if(!ofs.is_open()) {
@@ -44,13 +54,14 @@ std::ofstream FileProcessorImpl::open_file_for_writing(const std::string& initia
     }
     return ofs;
 }
-net::awaitable<void> FileProcessorImpl::handle_file(std::ofstream& os, const SendRequest& send_request) {
-    size_t bytes_remaining = send_request.filesize;
+
+net::awaitable<void> FileProcessorImpl::handle_file(std::ofstream& os, size_t filesize) {
+    size_t bytes_remaining = filesize;
     SocketManager::BufferType buffer;
     while (bytes_remaining) {
         size_t bytes = co_await socket_manager_->read_file_part_to(buffer, bytes_remaining);
         os.write(buffer.data(), bytes);
-        calculate_notify_progressbar(bytes_remaining, send_request.filesize);
+        calculate_notify_progressbar(bytes_remaining, filesize);
     }
 } 
 
