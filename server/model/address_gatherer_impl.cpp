@@ -8,10 +8,7 @@ AddressGathererImpl::AddressGathererImpl(std::shared_ptr<ModelFactory> factory) 
 void AddressGathererImpl::gather_local_address() {
     if(thread_wrapper_->is_running()) 
         throw std::logic_error("gathering local address twice");
-    auto rethrow_functor = [](std::exception_ptr ptr) {
-        if(ptr) std::rethrow_exception(ptr);
-    };
-    net::co_spawn(context_, gather_async(), rethrow_functor);
+    net::co_spawn(context_, gather_async(), net::detached);
     thread_wrapper_->execute([this] {
         context_.run();
         context_.restart();

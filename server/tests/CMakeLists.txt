@@ -7,6 +7,7 @@ add_executable(server_tests
     test_presenter.cpp
     test_listener.cpp
     test_socket_manager.cpp
+    test_address_gatherer.cpp
 )
 target_link_libraries(server_tests PUBLIC server ${LINK_LIBRARIES} test_headers GTest::gtest_main GTest::gmock)
 target_include_directories(server_tests PUBLIC ${INCLUDE_DIRECTORIES})

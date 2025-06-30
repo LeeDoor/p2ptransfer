@@ -4,7 +4,8 @@
 
 ListenerImpl::ListenerImpl(std::shared_ptr<ModelFactory> model_factory) :
     factory_(model_factory),
-    thread_wrapper_(factory_->create_thread_wrapper()){}
+    thread_wrapper_(factory_->create_thread_wrapper()){
+}
 
 void ListenerImpl::listen_if_not_already(Port port) {
     if(!thread_wrapper_->is_running()) { 
