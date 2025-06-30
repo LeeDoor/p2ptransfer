@@ -19,11 +19,15 @@ protected:
     {
         factory_->set_file_processor(file_processor_);
         factory_->set_thread_wrapper(thread_wrapper_);
-        factory_->set_socket_builder(std::make_shared<SocketManagerMockFactory>());
+        factory_->set_socket_builder(socket_builder_);
         listener_ = std::make_shared<ListenerImpl>(factory_);
         listener_->set_callback(callback_);
+
+        EXPECT_CALL(*socket_manager_, get_remote_endpoint())
+            .Times(::testing::AtLeast(0))
+            .WillRepeatedly(Return(SocketManager::Endpoint{TEST_ADDRESS, TEST_PORT}));
     }
-    
+
     std::shared_ptr<ModelMockFactory> factory_;
     std::shared_ptr<SocketManagerMockFactory> socket_builder_;
     std::shared_ptr<SocketManagerMock> socket_manager_;
@@ -45,17 +49,14 @@ TEST_F(ListenerFixture, ifListeningAlready_doNothing) {
 TEST_F(ListenerFixture, ifNotListening_connectAndReadFile) {
     EXPECT_CALL(*thread_wrapper_, is_running())
         .WillOnce(Return(false));
-    EXPECT_CALL(*thread_wrapper_, execute(::testing::_))
-        .WillOnce([](std::function<void()>&& func) {
-            func();
-        });
+    EXPECT_CALL(*thread_wrapper_, mock_execute());
     EXPECT_CALL(*socket_builder_, tcp_listening_at(TEST_PORT))
-        .WillOnce(Return(return_immediately(static_pointer_cast<SocketManager>(socket_manager_))));
-    EXPECT_CALL(*socket_manager_, get_remote_endpoint())
-        .WillOnce(Return(SocketManager::Endpoint{TEST_ADDRESS, TEST_PORT}));
-    EXPECT_CALL(*callback_, connected(TEST_ADDRESS, TEST_PORT));
+        .WillOnce([this]()->net::awaitable<std::shared_ptr<SocketManager>> {
+            co_return static_pointer_cast<SocketManager>(socket_manager_);
+        });
     EXPECT_CALL(*file_processor_, try_read_file())
         .WillOnce(Return(return_immediately()));
+    EXPECT_CALL(*callback_, connected(TEST_ADDRESS, TEST_PORT));
 
     listener_->listen_if_not_already(TEST_PORT);
 }
@@ -63,15 +64,13 @@ TEST_F(ListenerFixture, ifNotListening_connectAndReadFile) {
 TEST_F(ListenerFixture, connectingAttemptThrewException_HandleWithoutRethrow) {
     EXPECT_CALL(*thread_wrapper_, is_running())
         .WillOnce(Return(false));
-    EXPECT_CALL(*thread_wrapper_, execute(::testing::_))
-        .Times(testing::AtMost(1))
-        .WillOnce([](std::function<void()>&& func) {
-            func();
-        });
+    EXPECT_CALL(*thread_wrapper_, mock_execute())
+        .Times(testing::AtMost(1));
     EXPECT_CALL(*socket_builder_, tcp_listening_at(TEST_PORT))
         .WillOnce([]() -> net::awaitable<std::shared_ptr<SocketManager>> {
             throw std::runtime_error("immitating connection problem");
         });
+    EXPECT_CALL(*callback_, cant_open_socket());
 
     EXPECT_NO_THROW(listener_->listen_if_not_already(TEST_PORT));
 }
@@ -79,16 +78,14 @@ TEST_F(ListenerFixture, connectingAttemptThrewException_HandleWithoutRethrow) {
 TEST_F(ListenerFixture, FileProcessorThrew_HandleWithoutRethrow) {
     EXPECT_CALL(*thread_wrapper_, is_running())
         .WillOnce(Return(false));
-    EXPECT_CALL(*thread_wrapper_, execute(::testing::_))
-        .WillOnce([](std::function<void()>&& func) {
-            func();
-        });
+    EXPECT_CALL(*thread_wrapper_, mock_execute());
     EXPECT_CALL(*socket_builder_, tcp_listening_at(TEST_PORT))
         .WillOnce(Return(return_immediately(static_pointer_cast<SocketManager>(socket_manager_))));
     EXPECT_CALL(*file_processor_, try_read_file())
         .WillOnce([]() -> net::awaitable<void> {
             throw std::runtime_error("immitating filing problem");
         });
+    EXPECT_CALL(*callback_, connected(TEST_ADDRESS, TEST_PORT));
 
     EXPECT_NO_THROW(listener_->listen_if_not_already(TEST_PORT));
 }

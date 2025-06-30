@@ -35,16 +35,6 @@ public:
             "at the beginning of your program." << std::endl;
         exit(1);
     }
-    template<typename Func>
-    static bool catch_log(const Func& f) {
-        try {
-            f();
-            return true;
-        } catch(const std::exception& ex) {
-            log() << ex.what() << std::endl;
-            return false;
-        }
-    }
     static void progressbar_init() {
         log() << std::setprecision(5) << std::right;
     }

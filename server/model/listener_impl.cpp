@@ -13,7 +13,7 @@ void ListenerImpl::listen_if_not_already(Port port) {
 }
 
 void ListenerImpl::spawn_and_run(Port port) {
-    thread_wrapper_->execute([=, this] {
+    thread_wrapper_->execute([port, this] {
         spawn_listen_coroutine(port);
         context_.run();
         context_.restart();
@@ -21,10 +21,7 @@ void ListenerImpl::spawn_and_run(Port port) {
 }
 
 void ListenerImpl::spawn_listen_coroutine(Port port) {
-    auto rethrow_functor = [](std::exception_ptr ptr) {
-        if(ptr) std::rethrow_exception(ptr);
-    };
-    net::co_spawn(context_, listen_async(port), rethrow_functor);
+    net::co_spawn(context_, listen_async(port), net::detached);
 }
 
 net::awaitable<void> ListenerImpl::listen_async(Port port) {
@@ -46,7 +43,6 @@ net::awaitable<std::shared_ptr<SocketManager>> ListenerImpl::connect_and_listen(
         co_return socket_manager;
     } catch(const std::exception& ex) {
         callback()->cant_open_socket();
-        Logger::log() << ex.what() << std::endl;
         throw;
     }
 }
