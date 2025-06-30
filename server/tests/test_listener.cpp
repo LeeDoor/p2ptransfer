@@ -35,7 +35,22 @@ protected:
     void check_thread_wrapper_executing() {
         EXPECT_CALL(*thread_wrapper_, is_running())
             .WillOnce(Return(false));
-        EXPECT_CALL(*thread_wrapper_, mock_execute());
+        EXPECT_CALL(*thread_wrapper_, mock_execute())
+            .Times(::testing::AtLeast(1));
+    }
+    void check_socket_creation() {
+        EXPECT_CALL(*socket_builder_, mock_tcp_listening_at(TEST_PORT));
+    }
+    void check_file_processing() {
+        EXPECT_CALL(*file_processor_, try_read_file())
+            .WillOnce(Return(return_immediately()));
+    }
+
+    void check_connection_success_callback() {
+        EXPECT_CALL(*callback_, connected(TEST_ADDRESS, TEST_PORT));
+    }
+    void check_failure_callback() {
+        EXPECT_CALL(*callback_, cant_open_socket());
     }
 
     std::shared_ptr<ModelMockFactory> factory_;
@@ -58,38 +73,32 @@ TEST_F(ListenerFixture, ifListeningAlready_doNothing) {
 
 TEST_F(ListenerFixture, ifNotListening_connectAndReadFile) {
     check_thread_wrapper_executing();
-    EXPECT_CALL(*socket_builder_, mock_tcp_listening_at(TEST_PORT));
-    EXPECT_CALL(*file_processor_, try_read_file())
-        .WillOnce(Return(return_immediately()));
-    EXPECT_CALL(*callback_, connected(TEST_ADDRESS, TEST_PORT));
+    check_socket_creation();
+    check_file_processing();
+    check_connection_success_callback();
 
     listener_->listen_if_not_already(TEST_PORT);
 }
 
 TEST_F(ListenerFixture, connectingAttemptThrewException_HandleWithoutRethrow) {
-    EXPECT_CALL(*thread_wrapper_, is_running())
-        .WillOnce(Return(false));
-    EXPECT_CALL(*thread_wrapper_, mock_execute())
-        .Times(testing::AtMost(1));
+    check_thread_wrapper_executing();
     EXPECT_CALL(*socket_builder_, mock_tcp_listening_at(TEST_PORT))
         .WillOnce([]() {
             throw std::runtime_error("immitating connection problem");
         });
-    EXPECT_CALL(*callback_, cant_open_socket());
+    check_failure_callback();
 
     EXPECT_NO_THROW(listener_->listen_if_not_already(TEST_PORT));
 }
 
 TEST_F(ListenerFixture, FileProcessorThrew_HandleWithoutRethrow) {
-    EXPECT_CALL(*thread_wrapper_, is_running())
-        .WillOnce(Return(false));
-    EXPECT_CALL(*thread_wrapper_, mock_execute());
-    EXPECT_CALL(*socket_builder_, mock_tcp_listening_at(TEST_PORT));
+    check_thread_wrapper_executing();
+    check_socket_creation();
     EXPECT_CALL(*file_processor_, try_read_file())
         .WillOnce([]() -> net::awaitable<void> {
             throw std::runtime_error("immitating filing problem");
         });
-    EXPECT_CALL(*callback_, connected(TEST_ADDRESS, TEST_PORT));
+    check_connection_success_callback();
 
     EXPECT_NO_THROW(listener_->listen_if_not_already(TEST_PORT));
 }
