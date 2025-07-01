@@ -1,5 +1,5 @@
 #pragma once
-#include "common_types.hpp"
+
 #include "socket_manager.hpp"
 
 template<typename InternetProtocol>

@@ -1,6 +1,6 @@
 #include "address_gatherer_impl.hpp"
 #include "gather_address_callback_mock.hpp"
-#include "gtest_headers.hpp"
+
 #include "model_mock_factory.hpp"
 #include "socket_manager_mock.hpp"
 #include "socket_manager_mock_factory.hpp"

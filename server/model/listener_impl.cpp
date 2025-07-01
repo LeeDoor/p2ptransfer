@@ -1,5 +1,5 @@
 #include "listener_impl.hpp"
-#include "common_types.hpp"
+
 #include "logger.hpp"
 
 ListenerImpl::ListenerImpl(std::shared_ptr<ModelFactory> model_factory) :

@@ -1,4 +1,4 @@
-#include "gtest_headers.hpp"
+
 #include "socket_manager_impl.hpp"
 
 class SocketManagerFixture : public ::testing::Test {

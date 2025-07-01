@@ -1,6 +1,6 @@
 #pragma once
 #include "address_gatherer.hpp"
-#include "common_types.hpp"
+
 #include "model_factory.hpp"
 #include "thread_wrapper.hpp"
 

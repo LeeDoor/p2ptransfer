@@ -1,4 +1,4 @@
-#include "gtest_headers.hpp"
+
 #include "listener_mock.hpp"
 #include "address_gatherer_mock.hpp"
 #include "presenter_impl.hpp"

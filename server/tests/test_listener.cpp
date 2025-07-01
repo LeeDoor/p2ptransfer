@@ -1,5 +1,5 @@
 #include "file_processor_mock.hpp"
-#include "gtest_headers.hpp"
+
 #include "listener_impl.hpp"
 #include "logger.hpp"
 #include "model_mock_factory.hpp"

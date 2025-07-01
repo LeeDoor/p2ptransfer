@@ -1,5 +1,5 @@
 #include "file_processor_impl.hpp"
-#include "gtest_headers.hpp"
+
 #include "remote_interaction_callback_mock.hpp"
 #include "socket_manager_mock.hpp"
 #include "request_serializer.hpp"
