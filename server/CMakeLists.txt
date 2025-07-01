@@ -17,14 +17,17 @@ target_link_libraries(server INTERFACE
     server_presenter
     ${LINK_LIBRARIES})
 
-if(${GRAPHICS})
-    qt_add_executable(p2plisten main_graphics.cpp)
-else()
-    message( FATAL_ERROR "graphicsless server is not implemented")
+if(NOT ${TESTING})
+    if(${GRAPHICS})
+        qt_add_executable(p2plisten main_graphics.cpp)
+    else()
+        message( FATAL_ERROR "graphicsless server is not implemented")
+    endif()
+    target_link_libraries(p2plisten PUBLIC 
+        base 
+        server
+    )
+    target_include_directories(p2plisten PUBLIC ${INCLUDE_DIRECTORIES})
+    target_precompile_headers(p2plisten REUSE_FROM base)
 endif()
-target_link_libraries(p2plisten PUBLIC 
-    base 
-    server
-)
-target_include_directories(p2plisten PUBLIC ${INCLUDE_DIRECTORIES})
 set(SERVER_INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} PARENT_SCOPE)

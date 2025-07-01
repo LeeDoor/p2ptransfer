@@ -10,5 +10,6 @@ add_executable(server_tests
     test_address_gatherer.cpp
 )
 target_link_libraries(server_tests PUBLIC server ${LINK_LIBRARIES} test_headers GTest::gtest_main GTest::gmock)
+target_precompile_headers(server_tests REUSE_FROM base)
 target_include_directories(server_tests PUBLIC ${INCLUDE_DIRECTORIES})
 gtest_discover_tests(server_tests)

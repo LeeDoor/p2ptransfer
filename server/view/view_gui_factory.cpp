@@ -1,4 +1,4 @@
-#include "view_factory_impl.hpp"
+#include "view_gui_factory.hpp"
 #include "view_gui.hpp"
 
 ViewGUIFactory::ViewGUIFactory(int& argc, char** argv) 

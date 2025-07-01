@@ -1,6 +1,6 @@
 #include "logger.hpp"
 #include "presenter_impl.hpp"
-#include "view_factory_impl.hpp"
+#include "view_gui_factory.hpp"
 #include "model_impl_factory.hpp"
 #include "signal_handler.hpp"
 

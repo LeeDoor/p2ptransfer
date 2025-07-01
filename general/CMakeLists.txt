@@ -7,11 +7,6 @@ if(${GRAPHICS})
         headers/qt_headers.hpp
     )
 endif()
-if(${TESTING}) 
-    add_library(test_headers INTERFACE)
-    target_precompile_headers(test_headers INTERFACE headers/gtest_headers.hpp)
-    add_subdirectory(tests)
-endif()
 add_library(base 
     serializer/request_serializer.cpp
     serializer/request_deserializer.cpp
@@ -30,3 +25,9 @@ target_precompile_headers(base PUBLIC ${PRECOMPILED_HEADERS})
 target_link_libraries(base PUBLIC ${LINK_LIBRARIES})
 target_include_directories(base PUBLIC ${INCLUDE_DIRECTORIES})
 set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} PARENT_SCOPE)
+
+if(${TESTING}) 
+    add_library(test_headers INTERFACE)
+    target_precompile_headers(test_headers INTERFACE headers/gtest_headers.hpp)
+    add_subdirectory(tests)
+endif()
