@@ -1,1 +1,1 @@
-./build/client/p2ptransfer $@
+../build/client/p2ptransfer $@

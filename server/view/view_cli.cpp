@@ -3,11 +3,13 @@
 
 int ViewCLI::run() {
     std::cout << "Hello, world!" << std::endl;
-    while(true);
+    callback()->listen(45954);
+    while(is_running_);
     return 0;
 }
 void ViewCLI::stop() {
     std::cout << "bye, world!" << std::endl;
+    is_running_ = false;
 }
 void ViewCLI::show_address(const Address& address) {
     std::cout << "Your LAN Address: " << address << std::endl;
