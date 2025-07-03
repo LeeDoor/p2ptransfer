@@ -1,3 +1,9 @@
-cd ../build/
-ctest --test-dir x86_64_linux/cli --output-on-failure --stop-on-failure $@
-ctest --test-dir x86_64_linux/graphics --output-on-failure --stop-on-failure $@
+cd ../build/x86_64_linux/
+
+if [ -d cli ]; then
+    ctest --test-dir cli --output-on-failure --stop-on-failure $@
+elif [ -d graphics ]; then
+    ctest --test-dir graphics --output-on-failure --stop-on-failure $@
+else
+    echo "cant find a directory to run tests here: $(pwd)"
+fi
