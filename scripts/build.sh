@@ -1,28 +1,37 @@
-if [ $# -eq 0 ]
+# Help printing
+if [[ "$1" == "--help" ]];
 then
-    echo 'USAGE: ./build.sh <0=CLI|1=GRAPHICS>'
+    echo 'USAGE: ./build.sh [<0=CLI|1=GRAPHICS>] [build directory name (i.e. windows, linux)] [CMake params...]'
     exit 0
 fi
 
-graphics=$1
+# Reading view mode parameter
+graphics=${1:-0}
 shift
 
 cd ../
 
+# Reading build and source directories
 src=$(pwd)
-build_dir=${1:-x86_64_linux}
-echo $build_dir
+build_dir=${1:-$(uname)}
 shift
 
+# Creating build directory
 mkdir build/$build_dir -p
 cd build/$build_dir
 
-if [ $graphics -eq 1 ]
+# Printing logs
+echo -n "building sources at $build_dir with: tests; "
+if [[ $graphics -eq 1 ]];
 then
     mkdir graphics/ -p
     cd graphics/
+    echo "graphics"
 else
     mkdir cli/ -p
     cd cli/
+    echo "cli"
 fi
+
+# Executing CMake
 cmake $src -DTESTING=ON -DGRAPHICS=$graphics $@ && cmake --build . -j4
