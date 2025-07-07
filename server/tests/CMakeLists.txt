@@ -8,6 +8,7 @@ add_executable(server_tests
     test_listener.cpp
     test_socket_manager.cpp
     test_address_gatherer.cpp
+    test_thread_wrapper.cpp
 )
 target_link_libraries(server_tests PUBLIC server ${LINK_LIBRARIES} GTest::gtest_main GTest::gmock)
 target_precompile_headers(server_tests REUSE_FROM base)
