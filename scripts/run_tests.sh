@@ -1,4 +1,4 @@
-cd ../build/x86_64_linux/
+cd ../build/$(uname)
 
 if [ -d cli ]; then
     ctest --test-dir cli --output-on-failure --stop-on-failure $@
