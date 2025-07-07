@@ -1,2 +1,2 @@
-mkdir win_build; cd win_build && cmake -DENABLE_TESTING=OFF -DCMAKE_TOOLCHAIN_FILE=../toolchain/mingw.cmake .. && cmake --build . -j16
-
+./build.sh 0 windows '-DCMAKE_TOOLCHAIN_FILE=$(pwd)/../toolchain/mingw.cmake'
+./build.sh 1 windows '-DCMAKE_TOOLCHAIN_FILE=$(pwd)/../toolchain/mingw.cmake'

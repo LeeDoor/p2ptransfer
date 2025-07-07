@@ -5,13 +5,17 @@ then
 fi
 
 graphics=$1
+shift
 
 cd ../
 
 src=$(pwd)
+build_dir=${1:-x86_64_linux}
+echo $build_dir
+shift
 
-mkdir build/x86_64_linux/ -p
-cd build/x86_64_linux/
+mkdir build/$build_dir -p
+cd build/$build_dir
 
 if [ $graphics -eq 1 ]
 then
@@ -21,4 +25,4 @@ else
     mkdir cli/ -p
     cd cli/
 fi
-cmake $src -DTESTING=ON -DGRAPHICS=$graphics && cmake --build . -j4
+cmake $src -DTESTING=ON -DGRAPHICS=$graphics $@ && cmake --build . -j4

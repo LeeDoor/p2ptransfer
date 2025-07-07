@@ -2,8 +2,13 @@
 #include "filesize_formatter.hpp"
 
 int ViewCLI::run() {
-    std::cout << "Hello, world!" << std::endl;
-    callback()->listen(45954);
+    std::cout << 
+        "Ready to listen for connections\n"
+        "Enter your port: ";
+    Port port;
+    std::cin >> port;
+    if(!std::cin.good() || port > 65535) is_running_ = false;
+    else callback()->listen(port);
     while(is_running_);
     return 0;
 }
