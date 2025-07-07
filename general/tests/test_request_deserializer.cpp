@@ -1,4 +1,3 @@
-#include "gtest_headers.hpp"
 #include "request_deserializer.hpp"
 
 TEST(RequestDeserializer, SuccessSerializing_avg) {

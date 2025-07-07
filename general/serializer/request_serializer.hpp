@@ -1,9 +1,10 @@
 #pragma once
 
+#include "request_structures.hpp"
 class RequestSerializer {
 public:
-    static std::string serialize_send_request(const std::string& filename, size_t filesize);
-    static std::string serialize_send_permission(const std::string filename);
+    static std::string serialize_send_request(const Filename& filename, Filesize filesize);
+    static std::string serialize_send_permission(const Filename filename);
 
 private:
     RequestSerializer() = delete;
