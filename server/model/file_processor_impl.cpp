@@ -59,7 +59,7 @@ net::awaitable<void> FileProcessorImpl::read_file(const SendRequest& send_reques
 }
 
 std::ofstream FileProcessorImpl::open_file_for_writing(const std::string& initial_filename) {
-    std::ofstream ofs("READED_" + initial_filename, std::ios::binary);
+    std::ofstream ofs("READED_" + initial_filename, std::ofstream::binary);
     if(!ofs.is_open()) {
         throw std::runtime_error("failed to open file for writing");
     }

@@ -65,7 +65,7 @@ protected:
     void verify_file_content(const std::string& filename, const std::string& expected_file_content) {
         size_t filesize = expected_file_content.size();
         EXPECT_EQ(std::filesystem::file_size("READED_" + filename), filesize);
-        std::ifstream ifstream("READED_" + filename);
+        std::ifstream ifstream("READED_" + filename, std::ios::binary);
         ASSERT_TRUE(ifstream.is_open());
         std::stringstream ss;
         ss << ifstream.rdbuf();
