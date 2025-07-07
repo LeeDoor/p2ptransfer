@@ -2,13 +2,6 @@
 #include "filesize_formatter.hpp"
 
 int ViewCLI::run() {
-    std::cout << 
-        "Ready to listen for connections\n"
-        "Enter your port: ";
-    Port port;
-    std::cin >> port;
-    if(!std::cin.good() || port > 65535) is_running_ = false;
-    else callback()->listen(port);
     while(is_running_);
     return 0;
 }
@@ -18,12 +11,22 @@ void ViewCLI::stop() {
 }
 void ViewCLI::show_address(const Address& address) {
     std::cout << "Your LAN Address: " << address << std::endl;
+    read_port_and_listen();
+}
+void ViewCLI::read_port_and_listen() {
+    std::cout << 
+        "Ready to listen for connections\n"
+        "Enter your port: ";
+    Port port;
+    std::cin >> port;
+    if(!std::cin.good() || port > 65535) is_running_ = false;
+    else callback()->listen(port);
 }
 void ViewCLI::show_connected(const Address& address, Port port) {
     std::cout << "Connected to remote endpoint: " << address << ":" << port << std::endl;
 }
 void ViewCLI::show_socket_error() {
-    std::cout << "Failed to connect to socket" << std::endl;
+    std::cout << "Cant open socket" << std::endl;
 }
 void ViewCLI::update_progressbar_status(double persent) {
     std::cout << "progress: " << persent << std::endl;
