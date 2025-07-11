@@ -1,14 +1,14 @@
 #pragma once
 
-#include "model_factory.hpp"
-#include "view_factory.hpp"
 #include "presenter.hpp"
+#include "view.hpp"
 class PresenterImpl : 
     public Presenter, 
     public std::enable_shared_from_this<PresenterImpl> {
 public:
-    PresenterImpl(std::shared_ptr<ModelFactory> model_factory,
-                  std::shared_ptr<ViewFactory> view_factory);
+    PresenterImpl(std::shared_ptr<Listener> listener,
+                  std::shared_ptr<AddressGatherer> address_gatherer,
+                  std::shared_ptr<View> view);
     void setup() override;
     int run() override;
     void stop() override;
@@ -27,5 +27,5 @@ private:
     bool is_initialized_ = false;
     std::shared_ptr<View> view_;
     std::shared_ptr<Listener> listener_;
-    std::shared_ptr<AddressGatherer> gatherer_;
+    std::shared_ptr<AddressGatherer> address_gatherer_;
 };

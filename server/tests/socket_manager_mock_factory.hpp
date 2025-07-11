@@ -1,6 +1,5 @@
 #pragma once
-#include "model_factory.hpp"
-
+#include "socket_manager_builder.hpp"
 class SocketManagerMockFactory : public SocketManagerFactory {
 public:
     SocketManagerMockFactory(std::shared_ptr<SocketManager> socket_manager) :

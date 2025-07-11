@@ -1,10 +1,12 @@
 #include "presenter_impl.hpp"
-PresenterImpl::PresenterImpl(std::shared_ptr<ModelFactory> model_factory,
-              std::shared_ptr<ViewFactory> view_factory) {
-    view_ = view_factory->create_view();
-    listener_ = model_factory->create_listener();
-    address_gatherer_ = model_factory->create_address_gatherer();
-}
+
+PresenterImpl::PresenterImpl(std::shared_ptr<Listener> listener,
+              std::shared_ptr<AddressGatherer> address_gatherer,
+                  std::shared_ptr<View> view) :
+    view_ {view},
+    listener_ {listener},
+    address_gatherer_ {address_gatherer}
+{}
 
 void PresenterImpl::setup() {
     is_initialized_ = true;

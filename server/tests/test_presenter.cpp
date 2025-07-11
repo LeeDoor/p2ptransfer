@@ -3,8 +3,6 @@
 #include "address_gatherer_mock.hpp"
 #include "presenter_impl.hpp"
 #include "view_mock.hpp"
-#include "model_mock_factory.hpp"
-#include "view_mock_factory.hpp"
 
 class PresenterFixture : public ::testing::Test {
 protected:
@@ -13,12 +11,10 @@ protected:
         address_gatherer_(std::make_shared<AddressGathererMock>()),
         view_(std::make_shared<ViewMock>())
     {
-        auto model_factory = std::make_shared<ModelMockFactory>();
-        model_factory->set_listener(listener_);
-        model_factory->set_address_gatherer(address_gatherer_);
         presenter_ = std::make_shared<PresenterImpl>(
-            model_factory,
-            std::make_shared<ViewMockFactory>(view_)
+            listener_,
+            address_gatherer_,
+            view_
         );
     }
 

@@ -20,6 +20,7 @@ add_library(base
     string_view/string_view_methods.cpp
     thread_wrapper/thread_wrapper_impl.cpp
     signal_handler/signal_handler.cpp
+    address_gatherer/address_gatherer_impl.cpp
 )
 set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} 
     headers 
@@ -27,6 +28,8 @@ set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES}
     string_view 
     thread_wrapper
     signal_handler
+    address_gatherer
+    socket_manager
 )
 target_precompile_headers(base PUBLIC ${PRECOMPILED_HEADERS})
 target_link_libraries(base PUBLIC ${LINK_LIBRARIES})

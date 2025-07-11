@@ -21,7 +21,7 @@ mkdir build/$build_dir -p
 cd build/$build_dir
 
 # Printing logs
-echo -n "building sources at $build_dir with: tests; "
+echo -n "building $src at $build_dir with: "
 if [[ $graphics -eq 1 ]];
 then
     mkdir graphics/ -p

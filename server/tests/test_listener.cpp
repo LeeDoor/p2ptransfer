@@ -2,27 +2,27 @@
 
 #include "listener_impl.hpp"
 #include "logger.hpp"
-#include "model_mock_factory.hpp"
 #include "remote_interaction_callback_mock.hpp"
+#include "file_processor_mock_builder.hpp"
 #include "socket_manager_mock.hpp"
 #include "socket_manager_mock_factory.hpp"
-#include "thread_wrapper_impl.hpp"
 #include "thread_wrapper_mock.hpp"
 
 class ListenerFixture : public ::testing::Test {
 protected:
     ListenerFixture() :
-        factory_(std::make_shared<ModelMockFactory>()),
         socket_manager_(std::make_shared<SocketManagerMock>()),
         socket_builder_(std::make_shared<SocketManagerMockFactory>(socket_manager_)),
         file_processor_(std::make_shared<FileProcessorMock>()),
         thread_wrapper_(std::make_shared<ThreadWrapperMock>()),
         callback_(std::make_shared<RemoteInteractionCallbackMock>())
     {
-        factory_->set_file_processor(file_processor_);
-        factory_->set_thread_wrapper(thread_wrapper_);
-        factory_->set_socket_builder(socket_builder_);
-        listener_ = std::make_shared<ListenerImpl>(factory_);
+        listener_ = std::make_shared<ListenerImpl>(
+            std::make_shared<net::io_context>(),
+            thread_wrapper_,
+            socket_builder_,
+            std::make_shared<FileProcessorMockBuilder>(file_processor_)
+        );
         listener_->set_callback(callback_);
 
         expect_remote_endpoint_as_required();
@@ -54,7 +54,6 @@ protected:
         EXPECT_CALL(*callback_, cant_open_socket());
     }
 
-    std::shared_ptr<ModelMockFactory> factory_;
     std::shared_ptr<SocketManagerMock> socket_manager_;
     std::shared_ptr<SocketManagerMockFactory> socket_builder_;
     std::shared_ptr<FileProcessorMock> file_processor_;
