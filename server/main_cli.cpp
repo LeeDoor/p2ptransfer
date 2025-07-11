@@ -1,16 +1,15 @@
-#include "address_gatherer_impl_builder.hpp"
 #include "logger.hpp"
 #include "presenter_impl.hpp"
+#include "model_builder.hpp"
 #include "signal_handler.hpp"
-#include "listener_impl_builder.hpp"
-#include "view_cli_builder.hpp"
+#include "view_cli.hpp"
 
 int main() {
     LoggerInitializer log_init;
     auto presenter = std::make_shared<PresenterImpl>(
-        std::make_shared<ListenerImplBuilder>()->create_listener(),
-        std::make_shared<AddressGathererImplBuilder>()->create_address_gatherer(),
-        std::make_shared<ViewCLIBuilder>()->create_view()
+        ModelBuilder::create_listener(),
+        ModelBuilder::create_address_gatherer(),
+        std::make_shared<ViewCLI>()
     );
     SignalHandler::handle_SIGINT([&presenter]() {
         presenter->stop();
