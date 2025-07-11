@@ -1,8 +1,8 @@
 #pragma once
 #include "socket_manager_builder.hpp"
-class SocketManagerMockFactory : public SocketManagerFactory {
+class SocketManagerMockBuilder : public SocketManagerBuilder {
 public:
-    SocketManagerMockFactory(std::shared_ptr<SocketManager> socket_manager) :
+    SocketManagerMockBuilder(std::shared_ptr<SocketManager> socket_manager) :
         socket_manager_(socket_manager){}
    
     MOCK_METHOD(void, mock_tcp_listening_at, (Port port), ());

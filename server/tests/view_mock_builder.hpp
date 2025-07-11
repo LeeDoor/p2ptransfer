@@ -1,9 +1,9 @@
 #pragma once
-#include "view_factory.hpp"
+#include "view_builder.hpp"
 
-class ViewMockFactory : public ViewFactory {
+class ViewMockBuilder : public ViewBuilder {
 public:
-    ViewMockFactory(
+    ViewMockBuilder(
         std::shared_ptr<View> view
     ) : 
         view_(view)

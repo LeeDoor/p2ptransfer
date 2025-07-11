@@ -1,7 +1,7 @@
 #pragma once
-#include "view_factory.hpp"
+#include "view_builder.hpp"
 
-class ViewCLIFactory : public ViewFactory {
+class ViewCLIBuilder : public ViewBuilder {
 public:
     std::shared_ptr<View> create_view() override;
 };

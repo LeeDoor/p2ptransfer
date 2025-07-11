@@ -2,9 +2,9 @@
 #include "socket_manager_builder.hpp"
 #include "socket_manager_impl.hpp"
 
-class SocketManagerImplFactory : public SocketManagerFactory {
+class SocketManagerImplBuilder : public SocketManagerBuilder {
 public:
-    SocketManagerImplFactory(std::shared_ptr<net::io_context> context) :
+    SocketManagerImplBuilder(std::shared_ptr<net::io_context> context) :
         context_(context) {}
     net::awaitable<std::shared_ptr<SocketManager>> tcp_listening_at(Port port) override {
         co_return co_await SocketManagerTcp::open_for_listening(*context_, port);

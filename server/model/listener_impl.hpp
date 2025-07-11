@@ -8,8 +8,8 @@ class ListenerImpl : public Listener {
 public:
     ListenerImpl(std::shared_ptr<net::io_context> context,
                  std::shared_ptr<ThreadWrapper> thread_wrapper,
-                 std::shared_ptr<SocketManagerFactory> socket_manager_factory,
-                 std::shared_ptr<FileProcessorBuilder> file_processor_factory);
+                 std::shared_ptr<SocketManagerBuilder> socket_manager_builder,
+                 std::shared_ptr<FileProcessorBuilder> file_processor_builder);
     void listen_if_not_already(Port port) override;
     void stop() override;
 
@@ -21,7 +21,7 @@ private:
     net::awaitable<std::shared_ptr<SocketManager>> build_socket_manager(Port port);
 
     std::shared_ptr<ThreadWrapper> thread_wrapper_;
-    std::shared_ptr<SocketManagerFactory> socket_manager_factory_;
-    std::shared_ptr<FileProcessorBuilder> file_processor_factory_;
+    std::shared_ptr<SocketManagerBuilder> socket_manager_builder_;
+    std::shared_ptr<FileProcessorBuilder> file_processor_builder_;
     std::shared_ptr<net::io_context> context_;
 };

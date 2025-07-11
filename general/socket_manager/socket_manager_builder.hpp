@@ -1,7 +1,7 @@
 #pragma once
 #include "socket_manager.hpp"
 
-class SocketManagerFactory {
+class SocketManagerBuilder {
 public:
     virtual net::awaitable<std::shared_ptr<SocketManager>> tcp_listening_at(Port port) = 0;
     virtual net::awaitable<std::shared_ptr<SocketManager>> udp_listening_at(Port port) = 0;

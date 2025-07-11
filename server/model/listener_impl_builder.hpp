@@ -3,7 +3,7 @@
 #include "listener_builder.hpp"
 #include "listener_impl.hpp"
 #include "thread_wrapper_impl.hpp"
-#include "socket_manager_impl_factory.hpp"
+#include "socket_manager_impl_builder.hpp"
 
 class ListenerImplBuilder : public ListenerBuilder {
 public:
@@ -12,7 +12,7 @@ public:
         return std::make_shared<ListenerImpl>(
             context,
             std::make_shared<ThreadWrapperImpl>(),
-            std::make_shared<SocketManagerImplFactory>(context),
+            std::make_shared<SocketManagerImplBuilder>(context),
             std::make_shared<FileProcessorImplBuilder>()
         );
     }

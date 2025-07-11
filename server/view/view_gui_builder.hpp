@@ -1,9 +1,9 @@
 #pragma once
-#include "view_factory.hpp"
+#include "view_builder.hpp"
 
-class ViewGUIFactory : public ViewFactory {
+class ViewGUIBuilder : public ViewBuilder {
 public:
-    ViewGUIFactory(int& argc, char** argv);
+    ViewGUIBuilder(int& argc, char** argv);
     std::shared_ptr<View> create_view() override;
 
 private:

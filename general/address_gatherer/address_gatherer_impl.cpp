@@ -3,9 +3,9 @@
 AddressGathererImpl::AddressGathererImpl(
     std::shared_ptr<net::io_context> context,
     std::shared_ptr<ThreadWrapper> thread_wrapper,
-    std::shared_ptr<SocketManagerFactory> socket_manager_builder) :
+    std::shared_ptr<SocketManagerBuilder> socket_manager_builder) :
 
-    socket_factory_(socket_manager_builder),
+    socket_builder_(socket_manager_builder),
     thread_wrapper_(thread_wrapper),
     context_(context)
 {}
@@ -30,7 +30,7 @@ net::awaitable<void> AddressGathererImpl::gather_async() {
 }
 
 net::awaitable<std::shared_ptr<SocketManager>> AddressGathererImpl::build_socket_manager(const Address& address, Port port) {
-    co_return co_await socket_factory_->udp_connecting_to(address, port);
+    co_return co_await socket_builder_->udp_connecting_to(address, port);
 }
 
 void AddressGathererImpl::stop() {

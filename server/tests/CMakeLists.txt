@@ -1,6 +1,6 @@
 add_executable(server_tests 
     main.cpp
-    view_mock_factory.cpp
+    view_mock_builder.cpp
 
     test_file_processor.cpp
     test_presenter.cpp

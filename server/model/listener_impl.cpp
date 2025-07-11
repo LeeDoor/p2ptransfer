@@ -4,11 +4,11 @@
 
 ListenerImpl::ListenerImpl(std::shared_ptr<net::io_context> context,
                            std::shared_ptr<ThreadWrapper> thread_wrapper,
-                           std::shared_ptr<SocketManagerFactory> socket_manager_factory,
-                           std::shared_ptr<FileProcessorBuilder> file_processor_factory) :
+                           std::shared_ptr<SocketManagerBuilder> socket_manager_builder,
+                           std::shared_ptr<FileProcessorBuilder> file_processor_builder) :
     thread_wrapper_(thread_wrapper),
-    socket_manager_factory_(socket_manager_factory),
-    file_processor_factory_(file_processor_factory),
+    socket_manager_builder_(socket_manager_builder),
+    file_processor_builder_(file_processor_builder),
     context_(context)
 {}
 
@@ -33,7 +33,7 @@ void ListenerImpl::spawn_listen_coroutine(Port port) {
 net::awaitable<void> ListenerImpl::listen_async(Port port) {
     try {
         auto socket_manager = co_await connect_and_listen(port);
-        auto file_processor = file_processor_factory_->create_file_processor(callback(), socket_manager);
+        auto file_processor = file_processor_builder_->create_file_processor(callback(), socket_manager);
         co_await file_processor->try_read_file();
     } catch(const std::exception& ex) {
         Logger::log() << ex.what() << std::endl;
@@ -42,7 +42,7 @@ net::awaitable<void> ListenerImpl::listen_async(Port port) {
 
 net::awaitable<std::shared_ptr<SocketManager>> ListenerImpl::connect_and_listen(Port port) {
     try {
-        auto socket_manager = co_await socket_manager_factory_->tcp_listening_at(port);
+        auto socket_manager = co_await socket_manager_builder_->tcp_listening_at(port);
         auto endpoint = socket_manager->get_remote_endpoint();
         callback()->connected(endpoint.address, endpoint.port);
         co_return socket_manager;

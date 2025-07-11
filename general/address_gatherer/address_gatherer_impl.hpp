@@ -8,7 +8,7 @@ public:
     AddressGathererImpl(
         std::shared_ptr<net::io_context> context,
         std::shared_ptr<ThreadWrapper> thread_wrapper,
-        std::shared_ptr<SocketManagerFactory> socket_manager_builder);
+        std::shared_ptr<SocketManagerBuilder> socket_manager_builder);
 
     void gather_local_address() override;
     void stop() override;
@@ -16,7 +16,7 @@ private:
     net::awaitable<void> gather_async();
     net::awaitable<std::shared_ptr<SocketManager>> build_socket_manager(const Address& address, Port port);
 
-    std::shared_ptr<SocketManagerFactory> socket_factory_;
+    std::shared_ptr<SocketManagerBuilder> socket_builder_;
     std::shared_ptr<ThreadWrapper> thread_wrapper_;
     std::shared_ptr<net::io_context> context_;
 };

@@ -5,14 +5,14 @@
 #include "remote_interaction_callback_mock.hpp"
 #include "file_processor_mock_builder.hpp"
 #include "socket_manager_mock.hpp"
-#include "socket_manager_mock_factory.hpp"
+#include "socket_manager_mock_builder.hpp"
 #include "thread_wrapper_mock.hpp"
 
 class ListenerFixture : public ::testing::Test {
 protected:
     ListenerFixture() :
         socket_manager_(std::make_shared<SocketManagerMock>()),
-        socket_builder_(std::make_shared<SocketManagerMockFactory>(socket_manager_)),
+        socket_builder_(std::make_shared<SocketManagerMockBuilder>(socket_manager_)),
         file_processor_(std::make_shared<FileProcessorMock>()),
         thread_wrapper_(std::make_shared<ThreadWrapperMock>()),
         callback_(std::make_shared<RemoteInteractionCallbackMock>())
@@ -55,7 +55,7 @@ protected:
     }
 
     std::shared_ptr<SocketManagerMock> socket_manager_;
-    std::shared_ptr<SocketManagerMockFactory> socket_builder_;
+    std::shared_ptr<SocketManagerMockBuilder> socket_builder_;
     std::shared_ptr<FileProcessorMock> file_processor_;
     std::shared_ptr<ThreadWrapperMock> thread_wrapper_;
     std::shared_ptr<RemoteInteractionCallbackMock> callback_;

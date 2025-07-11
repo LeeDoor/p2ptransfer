@@ -2,14 +2,14 @@
 #include "address_gatherer_impl_builder.hpp"
 #include "gather_address_callback_mock.hpp"
 #include "socket_manager_mock.hpp"
-#include "socket_manager_mock_factory.hpp"
+#include "socket_manager_mock_builder.hpp"
 #include "thread_wrapper_mock.hpp"
 
 class AddressGathererFixture : public ::testing::Test {
 protected:
     AddressGathererFixture() :
         socket_manager_(std::make_shared<SocketManagerMock>()),
-        socket_builder_(std::make_shared<SocketManagerMockFactory>(socket_manager_)),
+        socket_builder_(std::make_shared<SocketManagerMockBuilder>(socket_manager_)),
         thread_wrapper_(std::make_shared<ThreadWrapperMock>()),
         callback_(std::make_shared<GatherAddressCallbackMock>())
     {
@@ -40,7 +40,7 @@ protected:
         EXPECT_CALL(*callback_, set_address(::testing::_));
     }
     std::shared_ptr<SocketManagerMock> socket_manager_;
-    std::shared_ptr<SocketManagerMockFactory> socket_builder_;
+    std::shared_ptr<SocketManagerMockBuilder> socket_builder_;
     std::shared_ptr<ThreadWrapperMock> thread_wrapper_;
     std::shared_ptr<AddressGathererImpl> address_gatherer_;
     std::shared_ptr<GatherAddressCallbackMock> callback_;
