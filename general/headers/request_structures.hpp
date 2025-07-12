@@ -9,8 +9,8 @@ enum RequestMethod {
     FILESIZE,
 };
 struct SendRequest {
-    Filename filename;
-    Filesize filesize;
+    Filename filename = "";
+    Filesize filesize = 0;
 };
 struct SendResponse {
     Filename filename;

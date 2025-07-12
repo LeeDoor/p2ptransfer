@@ -1,11 +1,11 @@
 #include "presenter_impl.hpp"
 
 PresenterImpl::PresenterImpl(std::shared_ptr<Listener> listener,
-              std::shared_ptr<AddressGatherer> address_gatherer,
-                  std::shared_ptr<View> view) :
-    view_ {view},
+                             std::shared_ptr<AddressGatherer> address_gatherer,
+                             std::shared_ptr<View> view) :
     listener_ {listener},
-    address_gatherer_ {address_gatherer}
+    address_gatherer_ {address_gatherer},
+    view_ {view}
 {}
 
 void PresenterImpl::setup() {

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "address_gatherer.hpp"
+#include "listener.hpp"
 #include "presenter.hpp"
 #include "view.hpp"
 class PresenterImpl : 
@@ -24,8 +26,8 @@ public:
     bool verify_file(const Filename& filename, Filesize filesize) override;
 
 private:
-    bool is_initialized_ = false;
-    std::shared_ptr<View> view_;
     std::shared_ptr<Listener> listener_;
     std::shared_ptr<AddressGatherer> address_gatherer_;
+    std::shared_ptr<View> view_;
+    bool is_initialized_ = false;
 };

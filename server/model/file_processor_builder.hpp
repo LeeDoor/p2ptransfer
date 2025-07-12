@@ -7,4 +7,5 @@ class FileProcessorBuilder {
 public:
     virtual std::shared_ptr<FileProcessor> create_file_processor(std::shared_ptr<FileTransferCallback> callback,
                                                                  std::shared_ptr<SocketManager> socket) = 0;
+    virtual ~FileProcessorBuilder() = default;
 };

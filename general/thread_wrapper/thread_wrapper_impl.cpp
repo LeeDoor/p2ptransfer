@@ -1,7 +1,9 @@
 #include "thread_wrapper_impl.hpp"    
 
 ThreadWrapperImpl::ThreadWrapperImpl() :
-    is_running_(false){}
+    is_running_(false),
+    thread_{}
+{}
 
 bool ThreadWrapperImpl::is_running()  {
     return is_running_;
