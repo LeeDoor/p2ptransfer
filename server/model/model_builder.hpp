@@ -7,7 +7,7 @@
 class ModelBuilder {
 public:
     static std::shared_ptr<ListenerImpl> create_listener() {
-        std::shared_ptr<net::io_context> context;
+        auto context = std::make_shared<net::io_context>();
         return std::make_shared<ListenerImpl>(
             context,
             std::make_shared<ThreadWrapperImpl>(),
@@ -17,7 +17,7 @@ public:
     }
 
     static std::shared_ptr<AddressGatherer> create_address_gatherer() {
-        std::shared_ptr<net::io_context> context;
+        auto context = std::make_shared<net::io_context>();
         return std::make_shared<AddressGathererImpl>(
             context,
             std::make_shared<ThreadWrapperImpl>(),

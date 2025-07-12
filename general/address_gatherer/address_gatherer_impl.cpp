@@ -3,9 +3,9 @@
 AddressGathererImpl::AddressGathererImpl(
     std::shared_ptr<net::io_context> context,
     std::shared_ptr<ThreadWrapper> thread_wrapper,
-    std::shared_ptr<SocketManagerBuilder> socket_manager_builder) :
+    std::shared_ptr<SocketManagerBuilder> socket_builder) :
 
-    socket_builder_(socket_manager_builder),
+    socket_builder_(socket_builder),
     thread_wrapper_(thread_wrapper),
     context_(context)
 {}

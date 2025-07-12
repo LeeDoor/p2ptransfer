@@ -11,7 +11,7 @@ int main() {
         ModelBuilder::create_address_gatherer(),
         std::make_shared<ViewCLI>()
     );
-    SignalHandler::handle_SIGINT([&presenter]() {
+    SignalHandler::handle_SIGINT([presenter]() {
         presenter->stop();
     });
     presenter->setup();

@@ -82,6 +82,7 @@ protected:
             ErrorCode ec;
             socket->shutdown(SocketType::shutdown_both, ec);
             socket->close();
+            delete socket;
         };
     }
 
