@@ -23,18 +23,21 @@ add_library(base
     address_gatherer/address_gatherer_impl.cpp
 )
 set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} 
-    headers 
-    serializer 
-    thread_wrapper
-    signal_handler
-    address_gatherer
-    socket_manager
+    ${CMAKE_CURRENT_SOURCE_DIR}/headers 
+    ${CMAKE_CURRENT_SOURCE_DIR}/serializer 
+    ${CMAKE_CURRENT_SOURCE_DIR}/thread_wrapper
+    ${CMAKE_CURRENT_SOURCE_DIR}/signal_handler
+    ${CMAKE_CURRENT_SOURCE_DIR}/address_gatherer
+    ${CMAKE_CURRENT_SOURCE_DIR}/socket_manager
 )
 target_precompile_headers(base PUBLIC ${PRECOMPILED_HEADERS})
 target_link_libraries(base PUBLIC ${LINK_LIBRARIES})
 target_include_directories(base PUBLIC ${INCLUDE_DIRECTORIES})
 if(${TESTING})
     add_subdirectory(tests)
+    set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} 
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests
+    )
 endif()
 set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} PARENT_SCOPE)
 
