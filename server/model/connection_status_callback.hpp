@@ -3,6 +3,7 @@
 #include "port.hpp"
 
 namespace general {
+namespace server {
 namespace model {
 
 class ConnectionStatusCallback {
@@ -13,5 +14,6 @@ public:
     virtual ~ConnectionStatusCallback() = default;
 };
 
+}
 }
 }

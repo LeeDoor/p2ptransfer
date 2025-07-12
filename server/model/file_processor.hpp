@@ -1,6 +1,7 @@
 #pragma once
 
 namespace general {
+namespace server {
 namespace model {
 
 class FileProcessor {
@@ -10,5 +11,6 @@ public:
     virtual ~FileProcessor() = default;
 };
 
+}
 }
 }

@@ -7,6 +7,7 @@ class ViewGUI;
 }
 
 namespace general {
+namespace server {
 namespace view {
 
 class ViewGUI : public QMainWindow, public View {
@@ -46,5 +47,6 @@ private:
     Ui::ViewGUI *ui;
 };
 
+}
 }
 }

@@ -8,6 +8,7 @@
 #include "thread_wrapper_mock.hpp"
 
 namespace general {
+namespace server {
 namespace model {
 namespace test {
 
@@ -115,6 +116,7 @@ TEST_F(ListenerFixture, stoppingWhileThreadOff_doNothing) {
     listener_->stop();
 }
 
+}
 }
 }
 }

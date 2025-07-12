@@ -4,6 +4,7 @@
 #include "view_mock.hpp"
 
 namespace general {
+namespace server {
 namespace presenter {
 namespace test {
 
@@ -143,6 +144,7 @@ TEST_F(PresenterFixture, multipleProgressbarUpdates_correctSequence) {
     }
 }
 
+}
 }
 }
 }

@@ -2,6 +2,7 @@
 #include "view.hpp"
 
 namespace general {
+namespace server {
 namespace view {
 
 class ViewCLI : public View {
@@ -22,5 +23,6 @@ private:
     bool is_running_ = true;
 };
 
+}
 }
 }

@@ -3,6 +3,7 @@
 #include "ui_view_gui.h"
 
 namespace general {
+namespace server {
 namespace view {
 
 ViewGUI::ViewGUI(std::unique_ptr<QApplication> application, QWidget *parent)
@@ -103,5 +104,6 @@ void ViewGUI::closeEvent([[maybe_unused]] QCloseEvent* e) {
     std::raise(SIGINT);
 }
 
+}
 }
 }

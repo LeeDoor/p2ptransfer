@@ -6,6 +6,7 @@
 #include "thread_wrapper_impl.hpp"
 
 namespace general {
+namespace server {
 namespace model {
 
 class ModelBuilder {
@@ -31,5 +32,6 @@ public:
 
 };
 
+}
 }
 }

@@ -4,6 +4,7 @@
 #include "socket_manager.hpp"
 
 namespace general {
+namespace server {
 namespace model {
 
 class FileProcessorBuilder {
@@ -16,5 +17,6 @@ public:
     virtual ~FileProcessorBuilder() = default;
 };
 
+}
 }
 }

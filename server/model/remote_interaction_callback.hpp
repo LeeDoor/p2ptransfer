@@ -3,6 +3,7 @@
 #include "file_transfer_callback.hpp"
 
 namespace general {
+namespace server {
 namespace model {
 
 class RemoteInteractionCallback :
@@ -13,5 +14,6 @@ public:
     virtual ~RemoteInteractionCallback() = default;
 };
 
+}
 }
 }

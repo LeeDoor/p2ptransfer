@@ -2,6 +2,7 @@
 #include "view.hpp"
 
 namespace general {
+namespace server {
 namespace view {
 namespace test {
 
@@ -21,6 +22,7 @@ public:
     }
 };
 
+}
 }
 }
 }

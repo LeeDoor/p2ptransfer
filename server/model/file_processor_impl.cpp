@@ -3,6 +3,7 @@
 #include "request_serializer.hpp"
 
 namespace general {
+namespace server {
 namespace model {
 
 FileProcessorImpl::FileProcessorImpl(SocketManagerPtr socket_manager) :
@@ -87,5 +88,6 @@ void FileProcessorImpl::calculate_notify_progressbar(size_t bytes_remaining, siz
     }
 }
 
+}
 }
 }

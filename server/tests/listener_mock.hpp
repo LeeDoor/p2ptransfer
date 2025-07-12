@@ -2,6 +2,7 @@
 #include "listener.hpp"
 
 namespace general {
+namespace server {
 namespace model {
 namespace test {
 
@@ -14,6 +15,7 @@ public:
     }
 };
 
+}
 }
 }
 }

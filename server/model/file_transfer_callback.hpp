@@ -4,6 +4,7 @@
 #include "request_structures.hpp"
 
 namespace general {
+namespace server {
 namespace model {
 
 class FileTransferCallback {
@@ -15,5 +16,6 @@ public:
     virtual ~FileTransferCallback() = default;
 };
 
+}
 }
 }

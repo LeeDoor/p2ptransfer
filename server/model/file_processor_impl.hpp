@@ -7,6 +7,7 @@
 #include "socket_manager.hpp"
 
 namespace general {
+namespace server {
 
 namespace presenter {class Presenter; }
 
@@ -34,5 +35,6 @@ private:
     SocketManagerPtr socket_manager_;
 };
 
+}
 }
 }

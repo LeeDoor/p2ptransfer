@@ -4,6 +4,7 @@
 #include "remote_interaction_callback.hpp"
 
 namespace general {
+namespace server {
 namespace model {
 namespace test {
 
@@ -17,6 +18,7 @@ public:
     MOCK_METHOD(bool, verify_file, (const Filename& filename, Filesize filesize), (override));
 };
 
+}
 }
 }
 }

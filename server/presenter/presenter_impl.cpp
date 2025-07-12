@@ -1,6 +1,7 @@
 #include "presenter_impl.hpp"
 
 namespace general {
+namespace server {
 namespace presenter {
 
 PresenterImpl::PresenterImpl(ListenerPtr listener,
@@ -55,5 +56,6 @@ bool PresenterImpl::verify_file(const Filename& filename, Filesize filesize) {
     return view_->ask_file_verification(filename, filesize);
 }
 
+}
 }
 }

@@ -5,6 +5,7 @@
 #include "view.hpp"
 
 namespace general {
+namespace server {
 namespace presenter {
 
 class PresenterImpl : 
@@ -39,5 +40,6 @@ private:
     bool is_initialized_ = false;
 };
 
+}
 }
 }

@@ -6,6 +6,7 @@
 
 int main(int argc, char** argv) {
     using namespace general;
+    using namespace server;
     LoggerInitializer init;
     auto presenter = std::make_shared<presenter::PresenterImpl>(
         model::ModelBuilder::create_listener(),

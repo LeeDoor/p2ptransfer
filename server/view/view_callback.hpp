@@ -2,6 +2,7 @@
 #include "port.hpp"
 
 namespace general {
+namespace server {
 namespace view {
 
 class ViewCallback {
@@ -10,5 +11,6 @@ public:
     virtual ~ViewCallback() = default;
 };
 
+}
 }
 }

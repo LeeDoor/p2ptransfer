@@ -4,6 +4,7 @@
 #include "request_serializer.hpp"
 
 namespace general {
+namespace server {
 namespace model {
 namespace test {
 
@@ -284,6 +285,7 @@ TEST_F(FileProcessorFixture, exceptionWhileReadingFile_abortRethrow) {
     EXPECT_THROW(run_read_file(), std::runtime_error);
 }
 
+}
 }
 }
 }

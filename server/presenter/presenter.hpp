@@ -4,6 +4,7 @@
 #include "view_callback.hpp"
 
 namespace general {
+namespace server {
 namespace presenter {
 
 class Presenter :
@@ -19,5 +20,6 @@ public:
     virtual ~Presenter() = default;
 };
 
+}
 }
 }

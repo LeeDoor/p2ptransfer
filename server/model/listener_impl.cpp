@@ -2,6 +2,7 @@
 #include "logger.hpp"
 
 namespace general {
+namespace server {
 namespace model {
 
 ListenerImpl::ListenerImpl(ContextPtr context,
@@ -59,5 +60,6 @@ void ListenerImpl::stop() {
     thread_wrapper_->join();
 }
 
+}
 }
 }

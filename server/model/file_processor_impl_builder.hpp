@@ -3,6 +3,7 @@
 #include "file_processor_impl.hpp"
 
 namespace general {
+namespace server {
 namespace model {
 
 class FileProcessorImplBuilder : public FileProcessorBuilder {
@@ -15,5 +16,6 @@ public:
     }
 };
 
+}
 }
 }

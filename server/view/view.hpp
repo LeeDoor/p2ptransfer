@@ -6,6 +6,7 @@
 #include "view_callback.hpp"
 
 namespace general {
+namespace server {
 namespace view {
 
 class View : public WithCallback<ViewCallback> {
@@ -24,5 +25,6 @@ public:
     virtual void show_connection_aborted(const Address& address, Port port) = 0;
 };
 
+}
 }
 }

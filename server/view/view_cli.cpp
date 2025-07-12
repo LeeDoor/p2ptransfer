@@ -2,6 +2,7 @@
 #include "filesize_formatter.hpp"
 
 namespace general {
+namespace server {
 namespace view {
 
 int ViewCLI::run() {
@@ -50,5 +51,6 @@ void ViewCLI::show_connection_aborted(const Address& address, Port port) {
     std::cout << "FATAL: Connection aborted with remote endpoint " << address << ":" << port << std::endl;
 }
 
+}
 }
 }

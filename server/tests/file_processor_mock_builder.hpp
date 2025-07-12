@@ -2,6 +2,7 @@
 #include "file_processor_builder.hpp"
 
 namespace general {
+namespace server {
 namespace model {
 namespace test {
 
@@ -18,6 +19,7 @@ private:
     std::shared_ptr<FileProcessor> ptr_;
 };
 
+}
 }
 }
 }

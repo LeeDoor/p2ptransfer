@@ -4,6 +4,7 @@
 #include "remote_interaction_callback.hpp"
 
 namespace general {
+namespace server {
 namespace model {
 
 class Listener : public WithCallback<RemoteInteractionCallback>{
@@ -13,5 +14,6 @@ public:
     virtual void stop() = 0;
 };
 
+}
 }
 }

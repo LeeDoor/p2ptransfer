@@ -5,6 +5,7 @@
 #include "thread_wrapper.hpp"
 
 namespace general {
+namespace server {
 namespace model {
 
 class ListenerImpl : public Listener {
@@ -35,5 +36,6 @@ private:
     ContextPtr context_;
 };
 
+}
 }
 }
