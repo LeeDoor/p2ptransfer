@@ -1,5 +1,8 @@
 #include "thread_wrapper_impl.hpp"    
 
+namespace general {
+namespace thread_wrapper {
+
 ThreadWrapperImpl::ThreadWrapperImpl() :
     is_running_(false),
     thread_{}
@@ -11,8 +14,8 @@ bool ThreadWrapperImpl::is_running()  {
 
 void ThreadWrapperImpl::execute(Functor&& func) {
     if(is_running_) 
-        throw std::logic_error("Called ThreadWrapperImpl::execute while thread still running."
-                               " Check if it is_running() before execution");
+        throw std::logic_error("Called ThreadWrapperImpl::execute while thread still running. "
+                               "Check if it is_running() before execution");
     try_join_thread();
     is_running_ = true;
     thread_ = std::jthread([func_ = std::move(func), this] {
@@ -31,3 +34,5 @@ void ThreadWrapperImpl::try_join_thread() {
     }
 }
 
+}
+}

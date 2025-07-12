@@ -1,15 +1,21 @@
 #pragma once
-#include "callback.hpp"
 
+#include "callback.hpp"
 #include "file_processor.hpp"
 #include "request_structures.hpp"
 #include "file_transfer_callback.hpp"
 #include "socket_manager.hpp"
 
-class Presenter;
+namespace general {
+
+namespace presenter {class Presenter; }
+
+namespace model {
+
 class FileProcessorImpl : public FileProcessor, public WithCallback<FileTransferCallback> {
 public:
-    FileProcessorImpl(std::shared_ptr<SocketManager> socket_manager);
+    using SocketManagerPtr = std::shared_ptr<socket_manager::SocketManager>;
+    FileProcessorImpl(SocketManagerPtr socket_manager);
 
     net::awaitable<void> try_read_file() override;
 
@@ -25,5 +31,8 @@ private:
     net::awaitable<void> handle_file(std::ofstream& os, size_t filesize);
     void calculate_notify_progressbar(size_t bytes_remaining, size_t filesize);
 
-    std::shared_ptr<SocketManager> socket_manager_;
+    SocketManagerPtr socket_manager_;
 };
+
+}
+}

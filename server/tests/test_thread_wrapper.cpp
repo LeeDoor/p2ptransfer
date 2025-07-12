@@ -1,4 +1,9 @@
 #include "thread_wrapper_impl.hpp"
+
+namespace general {
+namespace thread_wrapper {
+namespace test {
+
 class ThreadWrapperFixture : public ::testing::Test {
 protected:
     ThreadWrapperFixture() :
@@ -83,4 +88,8 @@ TEST_F(ThreadWrapperFixture, executedCommandOnDifferentThread) {
     thread_wrapper_->join();
 
     EXPECT_NE(wrappers_tid, tid);
+}
+
+}
+}
 }

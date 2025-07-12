@@ -1,12 +1,13 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
+#pragma once
 #include "view.hpp"
 #include "qt_headers.hpp"
 
 namespace Ui {
 class ViewGUI;
 }
+
+namespace general {
+namespace view {
 
 class ViewGUI : public QMainWindow, public View {
     Q_OBJECT
@@ -45,4 +46,5 @@ private:
     Ui::ViewGUI *ui;
 };
 
-#endif // MAINWINDOW_H
+}
+}

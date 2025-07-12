@@ -1,13 +1,16 @@
 #include "address_gatherer_impl.hpp"
 
-AddressGathererImpl::AddressGathererImpl(
-    std::shared_ptr<net::io_context> context,
-    std::shared_ptr<ThreadWrapper> thread_wrapper,
-    std::shared_ptr<SocketManagerBuilder> socket_builder) :
+namespace general {
+namespace address_gatherer {
 
-    socket_builder_(socket_builder),
-    thread_wrapper_(thread_wrapper),
-    context_(context)
+AddressGathererImpl::AddressGathererImpl(
+    ContextPtr context,
+    ThreadWrapperPtr thread_wrapper,
+    SocketManagerBuilderPtr socket_builder) :
+
+    socket_builder_{socket_builder},
+    thread_wrapper_{thread_wrapper},
+    context_{context}
 {}
 
 void AddressGathererImpl::gather_local_address() {
@@ -29,11 +32,15 @@ net::awaitable<void> AddressGathererImpl::gather_async() {
     }
 }
 
-net::awaitable<std::shared_ptr<SocketManager>> AddressGathererImpl::build_socket_manager(const Address& address, Port port) {
+net::awaitable<AddressGathererImpl::SocketManagerPtr> 
+AddressGathererImpl::build_socket_manager(const Address& address, Port port) {
     co_return co_await socket_builder_->udp_connecting_to(address, port);
 }
 
 void AddressGathererImpl::stop() {
     context_->stop();
     thread_wrapper_->join();
+}
+
+}
 }

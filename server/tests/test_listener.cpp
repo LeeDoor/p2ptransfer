@@ -1,5 +1,4 @@
 #include "file_processor_mock.hpp"
-
 #include "listener_impl.hpp"
 #include "logger.hpp"
 #include "remote_interaction_callback_mock.hpp"
@@ -7,6 +6,13 @@
 #include "socket_manager_mock.hpp"
 #include "socket_manager_mock_builder.hpp"
 #include "thread_wrapper_mock.hpp"
+
+namespace general {
+namespace model {
+namespace test {
+
+using namespace socket_manager::test;
+using namespace thread_wrapper::test;
 
 class ListenerFixture : public ::testing::Test {
 protected:
@@ -31,7 +37,7 @@ protected:
     void expect_remote_endpoint_as_required() {
         EXPECT_CALL(*socket_manager_, get_remote_endpoint())
             .Times(::testing::AtLeast(0))
-            .WillRepeatedly(Return(SocketManager::Endpoint{TEST_ADDRESS, TEST_PORT}));
+            .WillRepeatedly(Return(socket_manager::SocketManager::Endpoint{TEST_ADDRESS, TEST_PORT}));
     }
     void check_thread_wrapper_executing() {
         EXPECT_CALL(*thread_wrapper_, is_running())
@@ -107,4 +113,8 @@ TEST_F(ListenerFixture, stoppingWhileThreadOff_doNothing) {
     EXPECT_CALL(*thread_wrapper_, join());
 
     listener_->stop();
+}
+
+}
+}
 }

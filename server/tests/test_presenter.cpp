@@ -1,8 +1,16 @@
-
 #include "listener_mock.hpp"
 #include "address_gatherer_mock.hpp"
 #include "presenter_impl.hpp"
 #include "view_mock.hpp"
+
+namespace general {
+namespace presenter {
+namespace test {
+
+using namespace address_gatherer::test;
+using namespace model::test;
+using namespace view::test;
+
 
 class PresenterFixture : public ::testing::Test {
 protected:
@@ -133,4 +141,8 @@ TEST_F(PresenterFixture, multipleProgressbarUpdates_correctSequence) {
     for(int i = 0; i < 20; ++i) {
         EXPECT_EQ(i * 5, update_calls[i]);
     }
+}
+
+}
+}
 }

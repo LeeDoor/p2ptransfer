@@ -4,12 +4,21 @@
 #include "socket_manager_builder.hpp"
 #include "thread_wrapper.hpp"
 
+namespace general {
+namespace model {
+
 class ListenerImpl : public Listener {
 public:
-    ListenerImpl(std::shared_ptr<net::io_context> context,
-                 std::shared_ptr<ThreadWrapper> thread_wrapper,
-                 std::shared_ptr<SocketManagerBuilder> socket_manager_builder,
-                 std::shared_ptr<FileProcessorBuilder> file_processor_builder);
+    using ThreadWrapperPtr = std::shared_ptr<thread_wrapper::ThreadWrapper>;
+    using SocketManagerBuilderPtr = std::shared_ptr<socket_manager::SocketManagerBuilder>;
+    using SocketManagerPtr = std::shared_ptr<socket_manager::SocketManager>;
+    using FileProcessorBuilderPtr = std::shared_ptr<FileProcessorBuilder>;
+    using ContextPtr = std::shared_ptr<net::io_context>;
+
+    ListenerImpl(ContextPtr context,
+                 ThreadWrapperPtr thread_wrapper,
+                 SocketManagerBuilderPtr socket_manager_builder,
+                 FileProcessorBuilderPtr file_processor_builder);
     void listen_if_not_already(Port port) override;
     void stop() override;
 
@@ -17,11 +26,14 @@ private:
     void spawn_listen_coroutine(Port port);
     net::awaitable<void> listen_async(Port port);
     void spawn_and_run(Port port);
-    net::awaitable<std::shared_ptr<SocketManager>> connect_and_listen(Port port);
-    net::awaitable<std::shared_ptr<SocketManager>> build_socket_manager(Port port);
+    net::awaitable<SocketManagerPtr> connect_and_listen(Port port);
+    net::awaitable<SocketManagerPtr> build_socket_manager(Port port);
 
-    std::shared_ptr<ThreadWrapper> thread_wrapper_;
-    std::shared_ptr<SocketManagerBuilder> socket_manager_builder_;
-    std::shared_ptr<FileProcessorBuilder> file_processor_builder_;
-    std::shared_ptr<net::io_context> context_;
+    ThreadWrapperPtr thread_wrapper_;
+    SocketManagerBuilderPtr socket_manager_builder_;
+    FileProcessorBuilderPtr file_processor_builder_;
+    ContextPtr context_;
 };
+
+}
+}

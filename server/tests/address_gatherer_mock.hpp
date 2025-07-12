@@ -1,6 +1,10 @@
 #pragma once
-
 #include "address_gatherer.hpp"
+
+namespace general {
+namespace address_gatherer {
+namespace test {
+
 class AddressGathererMock : public AddressGatherer {
 public:
     MOCK_METHOD(void, gather_local_address, (), (override));
@@ -9,3 +13,7 @@ public:
         return callback_;
     }
 };
+
+}
+}
+}

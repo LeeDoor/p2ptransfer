@@ -1,4 +1,6 @@
 #pragma once
+namespace general {
+
 using SerializedText = std::string;
 using Filename = std::string;
 using Filesize = size_t;
@@ -15,3 +17,5 @@ struct SendRequest {
 struct SendResponse {
     Filename filename;
 };
+
+}

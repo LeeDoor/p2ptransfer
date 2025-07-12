@@ -3,6 +3,9 @@
 #include "request_structures.hpp"
 #include "string_view_methods.hpp"
 
+namespace general {
+namespace serializer {
+
 class RequestDeserializer {
 public:
     static SendRequest deserialize_send_request(const std::string request_str);
@@ -23,3 +26,6 @@ private:
 
     static const std::unordered_map<HeaderType, RequestMethod> request_methods_;
 };
+
+}
+}

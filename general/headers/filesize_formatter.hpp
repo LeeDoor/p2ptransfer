@@ -1,6 +1,8 @@
 #pragma once
-
 #include "request_structures.hpp"
+
+namespace general {
+
 class FilesizeFormatter {
 public:
     static std::string to_string(Filesize filesize) {
@@ -20,3 +22,5 @@ public:
         return std::format("{:.2f}", dsize / (1ll << 40)) + "TB";
     }
 };
+
+}

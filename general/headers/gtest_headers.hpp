@@ -2,6 +2,8 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+namespace general {
+
 using ::testing::Return;
 
 template<typename Type>
@@ -14,3 +16,5 @@ inline net::awaitable<void> return_immediately(){
 
 constexpr size_t TEST_PORT = 8080;
 constexpr std::string TEST_ADDRESS = "127.0.0.1";
+
+}

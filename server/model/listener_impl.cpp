@@ -1,11 +1,13 @@
 #include "listener_impl.hpp"
-
 #include "logger.hpp"
 
-ListenerImpl::ListenerImpl(std::shared_ptr<net::io_context> context,
-                           std::shared_ptr<ThreadWrapper> thread_wrapper,
-                           std::shared_ptr<SocketManagerBuilder> socket_manager_builder,
-                           std::shared_ptr<FileProcessorBuilder> file_processor_builder) :
+namespace general {
+namespace model {
+
+ListenerImpl::ListenerImpl(ContextPtr context,
+                           ThreadWrapperPtr thread_wrapper,
+                           SocketManagerBuilderPtr socket_manager_builder,
+                           FileProcessorBuilderPtr file_processor_builder) :
     thread_wrapper_(thread_wrapper),
     socket_manager_builder_(socket_manager_builder),
     file_processor_builder_(file_processor_builder),
@@ -40,7 +42,7 @@ net::awaitable<void> ListenerImpl::listen_async(Port port) {
     }
 }
 
-net::awaitable<std::shared_ptr<SocketManager>> ListenerImpl::connect_and_listen(Port port) {
+net::awaitable<ListenerImpl::SocketManagerPtr> ListenerImpl::connect_and_listen(Port port) {
     try {
         auto socket_manager = co_await socket_manager_builder_->tcp_listening_at(port);
         auto endpoint = socket_manager->get_remote_endpoint();
@@ -55,4 +57,7 @@ net::awaitable<std::shared_ptr<SocketManager>> ListenerImpl::connect_and_listen(
 void ListenerImpl::stop() {
     context_->stop();
     thread_wrapper_->join();
+}
+
+}
 }

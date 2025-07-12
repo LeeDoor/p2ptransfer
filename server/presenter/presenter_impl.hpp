@@ -1,16 +1,23 @@
 #pragma once
-
 #include "address_gatherer.hpp"
 #include "listener.hpp"
 #include "presenter.hpp"
 #include "view.hpp"
+
+namespace general {
+namespace presenter {
+
 class PresenterImpl : 
     public Presenter, 
     public std::enable_shared_from_this<PresenterImpl> {
 public:
-    PresenterImpl(std::shared_ptr<Listener> listener,
-                  std::shared_ptr<AddressGatherer> address_gatherer,
-                  std::shared_ptr<View> view);
+    using ListenerPtr = std::shared_ptr<model::Listener>;
+    using AddressGathererPtr = std::shared_ptr<address_gatherer::AddressGatherer>;
+    using ViewPtr = std::shared_ptr<view::View>;
+
+    PresenterImpl(ListenerPtr listener,
+                  AddressGathererPtr address_gatherer,
+                  ViewPtr view);
     void setup() override;
     int run() override;
     void stop() override;
@@ -26,8 +33,11 @@ public:
     bool verify_file(const Filename& filename, Filesize filesize) override;
 
 private:
-    std::shared_ptr<Listener> listener_;
-    std::shared_ptr<AddressGatherer> address_gatherer_;
-    std::shared_ptr<View> view_;
+    ListenerPtr listener_;
+    AddressGathererPtr address_gatherer_;
+    ViewPtr view_;
     bool is_initialized_ = false;
 };
+
+}
+}

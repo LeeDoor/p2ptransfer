@@ -1,6 +1,10 @@
 #pragma once
-
 #include "thread_wrapper.hpp"
+
+namespace general {
+namespace thread_wrapper {
+namespace test {
+
 class ThreadWrapperMock : public ThreadWrapper {
 public:
     MOCK_METHOD(bool, is_running, (), (override));
@@ -13,3 +17,7 @@ protected:
         functor();
     }
 };
+
+}
+}
+}

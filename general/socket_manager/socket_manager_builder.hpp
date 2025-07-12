@@ -1,6 +1,9 @@
 #pragma once
 #include "socket_manager.hpp"
 
+namespace general {
+namespace socket_manager {
+
 class SocketManagerBuilder {
 public:
     virtual net::awaitable<std::shared_ptr<SocketManager>> tcp_listening_at(Port port) = 0;
@@ -10,3 +13,6 @@ public:
 
     virtual ~SocketManagerBuilder() = default;
 };
+
+}
+}

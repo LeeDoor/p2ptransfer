@@ -1,8 +1,11 @@
 #include "presenter_impl.hpp"
 
-PresenterImpl::PresenterImpl(std::shared_ptr<Listener> listener,
-                             std::shared_ptr<AddressGatherer> address_gatherer,
-                             std::shared_ptr<View> view) :
+namespace general {
+namespace presenter {
+
+PresenterImpl::PresenterImpl(ListenerPtr listener,
+                             AddressGathererPtr address_gatherer,
+                             ViewPtr view) :
     listener_ {listener},
     address_gatherer_ {address_gatherer},
     view_ {view}
@@ -50,4 +53,7 @@ void PresenterImpl::file_transfered() {
 }
 bool PresenterImpl::verify_file(const Filename& filename, Filesize filesize) {
     return view_->ask_file_verification(filename, filesize);
+}
+
+}
 }

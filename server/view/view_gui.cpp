@@ -2,6 +2,9 @@
 #include "filesize_formatter.hpp"
 #include "ui_view_gui.h"
 
+namespace general {
+namespace view {
+
 ViewGUI::ViewGUI(std::unique_ptr<QApplication> application, QWidget *parent)
     : QMainWindow(parent)
     , application_(std::move(application))
@@ -98,4 +101,7 @@ void ViewGUI::enable_ui() {
 
 void ViewGUI::closeEvent([[maybe_unused]] QCloseEvent* e) {
     std::raise(SIGINT);
+}
+
+}
 }

@@ -1,6 +1,10 @@
 #include "request_serializer.hpp"
 #include "request_structures.hpp"
 
+namespace general {
+namespace serializer {
+namespace test {
+
 TEST(RequestSerializer, serializeRequest_defaultData) {
     std::string result = RequestSerializer::serialize_send_request("filename", 123);
 
@@ -70,3 +74,6 @@ TEST(RequestSerializer, serializePermission_empty) {
               "FILE \n\n");
 }
 
+}
+}
+}

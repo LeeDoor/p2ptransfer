@@ -1,6 +1,9 @@
 #pragma once
 #include "thread_wrapper.hpp"
 
+namespace general {
+namespace thread_wrapper {
+
 class ThreadWrapperImpl : public ThreadWrapper {
 public:
     ThreadWrapperImpl();
@@ -14,3 +17,6 @@ private:
     bool is_running_;
     std::jthread thread_;
 };
+
+}
+}

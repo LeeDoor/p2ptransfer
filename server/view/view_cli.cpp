@@ -1,6 +1,9 @@
 #include "view_cli.hpp"
 #include "filesize_formatter.hpp"
 
+namespace general {
+namespace view {
+
 int ViewCLI::run() {
     while(is_running_);
     return 0;
@@ -45,4 +48,7 @@ void ViewCLI::show_file_success() {
 }
 void ViewCLI::show_connection_aborted(const Address& address, Port port) {
     std::cout << "FATAL: Connection aborted with remote endpoint " << address << ":" << port << std::endl;
+}
+
+}
 }

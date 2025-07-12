@@ -1,7 +1,10 @@
 #pragma once
-
 #include "connection_status_callback.hpp"
 #include "file_transfer_callback.hpp"
+
+namespace general {
+namespace model {
+
 class RemoteInteractionCallback :
     public ConnectionStatusCallback,
     public FileTransferCallback
@@ -9,3 +12,6 @@ class RemoteInteractionCallback :
 public:
     virtual ~RemoteInteractionCallback() = default;
 };
+
+}
+}

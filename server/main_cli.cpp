@@ -5,13 +5,14 @@
 #include "view_cli.hpp"
 
 int main() {
+    using namespace general;
     LoggerInitializer log_init;
-    auto presenter = std::make_shared<PresenterImpl>(
-        ModelBuilder::create_listener(),
-        ModelBuilder::create_address_gatherer(),
-        std::make_shared<ViewCLI>()
+    auto presenter = std::make_shared<presenter::PresenterImpl>(
+        model::ModelBuilder::create_listener(),
+        model::ModelBuilder::create_address_gatherer(),
+        std::make_shared<view::ViewCLI>()
     );
-    SignalHandler::handle_SIGINT([presenter]() {
+    signal_handler::SignalHandler::handle_SIGINT([presenter]() {
         presenter->stop();
     });
     presenter->setup();

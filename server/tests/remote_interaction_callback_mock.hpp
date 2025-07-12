@@ -1,8 +1,11 @@
 #pragma once
 #include "address.hpp"
-
 #include "port.hpp"
 #include "remote_interaction_callback.hpp"
+
+namespace general {
+namespace model {
+namespace test {
 
 class RemoteInteractionCallbackMock : public RemoteInteractionCallback { 
 public:
@@ -13,3 +16,7 @@ public:
     MOCK_METHOD(void, set_progressbar, (double present), (override));
     MOCK_METHOD(bool, verify_file, (const Filename& filename, Filesize filesize), (override));
 };
+
+}
+}
+}

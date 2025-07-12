@@ -2,6 +2,9 @@
 #include "socket_manager_builder.hpp"
 #include "socket_manager_impl.hpp"
 
+namespace general {
+namespace socket_manager {
+
 class SocketManagerImplBuilder : public SocketManagerBuilder {
 public:
     SocketManagerImplBuilder(std::shared_ptr<net::io_context> context) :
@@ -22,3 +25,5 @@ private:
     std::shared_ptr<net::io_context> context_;
 };
 
+}
+}

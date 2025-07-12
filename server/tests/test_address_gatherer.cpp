@@ -4,6 +4,14 @@
 #include "socket_manager_mock_builder.hpp"
 #include "thread_wrapper_mock.hpp"
 
+namespace general {
+namespace address_gatherer {
+namespace test {
+
+
+using namespace ::general::socket_manager::test;
+using namespace ::general::thread_wrapper::test;
+
 class AddressGathererFixture : public ::testing::Test {
 protected:
     AddressGathererFixture() :
@@ -30,7 +38,7 @@ protected:
     }
     void immitate_endpoint_getter() {
         EXPECT_CALL(*socket_manager_, get_local_endpoint())
-            .WillOnce(Return(SocketManager::Endpoint{TEST_ADDRESS, TEST_PORT}));
+            .WillOnce(Return(socket_manager::SocketManager::Endpoint{TEST_ADDRESS, TEST_PORT}));
     }
     void check_success_callback() {
         EXPECT_CALL(*callback_, set_address(TEST_ADDRESS));
@@ -76,4 +84,8 @@ TEST_F(AddressGathererFixture, socketCreationFailed_Throw) {
     check_fail_callback();
 
     address_gatherer_->gather_local_address();
+}
+
+}
+}
 }

@@ -1,5 +1,8 @@
 #pragma once
 
+namespace general {
+namespace serializer {
+
 template<typename T>
 concept Deserializable = requires(std::istringstream& is, T& v){
 is >> v;
@@ -44,3 +47,6 @@ private:
         return sv_copy;
     }
 };
+
+}
+}

@@ -1,4 +1,5 @@
 #pragma once
+namespace general {
 
 template<typename CallbackType>
 class WithCallback {
@@ -19,3 +20,5 @@ protected:
     }
     std::weak_ptr<CallbackType> callback_;
 };
+
+}

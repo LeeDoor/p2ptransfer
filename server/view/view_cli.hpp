@@ -1,6 +1,9 @@
 #pragma once
 #include "view.hpp"
 
+namespace general {
+namespace view {
+
 class ViewCLI : public View {
 public:
      int run() override;
@@ -12,8 +15,12 @@ public:
      bool ask_file_verification(const Filename& filename, Filesize filesize) override;
      void show_file_success() override;
      void show_connection_aborted(const Address& address, Port port) override;
+
 private:
     void read_port_and_listen();
 
     bool is_running_ = true;
 };
+
+}
+}

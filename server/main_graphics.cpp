@@ -5,13 +5,14 @@
 #include "view_gui.hpp"
 
 int main(int argc, char** argv) {
+    using namespace general;
     LoggerInitializer init;
-    auto presenter = std::make_shared<PresenterImpl>(
-        ModelBuilder::create_listener(),
-        ModelBuilder::create_address_gatherer(),
-        std::make_shared<ViewGUI>(std::make_unique<QApplication>(argc, argv))
+    auto presenter = std::make_shared<presenter::PresenterImpl>(
+        model::ModelBuilder::create_listener(),
+        model::ModelBuilder::create_address_gatherer(),
+        std::make_shared<view::ViewGUI>(std::make_unique<QApplication>(argc, argv))
     );
-    SignalHandler::handle_SIGINT([&presenter]() {
+    signal_handler::SignalHandler::handle_SIGINT([presenter]() {
         presenter->stop();
     });
     presenter->setup();

@@ -1,6 +1,9 @@
 #pragma once
-
 #include "request_structures.hpp"
+
+namespace general {
+namespace serializer {
+
 class RequestSerializer {
 public:
     static std::string serialize_send_request(const Filename& filename, Filesize filesize);
@@ -14,3 +17,6 @@ private:
     static void serialize_filename_header(std::ostringstream& os, const std::string& filename);
     static void serialize_filesize_header(std::ostringstream& os, size_t filesize);
 };
+
+}
+}

@@ -1,10 +1,13 @@
 #pragma once
-
 #include "address.hpp"
 #include "callback.hpp"
 #include "port.hpp"
 #include "request_structures.hpp"
 #include "view_callback.hpp"
+
+namespace general {
+namespace view {
+
 class View : public WithCallback<ViewCallback> {
 public:
     virtual int run() = 0;
@@ -20,3 +23,6 @@ public:
     virtual void show_file_success() = 0;
     virtual void show_connection_aborted(const Address& address, Port port) = 0;
 };
+
+}
+}

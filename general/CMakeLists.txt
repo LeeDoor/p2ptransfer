@@ -17,7 +17,7 @@ endif()
 add_library(base 
     serializer/request_serializer.cpp
     serializer/request_deserializer.cpp
-    string_view/string_view_methods.cpp
+    serializer/string_view_methods.cpp
     thread_wrapper/thread_wrapper_impl.cpp
     signal_handler/signal_handler.cpp
     address_gatherer/address_gatherer_impl.cpp
@@ -25,7 +25,6 @@ add_library(base
 set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} 
     headers 
     serializer 
-    string_view 
     thread_wrapper
     signal_handler
     address_gatherer

@@ -1,5 +1,9 @@
 #include "request_deserializer.hpp"
 
+namespace general {
+namespace serializer {
+namespace test {
+
 TEST(RequestDeserializer, SuccessSerializing_avg) {
     std::string request = 
         "REQUEST\n"
@@ -232,4 +236,8 @@ TEST(RequestDeserializer, SIZEcontainsLeadingLiterals_shouldThrowRuntimeError) {
     EXPECT_THROW({
         auto result = RequestDeserializer::deserialize_send_request(request);
     }, std::runtime_error);
+}
+
+}
+}
 }

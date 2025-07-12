@@ -1,4 +1,8 @@
 #include "request_deserializer.hpp"
+
+namespace general {
+namespace serializer {
+
 const std::unordered_map<HeaderType, RequestMethod> RequestDeserializer::request_methods_ = {
         { REQUEST_HEADER, RequestMethod::REQUEST },
         { FILE_HEADER, RequestMethod::FILENAME },
@@ -20,4 +24,7 @@ void RequestDeserializer::validate_method(std::string_view method_sv, RequestMet
         throw std::runtime_error("no such method: " + SVMethods::to_string(method_sv));
     if(request_methods_.at(method_sv) != required_method) 
         throw std::runtime_error("Unexpected header found: " + SVMethods::to_string(method_sv));
+}
+
+}
 }

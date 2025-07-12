@@ -1,8 +1,11 @@
 #pragma once
-
 #include "address.hpp"
 #include "port.hpp"
 #include "request_structures.hpp"
+
+namespace general {
+namespace model {
+
 class FileTransferCallback {
 public:
     virtual void set_progressbar(double present) = 0;
@@ -11,3 +14,6 @@ public:
     virtual void connection_aborted(const Address& address, Port port) = 0;
     virtual ~FileTransferCallback() = default;
 };
+
+}
+}

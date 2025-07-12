@@ -1,4 +1,6 @@
 #pragma once
+namespace general {
+
 // If you don't want to use std::cout for logging, write in main file: 
 // #define IS_COUT 0 
 #ifndef IS_COUT
@@ -55,3 +57,4 @@ public:
     ~LoggerInitializer() { Logger::destroy(); }
 };
 
+}

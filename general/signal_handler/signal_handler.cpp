@@ -1,6 +1,9 @@
 #include "signal_handler.hpp"
 #include "logger.hpp"
 
+namespace general {
+namespace signal_handler {
+
 std::function<void()> SignalHandler::stop_func_;
 
 void SignalHandler::handle_SIGINT(std::function<void()>&& stop_func) {
@@ -14,3 +17,5 @@ void SignalHandler::handle_signal([[maybe_unused]] int signal) {
     Logger::log() << "SIGINT successfully handled\n";
 }
 
+}
+}

@@ -1,5 +1,8 @@
-
 #include "socket_manager_impl.hpp"
+
+namespace general {
+namespace socket_manager {
+namespace test {
 
 class SocketManagerFixture : public ::testing::Test {
 protected:
@@ -10,4 +13,8 @@ protected:
 
 TEST_F(SocketManagerFixture, success) {
 
+}
+
+}
+}
 }

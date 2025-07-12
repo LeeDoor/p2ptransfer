@@ -1,5 +1,8 @@
 #include "string_view_methods.hpp"
 
+namespace general {
+namespace serializer {
+
 template<>
 size_t SVMethods::deserialize_value(std::string_view line_sv) {
     auto line_end_ptr = line_sv.data() + line_sv.size();
@@ -20,3 +23,5 @@ void SVMethods::deserialize_value(std::string_view line_sv) {
         throw std::runtime_error("expected empty data is not empty");
 }
 
+}
+}

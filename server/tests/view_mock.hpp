@@ -1,6 +1,10 @@
 #pragma once
-
 #include "view.hpp"
+
+namespace general {
+namespace view {
+namespace test {
+
 class ViewMock : public View {
 public:
     MOCK_METHOD(int, run, (), (override));
@@ -16,3 +20,7 @@ public:
         return callback_;
     }
 };
+
+}
+}
+}

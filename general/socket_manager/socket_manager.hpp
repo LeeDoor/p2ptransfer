@@ -2,6 +2,9 @@
 #include "address.hpp"
 #include "port.hpp"
 
+namespace general {
+namespace socket_manager {
+
 class SocketManager {
 public:
     struct Endpoint {
@@ -19,3 +22,6 @@ public:
     
     virtual ~SocketManager() = default;
 };
+
+}
+}
