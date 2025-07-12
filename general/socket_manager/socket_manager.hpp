@@ -10,6 +10,7 @@ public:
     struct Endpoint {
         Address address;
         Port port;
+        bool operator==(const Endpoint& b) const = default;
     };
     static constexpr size_t BUFFER_SIZE = 4096;
     using BufferType = std::array<char, BUFFER_SIZE>;

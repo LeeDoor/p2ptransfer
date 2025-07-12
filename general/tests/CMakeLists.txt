@@ -1,4 +1,6 @@
 add_executable(general_tests 
+    main.cpp
+
     test_request_serializer.cpp
     test_request_deserializer.cpp
     test_socket_manager.cpp
