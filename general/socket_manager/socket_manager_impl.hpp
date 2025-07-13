@@ -45,7 +45,7 @@ public:
         };
     }
 
-    net::awaitable<std::string> read_request() override {
+    net::awaitable<std::string> read() override {
         std::string buffer;
         size_t bytes;
         auto dynamic_buffer = net::dynamic_buffer(buffer, MAX_SEND_REQUEST_SIZE);
@@ -56,13 +56,13 @@ public:
         co_return buffer.substr(0, bytes);
     }
 
-    net::awaitable<void> send_response(const std::string& response) override {
+    net::awaitable<void> write(const std::string& response) override {
         co_await net::async_write(*socket_, 
                                   net::buffer(response), 
                                   net::use_awaitable);
     }
 
-    net::awaitable<size_t> read_file_part_to(BufferType& buffer, size_t& bytes_remaining) override {
+    net::awaitable<size_t> read_part_to(BufferType& buffer, size_t& bytes_remaining) override {
         size_t bytes; ErrorCode ec;
         std::tie(ec, bytes) 
             = co_await net::async_read(*socket_, 

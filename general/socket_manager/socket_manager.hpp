@@ -17,9 +17,9 @@ public:
 
     virtual Endpoint get_remote_endpoint() = 0;
     virtual Endpoint get_local_endpoint() = 0;
-    virtual net::awaitable<std::string> read_request() = 0;
-    virtual net::awaitable<void> send_response(const std::string& response) = 0;
-    virtual net::awaitable<size_t> read_file_part_to(BufferType& buffer, size_t& bytes_remaining) = 0;
+    virtual net::awaitable<std::string> read() = 0;
+    virtual net::awaitable<void> write(const std::string& response) = 0;
+    virtual net::awaitable<size_t> read_part_to(BufferType& buffer, size_t& bytes_remaining) = 0;
     
     virtual ~SocketManager() = default;
 };

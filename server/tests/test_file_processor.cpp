@@ -34,7 +34,7 @@ protected:
         check_file_transfered_callback();
     }
     void immitate_send_request(const std::string& filename, size_t filesize) {
-        EXPECT_CALL(*socket_mock, read_request())
+        EXPECT_CALL(*socket_mock, read())
             .WillOnce(Return(return_immediately(
                 serializer::RequestSerializer::serialize_send_request(filename, filesize))));
     }
@@ -43,13 +43,13 @@ protected:
             .WillOnce(Return(is_confirming));
     }
     void check_response_sending(const std::string& filename) {
-        EXPECT_CALL(*socket_mock, send_response(serializer::RequestSerializer::serialize_send_permission(filename)))
+        EXPECT_CALL(*socket_mock, write(serializer::RequestSerializer::serialize_send_permission(filename)))
             .WillOnce(Return(return_immediately()));
     }
     void immitate_file_content_sending(const std::string& file_content) {
         size_t filesize = file_content.size();
         assert_filesize(filesize);
-        EXPECT_CALL(*socket_mock, read_file_part_to(testing::_, filesize))
+        EXPECT_CALL(*socket_mock, read_part_to(testing::_, filesize))
             .WillOnce([=](BufferType& buffer, size_t& bytes_remaining) {
                 std::copy(file_content.begin(), file_content.end(), buffer.begin());
                 bytes_remaining = 0;
@@ -157,7 +157,7 @@ TEST_F(FileProcessorFixture, sentTooMuch_readOnlyGivenData) {
     immitate_user_confirmation(filename, filesize, true); 
     check_response_sending(filename);
     assert_filesize(filesize * 2);
-    EXPECT_CALL(*socket_mock, read_file_part_to(testing::_, filesize))
+    EXPECT_CALL(*socket_mock, read_part_to(testing::_, filesize))
         .WillOnce([=](BufferType& buffer, size_t& bytes_remaining) {
             std::copy(filecontent.begin(), filecontent.end(), buffer.begin());
             // copying extra data
@@ -181,14 +181,14 @@ TEST_F(FileProcessorFixture, contentOutOfBufferSize_successFileProcessing) {
     immitate_user_confirmation(filename, filesize, true); 
     check_response_sending(filename);
     testing::Sequence buffer_sequence;
-    EXPECT_CALL(*socket_mock, read_file_part_to(testing::_, filesize))
+    EXPECT_CALL(*socket_mock, read_part_to(testing::_, filesize))
         .InSequence(buffer_sequence)
         .WillOnce([=](BufferType& buffer, size_t& bytes_remaining) {
             buffer.fill('f');
             bytes_remaining -= buffer.size();
             return return_immediately(buffer.size());
         });
-    EXPECT_CALL(*socket_mock, read_file_part_to(testing::_, buffer_size))
+    EXPECT_CALL(*socket_mock, read_part_to(testing::_, buffer_size))
         .InSequence(buffer_sequence)
         .WillOnce([=](BufferType& buffer, size_t& bytes_remaining) {
             buffer.fill('s');
@@ -208,7 +208,7 @@ TEST_F(FileProcessorFixture, contentOutOfBufferSize_successFileProcessing) {
 TEST_F(FileProcessorFixture, readSendRequestThrowsException_abortRethrow) {
     const std::string filename = "new_file.txt";
     const std::string filecontent = "some content\n";
-    EXPECT_CALL(*socket_mock, read_request())
+    EXPECT_CALL(*socket_mock, read())
         .WillOnce([=]() -> net::awaitable<std::string> 
                   { throw std::runtime_error("immitating send_request reading error"); });
     check_connection_aborted_callback();
@@ -219,7 +219,7 @@ TEST_F(FileProcessorFixture, readSendRequestThrowsException_abortRethrow) {
 }
 
 TEST_F(FileProcessorFixture, invalidRequestGiven_abortRethrow) {
-    EXPECT_CALL(*socket_mock, read_request())
+    EXPECT_CALL(*socket_mock, read())
         .WillOnce([=]() -> net::awaitable<std::string> 
                   { using namespace std::literals; return return_immediately("INVALID_REQUEST\nFILEisbad\nSIZETOO\n\n"s); });
     check_connection_aborted_callback();
@@ -258,7 +258,7 @@ TEST_F(FileProcessorFixture, sendResponseException_abortRethrow) {
     size_t filesize = filecontent.size();
     immitate_send_request(filename, filesize);
     immitate_user_confirmation(filename, filesize, true); 
-    EXPECT_CALL(*socket_mock, send_response(serializer::RequestSerializer::serialize_send_permission(filename)))
+    EXPECT_CALL(*socket_mock, write(serializer::RequestSerializer::serialize_send_permission(filename)))
         .WillOnce([]() -> net::awaitable<void> { 
             throw std::runtime_error("imitating exception while sending permission"); 
         });
@@ -275,7 +275,7 @@ TEST_F(FileProcessorFixture, exceptionWhileReadingFile_abortRethrow) {
     immitate_user_confirmation(filename, filesize, true); 
     check_response_sending(filename);
     ASSERT_LE(filesize, std::tuple_size<BufferType>::value);
-    EXPECT_CALL(*socket_mock, read_file_part_to(testing::_, filesize))
+    EXPECT_CALL(*socket_mock, read_part_to(testing::_, filesize))
         .WillOnce(::testing::WithoutArgs([=]() 
                   -> net::awaitable<size_t> {
             throw std::runtime_error("immitating reading data exception");
