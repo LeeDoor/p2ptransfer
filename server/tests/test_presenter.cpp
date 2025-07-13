@@ -73,15 +73,15 @@ TEST_F(PresenterFixture, listenPressed_calledListener) {
 }
 
 TEST_F(PresenterFixture, addressGathered_calledViewSetter) {
-    EXPECT_CALL(*view_, show_address(TEST_ADDRESS));
+    EXPECT_CALL(*view_, show_address(TEST_LOCADDR));
 
-    presenter_->set_address(TEST_ADDRESS);
+    presenter_->set_address(TEST_LOCADDR);
 }
 
 TEST_F(PresenterFixture, connectionEstablished_showNotification) {
-    EXPECT_CALL(*view_, show_connected(TEST_ADDRESS, TEST_PORT));
+    EXPECT_CALL(*view_, show_connected(TEST_LOCADDR, TEST_PORT));
 
-    presenter_->connected(TEST_ADDRESS, TEST_PORT);
+    presenter_->connected(TEST_LOCADDR, TEST_PORT);
 }
 
 TEST_F(PresenterFixture, connectionFailed_showNotification) {
@@ -97,9 +97,9 @@ TEST_F(PresenterFixture, fileTransfered_showNotification) {
 }
 
 TEST_F(PresenterFixture, connectionAborted_showNotification) {
-    EXPECT_CALL(*view_, show_connection_aborted(TEST_ADDRESS, TEST_PORT));
+    EXPECT_CALL(*view_, show_connection_aborted(TEST_LOCADDR, TEST_PORT));
 
-    presenter_->connection_aborted(TEST_ADDRESS, TEST_PORT);
+    presenter_->connection_aborted(TEST_LOCADDR, TEST_PORT);
 }
 
 TEST_F(PresenterFixture, fileVerificationAsked_ProvideTrueResponse) {

@@ -15,6 +15,6 @@ inline net::awaitable<void> return_immediately(){
 }
 
 constexpr size_t TEST_PORT = 8080;
-constexpr std::string TEST_ADDRESS = "127.0.0.1";
+constexpr std::string TEST_LOCADDR = "127.0.0.1";
 
 }
