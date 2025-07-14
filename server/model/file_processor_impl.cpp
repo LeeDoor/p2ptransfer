@@ -30,7 +30,7 @@ net::awaitable<SendRequest> FileProcessorImpl::header_handshake() {
 }
 
 net::awaitable<SendRequest> FileProcessorImpl::handle_send_request() {
-    std::string request = co_await socket_manager_->read();
+    std::string request = co_await socket_manager_->read_request();
     auto send_request = serializer::RequestDeserializer::deserialize_send_request(request);
     validate_send_request(send_request);
     co_return send_request;

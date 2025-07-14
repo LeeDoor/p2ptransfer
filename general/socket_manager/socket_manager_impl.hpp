@@ -25,6 +25,11 @@ public:
         co_return sm;
     }
 
+    ~SocketManagerImpl() = default;
+
+    bool connected() {
+        return socket_ != nullptr;
+    }
     Endpoint get_remote_endpoint() override{
         if(socket_ == nullptr) 
             throw std::logic_error("get_remote_endpoint called while socket is nullptr. "
@@ -45,7 +50,7 @@ public:
         };
     }
 
-    net::awaitable<std::string> read() override {
+    net::awaitable<std::string> read_request() override {
         std::string buffer;
         size_t bytes;
         auto dynamic_buffer = net::dynamic_buffer(buffer, MAX_SEND_REQUEST_SIZE);
@@ -56,7 +61,7 @@ public:
         co_return buffer.substr(0, bytes);
     }
 
-    net::awaitable<void> write(const std::string& response) override {
+    net::awaitable<void> write(std::string response) override {
         co_await net::async_write(*socket_, 
                                   net::buffer(response), 
                                   net::use_awaitable);
@@ -102,8 +107,6 @@ protected:
     }
     
 
-    constexpr static size_t MAX_SEND_REQUEST_SIZE = 512;
-    constexpr static std::string_view REQUEST_COMPLETION = "\n\n";
     net::io_context& context_;
     SocketPtr socket_;
 };

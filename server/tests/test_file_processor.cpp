@@ -34,7 +34,7 @@ protected:
         check_file_transfered_callback();
     }
     void immitate_send_request(const std::string& filename, size_t filesize) {
-        EXPECT_CALL(*socket_mock, read())
+        EXPECT_CALL(*socket_mock, read_request())
             .WillOnce(Return(return_immediately(
                 serializer::RequestSerializer::serialize_send_request(filename, filesize))));
     }
@@ -208,7 +208,7 @@ TEST_F(FileProcessorFixture, contentOutOfBufferSize_successFileProcessing) {
 TEST_F(FileProcessorFixture, readSendRequestThrowsException_abortRethrow) {
     const std::string filename = "new_file.txt";
     const std::string filecontent = "some content\n";
-    EXPECT_CALL(*socket_mock, read())
+    EXPECT_CALL(*socket_mock, read_request())
         .WillOnce([=]() -> net::awaitable<std::string> 
                   { throw std::runtime_error("immitating send_request reading error"); });
     check_connection_aborted_callback();
@@ -219,7 +219,7 @@ TEST_F(FileProcessorFixture, readSendRequestThrowsException_abortRethrow) {
 }
 
 TEST_F(FileProcessorFixture, invalidRequestGiven_abortRethrow) {
-    EXPECT_CALL(*socket_mock, read())
+    EXPECT_CALL(*socket_mock, read_request())
         .WillOnce([=]() -> net::awaitable<std::string> 
                   { using namespace std::literals; return return_immediately("INVALID_REQUEST\nFILEisbad\nSIZETOO\n\n"s); });
     check_connection_aborted_callback();
