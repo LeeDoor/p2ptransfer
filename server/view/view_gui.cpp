@@ -6,10 +6,10 @@ namespace general {
 namespace server {
 namespace view {
 
-ViewGUI::ViewGUI(std::unique_ptr<QApplication> application, QWidget *parent)
+ViewGUI::ViewGUI(std::shared_ptr<QApplication> application, QWidget *parent)
     : QMainWindow(parent)
-    , application_(std::move(application))
     , ui(new Ui::ViewGUI)
+    , application_(application)
 {
     ui->setupUi(this);
 }
@@ -19,10 +19,18 @@ ViewGUI::~ViewGUI()
 }
 int ViewGUI::run() {
     QMainWindow::show();
-    return application_->exec();
+    if(auto application = application_.lock()) {
+        return application->exec();
+    } else {
+        throw std::logic_error("application removed before ViewGUI::run");
+    }
 }
 void ViewGUI::stop() {
-    application_->quit();
+    if(auto application = application_.lock()) {
+        application->quit();
+    } else {
+        throw std::logic_error("application removed before ViewGUI::stop");
+    }
 }
 void ViewGUI::show_address(const Address& address) {
     QString qaddress = address.c_str();

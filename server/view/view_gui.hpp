@@ -1,6 +1,5 @@
 #pragma once
 #include "view.hpp"
-#include "qt_headers.hpp"
 
 namespace Ui {
 class ViewGUI;
@@ -10,11 +9,10 @@ namespace general {
 namespace server {
 namespace view {
 
-class ViewGUI : public QMainWindow, public View {
+class ViewGUI : QMainWindow, public View {
     Q_OBJECT
-
 public:
-    explicit ViewGUI(std::unique_ptr<QApplication> application, QWidget *parent = nullptr);
+    explicit ViewGUI(std::shared_ptr<QApplication> application, QWidget *parent = nullptr);
     ~ViewGUI();
 
     int run() override;
@@ -43,8 +41,8 @@ private:
         QMetaObject::invokeMethod(this, std::move(function), Qt::BlockingQueuedConnection);
     }
 
-    std::unique_ptr<QApplication> application_;
     Ui::ViewGUI *ui;
+    std::weak_ptr<QApplication> application_;
 };
 
 }
