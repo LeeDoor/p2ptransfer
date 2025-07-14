@@ -112,6 +112,30 @@ TEST_F(SocketManagerFixture, clientWritesString_singleBufferUsed) {
     EXPECT_EQ(result, "aboba\n\n");
 }
 
+TEST_F(SocketManagerFixture, multipleExchangeAllowed) {
+    for(int i = 0; i < 20; ++i) {
+        const std::string request = "aboba" + std::to_string(i) + "\n\n";
+        client_.spawn_yourself(client_.write(request));
+        client_.run();
+
+        auto result = server_.spawn_yourself_get<std::string>(server_.read_request());
+
+        EXPECT_EQ(result, request);
+    }   
+}
+TEST_F(SocketManagerFixture, sendingTwoRequestsAtOnce_shouldReadOneByOne) {
+    const std::string request = "aboba\n\n";
+    client_.spawn_yourself(client_.write(request + request));
+    client_.run();
+
+    auto result1 = server_.spawn_yourself_get<std::string>(server_.read_request());
+    std::cerr << "First request result: " << result1 << std::endl;
+    auto result2 = server_.spawn_yourself_get<std::string>(server_.read_request());
+    std::cerr << "Second request result: " << result2 << std::endl;
+
+    EXPECT_EQ(result1, request);
+    EXPECT_EQ(result2, request);
+}
 
 }
 }

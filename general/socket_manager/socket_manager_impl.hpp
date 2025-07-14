@@ -51,14 +51,15 @@ public:
     }
 
     net::awaitable<std::string> read_request() override {
-        std::string buffer;
         size_t bytes;
-        auto dynamic_buffer = net::dynamic_buffer(buffer, MAX_SEND_REQUEST_SIZE);
+        auto dynamic_buffer = net::dynamic_buffer(reading_buffer_, MAX_SEND_REQUEST_SIZE);
         bytes = 
             co_await net::async_read_until(*socket_, dynamic_buffer, 
                                            REQUEST_COMPLETION, 
                                            net::use_awaitable);
-        co_return buffer.substr(0, bytes);
+        std::string result = reading_buffer_.substr(0, bytes);
+        reading_buffer_.erase(0, bytes);
+        co_return result;
     }
 
     net::awaitable<void> write(std::string response) override {
@@ -106,9 +107,9 @@ protected:
         co_await socket_->async_connect(ep, net::use_awaitable);
     }
     
-
     net::io_context& context_;
     SocketPtr socket_;
+    std::string reading_buffer_;
 };
 
 using SocketManagerTcp = SocketManagerImpl<tcpip>;
