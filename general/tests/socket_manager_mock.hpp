@@ -7,6 +7,7 @@ namespace test {
 
 class SocketManagerMock : public SocketManager {
 public:
+    MOCK_METHOD(bool, connected, (), (override));
     MOCK_METHOD(Endpoint, get_remote_endpoint, (), (override));
     MOCK_METHOD(Endpoint, get_local_endpoint, (), (override));
     MOCK_METHOD(net::awaitable<std::string>, read_request, (), (override));

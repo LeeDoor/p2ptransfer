@@ -15,6 +15,7 @@ public:
     static constexpr size_t BUFFER_SIZE = 4096;
     using BufferType = std::array<char, BUFFER_SIZE>;
 
+    virtual bool connected() = 0;
     virtual Endpoint get_remote_endpoint() = 0;
     virtual Endpoint get_local_endpoint() = 0;
     virtual net::awaitable<std::string> read_request() = 0;

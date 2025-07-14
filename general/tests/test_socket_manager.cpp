@@ -1,4 +1,5 @@
 #include "socket_manager_impl.hpp"
+#include "socket_manager_impl_builder.hpp"
 #include "thread_wrapper_impl.hpp"
 
 namespace general {
@@ -93,6 +94,71 @@ protected:
     SocketManagerTest server_;
     SocketManagerTest client_;
 };
+
+class SocketManagerBuilderFixture : public ::testing::Test {
+protected:
+    SocketManagerBuilderFixture() :
+        context{std::make_shared<net::io_context>()},
+        builder{context}
+    {}
+    std::shared_ptr<net::io_context> context;
+    SocketManagerImplBuilder builder;
+};
+
+TEST_F(SocketManagerBuilderFixture, connectingToListenedPort) {
+    std::shared_ptr<SocketManager> server, client;
+
+    std::jthread server_thread{[&] {
+        auto second_context = std::make_shared<net::io_context>();
+        server = spawn_get<std::shared_ptr<SocketManager>>(builder.tcp_listening_at(TEST_PORT), *second_context);
+    }};
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    client = spawn_get<std::shared_ptr<SocketManager>>(builder.tcp_connecting_to(TEST_LOCADDR, TEST_PORT), *context);
+    server_thread.join();
+
+    auto& r = *server;
+    EXPECT_EQ(typeid(r), typeid(SocketManagerTcp));
+    EXPECT_TRUE(server->connected());
+    EXPECT_TRUE(client->connected());
+}
+
+TEST_F(SocketManagerBuilderFixture, connectingToClosedPort_throwsRuntimeError) {
+    // TEST_PORT should not be opened ATM
+    EXPECT_THROW({
+        auto client = spawn_get<std::shared_ptr<SocketManager>>(builder.tcp_connecting_to(TEST_LOCADDR, TEST_PORT), *context);
+    }, std::runtime_error);
+}
+
+TEST_F(SocketManagerBuilderFixture, connectingToForbiddenPort_throwsRuntimeError) {
+    EXPECT_THROW({
+        auto client = spawn_get<std::shared_ptr<SocketManager>>(builder.tcp_connecting_to(TEST_LOCADDR, 1), *context);
+    }, std::runtime_error);
+}
+
+TEST_F(SocketManagerBuilderFixture, abortingWhileReading_throwsRuntimeError) {
+    std::shared_ptr<SocketManager> server, client;
+    std::jthread server_thread{[&] {
+        auto second_context = std::make_shared<net::io_context>();
+        server = spawn_get<std::shared_ptr<SocketManager>>(builder.tcp_listening_at(TEST_PORT), *second_context);
+    }};
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    client = spawn_get<std::shared_ptr<SocketManager>>(builder.tcp_connecting_to(TEST_LOCADDR, TEST_PORT), *context);
+    server_thread.join();
+
+    bool throw_catched = false;
+    server_thread = std::jthread{[&] {
+        try {
+        std::ignore = spawn_get<std::string>(server->read_request(), *context);
+        } catch (const std::runtime_error& ex) {
+            throw_catched = true;
+        }
+    }};
+    EXPECT_FALSE(throw_catched);
+    client.reset();
+    server_thread.join();
+
+    EXPECT_TRUE(throw_catched);
+}
 
 TEST_F(SocketManagerFixture, afterConstructor_bothConnected) {
     EXPECT_TRUE(server_.connected());
