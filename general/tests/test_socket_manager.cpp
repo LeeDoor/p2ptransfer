@@ -13,7 +13,7 @@ void spawn_at(Func&& func, net::io_context& context) {
 }
 
 template<typename Ret, typename Func>
-Ret spawn_get(Func&& func, net::io_context& context) {
+[[nodiscard]] Ret spawn_get(Func&& func, net::io_context& context) {
     Ret result;
     net::co_spawn(context, std::move(func), [&result](auto exptr, Ret val) {
         if(exptr) std::rethrow_exception(exptr);
@@ -57,7 +57,7 @@ public:
         spawn_at(std::move(func), *context_);
     }
     template<typename Ret, typename Func>
-    Ret spawn_yourself_get(Func&& func) {
+    [[nodiscard]] Ret spawn_yourself_get(Func&& func) {
         return spawn_get<Ret>(std::move(func), *context_);
     }
 
@@ -86,6 +86,10 @@ protected:
         server_.join();
     }
 
+    static constexpr size_t get_buffer_size() {
+        return std::tuple_size<SocketManager::BufferType>::value;
+    }
+
     SocketManagerTest server_;
     SocketManagerTest client_;
 };
@@ -103,7 +107,7 @@ TEST_F(SocketManagerFixture, connectionEstablishedByDefault) {
     EXPECT_EQ(client_.get_local_endpoint().address, TEST_LOCADDR);
 }
 
-TEST_F(SocketManagerFixture, clientWritesString_singleBufferUsed) {
+TEST_F(SocketManagerFixture, clientWritesString) {
     client_.spawn_yourself(client_.write("aboba\n\n"));
     client_.run();
 
@@ -112,7 +116,7 @@ TEST_F(SocketManagerFixture, clientWritesString_singleBufferUsed) {
     EXPECT_EQ(result, "aboba\n\n");
 }
 
-TEST_F(SocketManagerFixture, multipleExchangeAllowed) {
+TEST_F(SocketManagerFixture, multipleSequentialExchangeAllowed) {
     for(int i = 0; i < 20; ++i) {
         const std::string request = "aboba" + std::to_string(i) + "\n\n";
         client_.spawn_yourself(client_.write(request));
@@ -123,18 +127,80 @@ TEST_F(SocketManagerFixture, multipleExchangeAllowed) {
         EXPECT_EQ(result, request);
     }   
 }
+
 TEST_F(SocketManagerFixture, sendingTwoRequestsAtOnce_shouldReadOneByOne) {
     const std::string request = "aboba\n\n";
     client_.spawn_yourself(client_.write(request + request));
     client_.run();
 
     auto result1 = server_.spawn_yourself_get<std::string>(server_.read_request());
-    std::cerr << "First request result: " << result1 << std::endl;
     auto result2 = server_.spawn_yourself_get<std::string>(server_.read_request());
-    std::cerr << "Second request result: " << result2 << std::endl;
 
     EXPECT_EQ(result1, request);
     EXPECT_EQ(result2, request);
+}
+
+TEST_F(SocketManagerFixture, readAndWriteSimultaniously) {
+    const std::string server_to_client = "Some server to client text to read\n\n";
+    const std::string client_to_server = "Some client to server text to read\n\n";
+    client_.spawn_yourself(client_.write(client_to_server));
+    server_.spawn_yourself(server_.write(server_to_client));
+    client_.run();
+    server_.run();
+
+    auto server_read = server_.spawn_yourself_get<std::string>(server_.read_request());
+    auto client_read = client_.spawn_yourself_get<std::string>(client_.read_request());
+
+    EXPECT_EQ(server_read, client_to_server);
+    EXPECT_EQ(client_read, server_to_client);
+}
+
+TEST_F(SocketManagerFixture, sendMoreThanRestriction_closeConnection) {
+    std::stringstream ss;
+    for(size_t i = 0; i < get_buffer_size() * 2; ++i) ss << "TrashText";
+    ss << "\n\n";
+    client_.spawn_yourself(client_.write(ss.str()));
+    client_.run();
+
+    EXPECT_THROW({
+        auto server_read = server_.spawn_yourself_get<std::string>(server_.read_request());
+    }, std::runtime_error);
+}
+
+TEST_F(SocketManagerFixture, readingFilePart_lessThanOneBuffer) {
+    constexpr size_t less_than_buffer = get_buffer_size() / 2;
+    std::string file_immitation(less_than_buffer, 'a');
+    client_.spawn_yourself(client_.write(file_immitation));
+    client_.run();
+
+    SocketManager::BufferType buffer; size_t bytes_remaining = less_than_buffer;
+    size_t bytes = server_.spawn_yourself_get<size_t>(server_.read_part_to(buffer, bytes_remaining));
+
+    EXPECT_LE(bytes, less_than_buffer);
+    EXPECT_GE(bytes_remaining, 0);
+    EXPECT_TRUE(std::equal(buffer.begin(), buffer.begin() + bytes, file_immitation.begin()));
+}
+
+TEST_F(SocketManagerFixture, readingFile_BuffersInCycle) {
+    constexpr size_t many_buffer_sizes = get_buffer_size() * 10;
+    std::string file_immitation(many_buffer_sizes, 'a');
+    client_.spawn_yourself(client_.write(file_immitation));
+    client_.run();
+
+    SocketManager::BufferType buffer; 
+    size_t bytes_remaining = many_buffer_sizes;
+    size_t bytes, bytes_gone = 0;
+    do {
+        size_t old_bytes_remaining = bytes_remaining;
+        bytes = server_.spawn_yourself_get<size_t>(server_.read_part_to(buffer, bytes_remaining));
+        EXPECT_EQ(old_bytes_remaining - bytes_remaining, bytes);
+        EXPECT_LE(bytes, get_buffer_size());
+        EXPECT_TRUE(std::equal(buffer.begin(), buffer.begin() + bytes, file_immitation.begin() + bytes_gone));
+        bytes_gone += bytes;
+    } while(bytes);
+
+    ASSERT_EQ(bytes_gone, many_buffer_sizes);
+    ASSERT_EQ(bytes_remaining, 0);
 }
 
 }
