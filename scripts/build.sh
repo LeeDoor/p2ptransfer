@@ -1,13 +1,20 @@
 # Help printing
 if [[ "$1" == "--help" ]];
 then
-    echo 'USAGE: ./build.sh [<0=CLI|1=GRAPHICS>] [build directory name (i.e. windows, linux)] [CMake params...]'
+    echo 'USAGE: ./build.sh [<0=CLI|1=GRAPHICS|2=ALL(default)>] [build directory name (i.e. windows, linux)] [CMake params...]'
     exit 0
 fi
 
 # Reading view mode parameter
-graphics=${1:-0}
+graphics=${1:-2}
 shift
+
+# if build mode unspecified run both
+if [[ $graphics -eq 2 ]];
+then
+    ./build.sh 0 && ./build.sh 1
+    exit
+fi
 
 cd ../
 
@@ -21,7 +28,9 @@ mkdir build/$build_dir -p
 cd build/$build_dir
 
 # Printing logs
-echo -n "building $src at $build_dir with: "
+highlight='\033[0;36m'
+clearcolor='\033[0m'
+printf "${highlight}building ${src} at ${build_dir} with: "
 if [[ $graphics -eq 1 ]];
 then
     mkdir graphics/ -p
@@ -32,6 +41,7 @@ else
     cd cli/
     echo "cli"
 fi
+printf "${clearcolor}"
 
 # Executing CMake
 cmake $src -DTESTING=ON -DGRAPHICS=$graphics $@ && cmake --build . -j4
