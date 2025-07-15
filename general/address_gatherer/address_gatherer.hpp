@@ -4,7 +4,6 @@
 #include "gather_address_callback.hpp"
 
 namespace general {
-namespace address_gatherer {
 
 class AddressGatherer : public WithCallback<GatherAddressCallback> {
 public:
@@ -13,5 +12,4 @@ public:
     virtual ~AddressGatherer() = default;
 };
 
-}
 }

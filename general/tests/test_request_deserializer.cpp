@@ -1,7 +1,6 @@
 #include "request_deserializer.hpp"
 
 namespace general {
-namespace serializer {
 namespace test {
 
 TEST(RequestDeserializer, SuccessSerializing_avg) {
@@ -238,6 +237,5 @@ TEST(RequestDeserializer, SIZEcontainsLeadingLiterals_shouldThrowRuntimeError) {
     }, std::runtime_error);
 }
 
-}
 }
 }

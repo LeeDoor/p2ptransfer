@@ -2,7 +2,6 @@
 #include "thread_wrapper.hpp"
 
 namespace general {
-namespace thread_wrapper {
 namespace test {
 
 class ThreadWrapperMock : public ThreadWrapper {
@@ -18,6 +17,5 @@ protected:
     }
 };
 
-}
 }
 }

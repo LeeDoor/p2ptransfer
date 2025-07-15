@@ -1,7 +1,6 @@
 #include "thread_wrapper_impl.hpp"    
 
 namespace general {
-namespace thread_wrapper {
 
 ThreadWrapperImpl::ThreadWrapperImpl() :
     is_running_(false),
@@ -34,5 +33,4 @@ void ThreadWrapperImpl::try_join_thread() {
     }
 }
 
-}
 }

@@ -15,7 +15,7 @@ namespace model {
 
 class FileProcessorImpl : public FileProcessor, public WithCallback<FileTransferCallback> {
 public:
-    using SocketManagerPtr = std::shared_ptr<socket_manager::SocketManager>;
+    using SocketManagerPtr = std::shared_ptr<SocketManager>;
     FileProcessorImpl(SocketManagerPtr socket_manager);
 
     net::awaitable<void> try_read_file() override;

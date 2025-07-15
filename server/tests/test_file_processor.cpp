@@ -8,11 +8,11 @@ namespace server {
 namespace model {
 namespace test {
 
-using namespace socket_manager::test;
+using namespace ::general::test;
 
 class FileProcessorFixture : public ::testing::Test {
 protected:
-    using BufferType = socket_manager::SocketManager::BufferType;
+    using BufferType = SocketManager::BufferType;
 
     FileProcessorFixture() :
         socket_mock(std::make_shared<SocketManagerMock>()),
@@ -36,14 +36,14 @@ protected:
     void immitate_send_request(const std::string& filename, size_t filesize) {
         EXPECT_CALL(*socket_mock, read_request())
             .WillOnce(Return(return_immediately(
-                serializer::RequestSerializer::serialize_send_request(filename, filesize))));
+                RequestSerializer::serialize_send_request(filename, filesize))));
     }
     void immitate_user_confirmation(const std::string& filename, size_t filesize, bool is_confirming) {
         EXPECT_CALL(*callback_mock, verify_file(filename, filesize))
             .WillOnce(Return(is_confirming));
     }
     void check_response_sending(const std::string& filename) {
-        EXPECT_CALL(*socket_mock, write(serializer::RequestSerializer::serialize_send_permission(filename)))
+        EXPECT_CALL(*socket_mock, write(RequestSerializer::serialize_send_permission(filename)))
             .WillOnce(Return(return_immediately()));
     }
     void immitate_file_content_sending(const std::string& file_content) {
@@ -83,7 +83,7 @@ protected:
     }
     void check_connection_aborted_callback() {
         EXPECT_CALL(*socket_mock, get_remote_endpoint())
-            .WillOnce(Return(socket_manager::SocketManager::Endpoint{TEST_LOCADDR, TEST_PORT}));
+            .WillOnce(Return(SocketManager::Endpoint{TEST_LOCADDR, TEST_PORT}));
         EXPECT_CALL(*callback_mock, connection_aborted(TEST_LOCADDR, TEST_PORT));
     }
 
@@ -258,7 +258,7 @@ TEST_F(FileProcessorFixture, sendResponseException_abortRethrow) {
     size_t filesize = filecontent.size();
     immitate_send_request(filename, filesize);
     immitate_user_confirmation(filename, filesize, true); 
-    EXPECT_CALL(*socket_mock, write(serializer::RequestSerializer::serialize_send_permission(filename)))
+    EXPECT_CALL(*socket_mock, write(RequestSerializer::serialize_send_permission(filename)))
         .WillOnce([]() -> net::awaitable<void> { 
             throw std::runtime_error("imitating exception while sending permission"); 
         });

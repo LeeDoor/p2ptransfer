@@ -4,14 +4,13 @@
 #include "socket_manager_builder.hpp"
 
 namespace general {
-namespace address_gatherer {
 
 class AddressGathererImpl : public AddressGatherer {
 public:
     using ContextPtr = std::shared_ptr<net::io_context>;
-    using ThreadWrapperPtr = std::shared_ptr<thread_wrapper::ThreadWrapper>;
-    using SocketManagerBuilderPtr = std::shared_ptr<socket_manager::SocketManagerBuilder>;
-    using SocketManagerPtr = std::shared_ptr<socket_manager::SocketManager>;
+    using ThreadWrapperPtr = std::shared_ptr<ThreadWrapper>;
+    using SocketManagerBuilderPtr = std::shared_ptr<SocketManagerBuilder>;
+    using SocketManagerPtr = std::shared_ptr<SocketManager>;
 
     AddressGathererImpl(
         ContextPtr context,
@@ -29,5 +28,4 @@ private:
     ContextPtr context_;
 };
 
-}
 }

@@ -4,7 +4,6 @@
 #include "string_view_methods.hpp"
 
 namespace general {
-namespace serializer {
 
 class RequestDeserializer {
 public:
@@ -27,5 +26,4 @@ private:
     static const std::unordered_map<HeaderType, RequestMethod> request_methods_;
 };
 
-}
 }

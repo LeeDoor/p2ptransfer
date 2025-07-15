@@ -2,7 +2,6 @@
 #include <functional>
 
 namespace general {
-namespace thread_wrapper {
 
 class ThreadWrapper {
 public:
@@ -14,5 +13,4 @@ public:
     virtual ~ThreadWrapper() = default;
 };
 
-}
 }

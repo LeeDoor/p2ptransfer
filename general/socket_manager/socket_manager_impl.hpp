@@ -2,7 +2,6 @@
 #include "socket_manager.hpp"
 
 namespace general {
-namespace socket_manager {
 
 template<typename InternetProtocol>
 class SocketManagerImpl : public SocketManager {
@@ -115,5 +114,4 @@ protected:
 using SocketManagerTcp = SocketManagerImpl<tcpip>;
 using SocketManagerUdp = SocketManagerImpl<net::ip::udp>;
 
-}
 }

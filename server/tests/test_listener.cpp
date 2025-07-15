@@ -12,8 +12,7 @@ namespace server {
 namespace model {
 namespace test {
 
-using namespace socket_manager::test;
-using namespace thread_wrapper::test;
+using namespace ::general::test;
 
 class ListenerFixture : public ::testing::Test {
 protected:
@@ -38,7 +37,7 @@ protected:
     void expect_remote_endpoint_as_required() {
         EXPECT_CALL(*socket_manager_, get_remote_endpoint())
             .Times(::testing::AtLeast(0))
-            .WillRepeatedly(Return(socket_manager::SocketManager::Endpoint{TEST_LOCADDR, TEST_PORT}));
+            .WillRepeatedly(Return(SocketManager::Endpoint{TEST_LOCADDR, TEST_PORT}));
     }
     void check_thread_wrapper_executing() {
         EXPECT_CALL(*thread_wrapper_, is_running())

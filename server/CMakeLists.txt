@@ -2,6 +2,7 @@ set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES}
     ${CMAKE_CURRENT_SOURCE_DIR}/model
     ${CMAKE_CURRENT_SOURCE_DIR}/view
     ${CMAKE_CURRENT_SOURCE_DIR}/presenter 
+    ${CMAKE_CURRENT_SOURCE_DIR}/application
 )
 add_subdirectory(model)
 add_subdirectory(view)

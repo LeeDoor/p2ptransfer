@@ -9,7 +9,7 @@ namespace presenter {
 
 class Presenter :
     public model::RemoteInteractionCallback, 
-    public address_gatherer::GatherAddressCallback,
+    public GatherAddressCallback,
     public view::ViewCallback {
 
 public:

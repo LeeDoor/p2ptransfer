@@ -2,7 +2,6 @@
 #include "request_header_names.hpp"
 
 namespace general {
-namespace serializer {
 
 std::string RequestSerializer::serialize_send_request(const std::string& filename, 
                                    size_t filesize){
@@ -38,5 +37,4 @@ void RequestSerializer::serialize_filesize_header(std::ostringstream& os, size_t
     os << SIZE_HEADER << " " << filesize << std::endl;
 }
 
-}
 }

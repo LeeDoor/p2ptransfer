@@ -2,7 +2,6 @@
 #include "socket_manager.hpp"
 
 namespace general {
-namespace socket_manager {
 
 class SocketManagerBuilder {
 public:
@@ -14,5 +13,4 @@ public:
     virtual ~SocketManagerBuilder() = default;
 };
 
-}
 }

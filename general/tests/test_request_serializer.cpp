@@ -2,7 +2,6 @@
 #include "request_structures.hpp"
 
 namespace general {
-namespace serializer {
 namespace test {
 
 TEST(RequestSerializer, serializeRequest_defaultData) {
@@ -74,6 +73,5 @@ TEST(RequestSerializer, serializePermission_empty) {
               "FILE \n\n");
 }
 
-}
 }
 }

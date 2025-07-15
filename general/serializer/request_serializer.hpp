@@ -2,7 +2,6 @@
 #include "request_structures.hpp"
 
 namespace general {
-namespace serializer {
 
 class RequestSerializer {
 public:
@@ -18,5 +17,4 @@ private:
     static void serialize_filesize_header(std::ostringstream& os, size_t filesize);
 };
 
-}
 }

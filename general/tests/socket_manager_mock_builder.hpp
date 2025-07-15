@@ -2,7 +2,6 @@
 #include "socket_manager_builder.hpp"
 
 namespace general {
-namespace socket_manager {
 namespace test {
 
 class SocketManagerMockBuilder : public SocketManagerBuilder {
@@ -36,6 +35,5 @@ protected:
     std::shared_ptr<SocketManager> socket_manager_;
 };
 
-}
 }
 }

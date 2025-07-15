@@ -31,7 +31,7 @@ net::awaitable<SendRequest> FileProcessorImpl::header_handshake() {
 
 net::awaitable<SendRequest> FileProcessorImpl::handle_send_request() {
     std::string request = co_await socket_manager_->read_request();
-    auto send_request = serializer::RequestDeserializer::deserialize_send_request(request);
+    auto send_request = RequestDeserializer::deserialize_send_request(request);
     validate_send_request(send_request);
     co_return send_request;
 }
@@ -54,7 +54,7 @@ bool FileProcessorImpl::ask_file_confirmation(const SendRequest& send_request) {
 }
 
 net::awaitable<void> FileProcessorImpl::send_permission(const SendRequest& send_request) {
-    auto send_permission = serializer::RequestSerializer::serialize_send_permission(send_request.filename);
+    auto send_permission = RequestSerializer::serialize_send_permission(send_request.filename);
     co_await socket_manager_->write(send_permission);
 }
 
@@ -73,7 +73,7 @@ std::ofstream FileProcessorImpl::open_file_for_writing(const std::string& initia
 
 net::awaitable<void> FileProcessorImpl::handle_file(std::ofstream& os, size_t filesize) {
     size_t bytes_remaining = filesize;
-    socket_manager::SocketManager::BufferType buffer;
+    SocketManager::BufferType buffer;
     while (bytes_remaining) {
         size_t bytes = co_await socket_manager_->read_part_to(buffer, bytes_remaining);
         os.write(buffer.data(), bytes);

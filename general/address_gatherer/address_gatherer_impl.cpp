@@ -1,7 +1,6 @@
 #include "address_gatherer_impl.hpp"
 
 namespace general {
-namespace address_gatherer {
 
 AddressGathererImpl::AddressGathererImpl(
     ContextPtr context,
@@ -42,5 +41,4 @@ void AddressGathererImpl::stop() {
     thread_wrapper_->join();
 }
 
-}
 }

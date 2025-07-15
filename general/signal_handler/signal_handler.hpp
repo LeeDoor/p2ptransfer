@@ -1,7 +1,6 @@
 #pragma once
 
 namespace general {
-namespace signal_handler {
 
 class SignalHandler {
 public:
@@ -12,5 +11,4 @@ private:
     static std::function<void()> stop_func_;
 };
 
-}
 }

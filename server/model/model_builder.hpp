@@ -15,18 +15,18 @@ public:
         auto context = std::make_shared<net::io_context>();
         return std::make_shared<ListenerImpl>(
             context,
-            std::make_shared<thread_wrapper::ThreadWrapperImpl>(),
-            std::make_shared<socket_manager::SocketManagerImplBuilder>(context),
+            std::make_shared<ThreadWrapperImpl>(),
+            std::make_shared<SocketManagerImplBuilder>(context),
             std::make_shared<FileProcessorImplBuilder>()
         );
     }
 
-    static std::shared_ptr<address_gatherer::AddressGatherer> create_address_gatherer() {
+    static std::shared_ptr<AddressGatherer> create_address_gatherer() {
         auto context = std::make_shared<net::io_context>();
-        return std::make_shared<address_gatherer::AddressGathererImpl>(
+        return std::make_shared<AddressGathererImpl>(
             context,
-            std::make_shared<thread_wrapper::ThreadWrapperImpl>(),
-            std::make_shared<socket_manager::SocketManagerImplBuilder>(context)
+            std::make_shared<ThreadWrapperImpl>(),
+            std::make_shared<SocketManagerImplBuilder>(context)
         );
     }
 

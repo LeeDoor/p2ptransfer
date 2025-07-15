@@ -8,10 +8,9 @@ namespace server {
 namespace presenter {
 namespace test {
 
-using namespace address_gatherer::test;
 using namespace model::test;
 using namespace view::test;
-
+using namespace ::general::test;
 
 class PresenterFixture : public ::testing::Test {
 protected:

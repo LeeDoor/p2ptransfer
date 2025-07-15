@@ -2,7 +2,6 @@
 #include "thread_wrapper.hpp"
 
 namespace general {
-namespace thread_wrapper {
 
 class ThreadWrapperImpl : public ThreadWrapper {
 public:
@@ -18,5 +17,4 @@ private:
     std::jthread thread_;
 };
 
-}
 }

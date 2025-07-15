@@ -2,7 +2,6 @@
 #include "socket_manager.hpp"
 
 namespace general {
-namespace socket_manager {
 namespace test {
 
 class SocketManagerMock : public SocketManager {
@@ -15,6 +14,5 @@ public:
     MOCK_METHOD(net::awaitable<size_t>, read_part_to, (BufferType& buffer, size_t& bytes_remaining), (override));
 };
 
-}
 }
 }

@@ -3,7 +3,6 @@
 #include "thread_wrapper_impl.hpp"
 
 namespace general {
-namespace socket_manager {
 namespace test {
 
 template<typename Func>
@@ -70,7 +69,7 @@ private:
     {}
 
     std::shared_ptr<net::io_context> context_;
-    thread_wrapper::ThreadWrapperImpl thread_;
+    ThreadWrapperImpl thread_;
 };
 
 class SocketManagerFixture : public ::testing::Test {
@@ -269,6 +268,5 @@ TEST_F(SocketManagerFixture, readingFile_BuffersInCycle) {
     ASSERT_EQ(bytes_remaining, 0);
 }
 
-}
 }
 }

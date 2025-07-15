@@ -10,7 +10,7 @@ namespace model {
 class FileProcessorBuilder {
 public:
     using FileTransferCallbackPtr = std::shared_ptr<FileTransferCallback>;
-    using SocketManagerPtr = std::shared_ptr<socket_manager::SocketManager>;
+    using SocketManagerPtr = std::shared_ptr<SocketManager>;
 
     virtual std::shared_ptr<FileProcessor> create_file_processor(FileTransferCallbackPtr callback,
                                                                  SocketManagerPtr socket) = 0;

@@ -1,7 +1,6 @@
 #include "thread_wrapper_impl.hpp"
 
 namespace general {
-namespace thread_wrapper {
 namespace test {
 
 class ThreadWrapperFixture : public ::testing::Test {
@@ -90,6 +89,5 @@ TEST_F(ThreadWrapperFixture, executedCommandOnDifferentThread) {
     EXPECT_NE(wrappers_tid, tid);
 }
 
-}
 }
 }

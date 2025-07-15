@@ -2,7 +2,6 @@
 #include "address_gatherer.hpp"
 
 namespace general {
-namespace address_gatherer {
 namespace test {
 
 class AddressGathererMock : public AddressGatherer {
@@ -14,6 +13,5 @@ public:
     }
 };
 
-}
 }
 }

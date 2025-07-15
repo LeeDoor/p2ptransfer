@@ -3,7 +3,6 @@
 #include "port.hpp"
 
 namespace general {
-namespace socket_manager {
 
 class SocketManager {
 public:
@@ -28,5 +27,4 @@ public:
     constexpr static std::string_view REQUEST_COMPLETION = "\n\n";
 };
 
-}
 }

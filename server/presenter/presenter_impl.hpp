@@ -13,7 +13,7 @@ class PresenterImpl :
     public std::enable_shared_from_this<PresenterImpl> {
 public:
     using ListenerPtr = std::shared_ptr<model::Listener>;
-    using AddressGathererPtr = std::shared_ptr<address_gatherer::AddressGatherer>;
+    using AddressGathererPtr = std::shared_ptr<AddressGatherer>;
     using ViewPtr = std::shared_ptr<view::View>;
 
     PresenterImpl(ListenerPtr listener,

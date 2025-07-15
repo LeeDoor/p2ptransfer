@@ -3,7 +3,6 @@
 #include "socket_manager_impl.hpp"
 
 namespace general {
-namespace socket_manager {
 
 class SocketManagerImplBuilder : public SocketManagerBuilder {
 public:
@@ -25,5 +24,4 @@ private:
     std::shared_ptr<net::io_context> context_;
 };
 
-}
 }

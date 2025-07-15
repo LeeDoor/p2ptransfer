@@ -10,9 +10,9 @@ namespace model {
 
 class ListenerImpl : public Listener {
 public:
-    using ThreadWrapperPtr = std::shared_ptr<thread_wrapper::ThreadWrapper>;
-    using SocketManagerBuilderPtr = std::shared_ptr<socket_manager::SocketManagerBuilder>;
-    using SocketManagerPtr = std::shared_ptr<socket_manager::SocketManager>;
+    using ThreadWrapperPtr = std::shared_ptr<ThreadWrapper>;
+    using SocketManagerBuilderPtr = std::shared_ptr<SocketManagerBuilder>;
+    using SocketManagerPtr = std::shared_ptr<SocketManager>;
     using FileProcessorBuilderPtr = std::shared_ptr<FileProcessorBuilder>;
     using ContextPtr = std::shared_ptr<net::io_context>;
 
