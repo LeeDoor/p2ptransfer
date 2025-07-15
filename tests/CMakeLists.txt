@@ -1,0 +1,10 @@
+if(${GRAPHICS})
+    return()
+endif()
+
+find_program(BASH_PROGRAM bash)
+if(BASH_PROGRAM)
+    add_test(integration_test ${BASH_PROGRAM} ${CMAKE_CURRENT_SOURCE_DIR}/run_integration_tests.sh ${CMAKE_BINARY_DIR})
+else()
+    message(WARNING "unable to locate bash for integration tests")
+endif()

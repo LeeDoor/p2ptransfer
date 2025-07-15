@@ -26,7 +26,7 @@ def main():
         cmd = [
             "ctest",
             "--test-dir", str(build_dir / test_dir),
-            "--timeout", "2",
+            "--timeout", "4",
             "--output-on-failure",
             "--stop-on-failure",
             *sys.argv[1:]
