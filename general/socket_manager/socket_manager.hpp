@@ -25,7 +25,7 @@ public:
     virtual ~SocketManager() = default;
 
     /// Defines if socket is connected already. Shouldn't ping for connection.
-    virtual bool connected() const = 0;
+    virtual bool connected() const noexcept = 0;
     /*! \throws std::logic_error if forgot to establish connection before use. */
     virtual Endpoint get_remote_endpoint() const = 0;
     /*! \throws std::logic_error if forgot to establish connection before use. */

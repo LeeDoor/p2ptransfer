@@ -13,7 +13,7 @@ public:
     virtual ~GatherAddressCallback() = default;
 
     /// Called when AddressGatherer finished it's job and gathered address.
-    virtual void set_address(const Address& address) = 0;
+    virtual void set_address(const Address& address) noexcept = 0;
 };
 
 }

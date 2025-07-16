@@ -40,7 +40,7 @@ public:
 
     ~SocketManagerImpl() = default;
 
-    bool connected() const override {
+    bool connected() const noexcept override {
         return socket_ != nullptr;
     }
     Endpoint get_remote_endpoint() const override {

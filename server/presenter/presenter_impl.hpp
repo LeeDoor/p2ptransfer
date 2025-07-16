@@ -26,7 +26,7 @@ public:
 
     void listen(Port port) override;
     void set_progressbar(double persent) override;
-    void set_address(const Address& address) override;
+    void set_address(const Address& address) noexcept override;
     void cant_open_socket() override;
 
     void connection_aborted(const Address& address, Port port) override;

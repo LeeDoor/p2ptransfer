@@ -36,7 +36,7 @@ void PresenterImpl::listen(Port port) {
 void PresenterImpl::set_progressbar(double persent) {
     view_->update_progressbar_status(persent);
 }
-void PresenterImpl::set_address(const Address& address) {
+void PresenterImpl::set_address(const Address& address) noexcept {
     view_->show_address(address);
 }
 void PresenterImpl::cant_open_socket() {
