@@ -82,20 +82,25 @@ void ViewGUI::show_socket_error() {
     });
 }
 
-Port ViewGUI::get_port() {
+Port ViewGUI::get_port() const {
     QString text = ui->portLineEdit->text();
     bool ok;
     Port port = text.toUInt(&ok);
     if(!ok) throw std::runtime_error("port is not an integer");
     if(port > 65535) {
-        QMessageBox::warning(this, "Wrong Port value", "Port value must be valid.");
+        throw std::runtime_error("Port must be valid");
     }
     return port;
 }
 
 void ViewGUI::listen_pressed() {
-    disable_ui();
-    callback()->listen(get_port());
+    try {
+        disable_ui();
+        callback()->listen(get_port());
+    } catch (const std::runtime_error& ex) {
+        QMessageBox::warning(this, "Listen error", ex.what());
+        enable_ui();
+    }   
 }
 void ViewGUI::disable_ui() {
     ui->portLineEdit->setEnabled(false);

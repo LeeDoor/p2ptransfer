@@ -5,6 +5,13 @@
 
 namespace general {
 
+/*!
+* \brief Implements \ref AddressGatherer interface.
+* 
+* Uses \ref ThreadWrapper to detach address gathering execution on other thread.
+* Uses \ref SocketManager via UDP connection to get local address.
+* Even if connection to router is forbidden, it resolves LAN address.
+*/
 class AddressGathererImpl : public AddressGatherer {
 public:
     using ContextPtr = std::shared_ptr<net::io_context>;
@@ -19,6 +26,7 @@ public:
 
     void gather_local_address() override;
     void stop() override;
+
 private:
     net::awaitable<void> gather_async();
     net::awaitable<SocketManagerPtr> build_socket_manager(const Address& address, Port port);

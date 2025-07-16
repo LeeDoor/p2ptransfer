@@ -19,6 +19,7 @@ public:
     PresenterImpl(ListenerPtr listener,
                   AddressGathererPtr address_gatherer,
                   ViewPtr view);
+
     void setup() override;
     int run() override;
     void stop() override;

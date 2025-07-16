@@ -12,6 +12,8 @@ namespace general {
 */
 class SocketManagerBuilder {
 public:
+    virtual ~SocketManagerBuilder() = default;
+
     /*!
     * \brief listening for connection via TCP protocol at given port.
     * \returns awaitable object with pointer to TCP socket manager.
@@ -36,8 +38,6 @@ public:
     * \throws std::runtime_error if connection rejected or any other connection error occured.
     */
     virtual net::awaitable<std::shared_ptr<SocketManager>> udp_connecting_to(const Address& address, Port port) = 0;
-
-    virtual ~SocketManagerBuilder() = default;
 };
 
 }

@@ -23,7 +23,7 @@ public:
     using AcceptorType = net::basic_socket_acceptor<InternetProtocol>;
 
     /// Object initialization with pre-established connection. Listens for incoming connection at port.
-    /// \throws std::runtime_error if connection failed.
+    /*! \throws std::runtime_error if connection failed. */
     static net::awaitable<std::shared_ptr<SocketManagerImpl>> open_for_listening(net::io_context& context, Port port) {
         auto sm = std::shared_ptr<SocketManagerImpl>(new SocketManagerImpl(context));
         co_await sm->listen_connection_at(port);
@@ -31,7 +31,7 @@ public:
     }
 
     /// Object initialization with pre-established connection. Connecting to Endpoint.
-    /// \throws std::runtime_error if connection failed.
+    /*! \throws std::runtime_error if connection failed. */
     static net::awaitable<std::shared_ptr<SocketManagerImpl>> open_for_connecting(net::io_context& context, const Address& address, Port port) {
         auto sm = std::shared_ptr<SocketManagerImpl>(new SocketManagerImpl(context));
         co_await sm->connect_to(address, port);
@@ -40,7 +40,7 @@ public:
 
     ~SocketManagerImpl() = default;
 
-    bool connected() const noexcept override {
+    bool connected() const override {
         return socket_ != nullptr;
     }
     Endpoint get_remote_endpoint() const override {
@@ -107,7 +107,7 @@ protected:
         };
     }
 
-    /// \throws std::runtime_error if connection failed
+    /*! \throws std::runtime_error if connection failed */
     net::awaitable<void> listen_connection_at(Port port) {
         EndpointType endpoint(InternetProtocol::v4(), port);
         AcceptorType acceptor(context_, endpoint);
@@ -115,7 +115,7 @@ protected:
         co_await acceptor.async_accept(*socket_, net::use_awaitable);
     }
 
-    /// \throws std::runtime_error if connection failed
+    /*! \throws std::runtime_error if connection failed */
     net::awaitable<void> connect_to(const Address& address, Port port) {
         const EndpointType ep (net::ip::make_address(address), port);
         socket_ = SocketPtr(new SocketType(context_, InternetProtocol::v4()), get_socket_deleter());

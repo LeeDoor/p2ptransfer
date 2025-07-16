@@ -32,7 +32,7 @@ private:
     void closeEvent(QCloseEvent* e) override;
 
     void setup_ui();
-    Port get_port();
+    Port get_port() const;
     void disable_ui();
     void enable_ui();
 
