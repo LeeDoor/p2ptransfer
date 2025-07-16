@@ -26,7 +26,7 @@ public:
 
     ~SocketManagerImpl() = default;
 
-    bool connected() {
+    bool connected() override {
         return socket_ != nullptr;
     }
     Endpoint get_remote_endpoint() override{

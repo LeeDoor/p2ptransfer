@@ -9,8 +9,6 @@ namespace general {
 * Using socket builder prevents class user from accessing
 * socket before connection. Takes over the responsibility
 * to ensure the returned socket connection is established.
-* \throws std::runtime_error if socket opening or connection 
-* establishing failed.
 */
 class SocketManagerBuilder {
 public:
