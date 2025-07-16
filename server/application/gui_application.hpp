@@ -12,7 +12,6 @@ namespace server {
 class GuiApplication {
 public:
     int run(int argc, char** argv) {
-        LoggerInitializer init;
         auto application = std::make_shared<QApplication>(argc, argv);
         auto presenter = std::make_shared<presenter::PresenterImpl>(
             model::ModelBuilder::create_listener(),

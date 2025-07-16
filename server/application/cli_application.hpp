@@ -12,7 +12,6 @@ namespace server {
 class CliApplication {
 public:
     int run() {
-        LoggerInitializer log_init;
         auto presenter = std::make_shared<presenter::PresenterImpl>(
             model::ModelBuilder::create_listener(),
             model::ModelBuilder::create_address_gatherer(),

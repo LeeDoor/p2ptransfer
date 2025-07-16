@@ -67,7 +67,6 @@ protected:
     std::shared_ptr<RemoteInteractionCallbackMock> callback_;
     std::shared_ptr<ListenerImpl> listener_;
 
-    LoggerInitializer log_init;
 };
 
 TEST_F(ListenerFixture, ifListeningAlready_doNothing) {
