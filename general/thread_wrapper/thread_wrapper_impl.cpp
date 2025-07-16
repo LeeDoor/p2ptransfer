@@ -7,7 +7,7 @@ ThreadWrapperImpl::ThreadWrapperImpl() :
     thread_{}
 {}
 
-bool ThreadWrapperImpl::is_running()  {
+bool ThreadWrapperImpl::is_running() const noexcept {
     return is_running_;
 }
 
@@ -23,11 +23,11 @@ void ThreadWrapperImpl::execute(Functor&& func) {
     });
 }
 
-void ThreadWrapperImpl::join() {
+void ThreadWrapperImpl::join() noexcept {
     try_join_thread();
 }
 
-void ThreadWrapperImpl::try_join_thread() {
+void ThreadWrapperImpl::try_join_thread() noexcept {
     if(thread_.joinable()) {
         thread_.join();
     }

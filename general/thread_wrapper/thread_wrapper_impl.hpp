@@ -3,15 +3,21 @@
 
 namespace general {
 
+/*!
+* \brief Implementation for \ref ThreadWrapper .
+*
+* Uses std::jthread to detach applications.
+*/
 class ThreadWrapperImpl : public ThreadWrapper {
 public:
     ThreadWrapperImpl();
-    bool is_running() override;
+
+    bool is_running() const noexcept override;
     void execute(Functor&& func) override;
-    void join() override;
+    void join() noexcept override;
 
 private:
-    void try_join_thread();
+    void try_join_thread() noexcept;
 
     bool is_running_;
     std::jthread thread_;
