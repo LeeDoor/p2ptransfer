@@ -3,6 +3,16 @@
 
 namespace general {
 
+/*!
+* \brief Implementation class for \ref SocketManager
+*
+* Implements \ref SocketManager interface for network communication.
+* Constructor is hidden to force class users firstly establish connection with
+* special static member functions open_for_listening or open_for_connecting.
+* Has two prepared implementations for boost::asio::ip::tcp and boost::asio::ip::udp:
+* SocketManagerTcp and SocketManagerUdp.
+* \tparam InternetProtocol means either TCP or UDP connection is used.
+*/
 template<typename InternetProtocol>
 class SocketManagerImpl : public SocketManager {
 public:
@@ -12,12 +22,16 @@ public:
     using EndpointType = net::ip::basic_endpoint<InternetProtocol>;
     using AcceptorType = net::basic_socket_acceptor<InternetProtocol>;
 
+    /// Object initialization with pre-established connection. Listens for incoming connection at port.
+    /// \throws std::runtime_error if connection failed.
     static net::awaitable<std::shared_ptr<SocketManagerImpl>> open_for_listening(net::io_context& context, Port port) {
         auto sm = std::shared_ptr<SocketManagerImpl>(new SocketManagerImpl(context));
         co_await sm->listen_connection_at(port);
         co_return sm;
     }
 
+    /// Object initialization with pre-established connection. Connecting to Endpoint.
+    /// \throws std::runtime_error if connection failed.
     static net::awaitable<std::shared_ptr<SocketManagerImpl>> open_for_connecting(net::io_context& context, const Address& address, Port port) {
         auto sm = std::shared_ptr<SocketManagerImpl>(new SocketManagerImpl(context));
         co_await sm->connect_to(address, port);
@@ -26,11 +40,11 @@ public:
 
     ~SocketManagerImpl() = default;
 
-    bool connected() override {
+    bool connected() const noexcept override {
         return socket_ != nullptr;
     }
-    Endpoint get_remote_endpoint() override{
-        if(socket_ == nullptr) 
+    Endpoint get_remote_endpoint() const override {
+        if(!connected()) 
             throw std::logic_error("get_remote_endpoint called while socket is nullptr. "
                                    "Connect first");
         return {
@@ -39,8 +53,8 @@ public:
         };
     }
     
-    Endpoint get_local_endpoint() override {
-        if(socket_ == nullptr) 
+    Endpoint get_local_endpoint() const override {
+        if(!connected()) 
             throw std::logic_error("get_local_endpoint called while socket is nullptr. "
                                    "Connect first");
         return {
@@ -93,6 +107,7 @@ protected:
         };
     }
 
+    /// \throws std::runtime_error if connection failed
     net::awaitable<void> listen_connection_at(Port port) {
         EndpointType endpoint(InternetProtocol::v4(), port);
         AcceptorType acceptor(context_, endpoint);
@@ -100,6 +115,7 @@ protected:
         co_await acceptor.async_accept(*socket_, net::use_awaitable);
     }
 
+    /// \throws std::runtime_error if connection failed
     net::awaitable<void> connect_to(const Address& address, Port port) {
         const EndpointType ep (net::ip::make_address(address), port);
         socket_ = SocketPtr(new SocketType(context_, InternetProtocol::v4()), get_socket_deleter());
