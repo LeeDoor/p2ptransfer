@@ -39,7 +39,35 @@ void ViewGUI::set_if_accessible(QString filepath) {
 }
 
 void ViewGUI::send_button_clicked() {
-    QMessageBox::about(this, "Sending file", selected_file_);
+    try {
+        QString ip = get_validated_ip();
+        int port = get_validated_port();
+        QMessageBox::about(this, "Sending file", 
+                           "Sending " + selected_file_ + 
+                           "\nTo " + ip +
+                           ":" + QString::number(port));
+    } catch (const std::exception& ex) {
+        QMessageBox::warning(this, "Input error", ex.what());
+    }
+}
+
+QString ViewGUI::get_validated_ip() {
+    QString ip = ui->IPlineEdit->text();
+    QRegularExpression ip_regex("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$");
+    QRegularExpressionValidator validator(ip_regex, this);
+    int pos = 0;
+    if(validator.validate(ip, pos) != QValidator::Acceptable) {
+        throw std::runtime_error("No ip provided or ip is incorrect");
+    }
+    return ip;
+}
+int ViewGUI::get_validated_port() {
+    QString port_str = ui->portLineEdit->text();
+    bool ok = false;
+    int port = port_str.toInt(&ok);
+    if(port < 0 || 65535 < port || !ok)
+        throw std::runtime_error("No port provided or port is incorrect");
+    return port;
 }
 
 void ViewGUI::select_file_button_clicked() {

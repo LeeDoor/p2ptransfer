@@ -47,7 +47,10 @@
          </size>
         </property>
         <property name="inputMask">
-         <string>000.000.000.000;_</string>
+         <string>000.000.000.000</string>
+        </property>
+        <property name="text">
+         <string>192.168.1.57</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignmentFlag::AlignCenter</set>

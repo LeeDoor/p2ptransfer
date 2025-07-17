@@ -1,7 +1,4 @@
 #pragma once
-#include <QDragEnterEvent>
-#include <QMimeData>
-#include <QFileDialog>
 
 namespace Ui {
 class ViewGUI;
@@ -35,6 +32,8 @@ public slots:
 private:
     void set_if_accessible(QString filepath);
     QString ask_file_explorer();
+    QString get_validated_ip();
+    int get_validated_port();
 
     QString selected_file_;
     Ui::ViewGUI *ui;

@@ -4,3 +4,8 @@
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QMetaObject>
+#include <QDragEnterEvent>
+#include <QMimeData>
+#include <QFileDialog>
+#include <QRegularExpression>
+#include <QRegularExpressionValidator>
