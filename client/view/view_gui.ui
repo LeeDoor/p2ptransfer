@@ -120,11 +120,11 @@
    <sender>buttonSend</sender>
    <signal>clicked()</signal>
    <receiver>ViewGUI</receiver>
-   <slot>listen_pressed()</slot>
+   <slot>send_button_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>202</x>
-     <y>85</y>
+     <x>211</x>
+     <y>140</y>
     </hint>
     <hint type="destinationlabel">
      <x>227</x>
@@ -134,6 +134,6 @@
   </connection>
  </connections>
  <slots>
-  <slot>listen_pressed()</slot>
+  <slot>send_button_clicked()</slot>
  </slots>
 </ui>

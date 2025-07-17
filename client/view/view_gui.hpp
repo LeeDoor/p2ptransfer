@@ -1,6 +1,7 @@
 #pragma once
 #include <QDragEnterEvent>
 #include <QMimeData>
+#include <QFileDialog>
 
 namespace Ui {
 class ViewGUI;
@@ -23,9 +24,19 @@ public:
     explicit ViewGUI();
     ~ViewGUI();
 
+    /// Required to filter drop events.
     void dragEnterEvent(QDragEnterEvent* event) override;
     void dropEvent(QDropEvent* event) override;
+
+public slots:
+    /// Event for button click.
+    void send_button_clicked();
+
 private:
+    void set_if_accessible(QString filepath);
+    QString ask_file_explorer();
+
+    QString selected_file_;
     Ui::ViewGUI *ui;
 };
 
