@@ -1,8 +1,8 @@
-#include "qt_headers.hpp"
+#include "view_gui.hpp"
 
 int main(int argc, char** argv) {
     QApplication app(argc, argv);
-    auto mywindow = new QWidget();
-    mywindow->show();
+    general::client::view::ViewGUI mywindow;
+    mywindow.show();
     app.exec();
 }

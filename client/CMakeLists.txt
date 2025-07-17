@@ -1,23 +1,32 @@
-set (CLIENT_SOURCE
-    client_manager.cpp
-    argument_parser.cpp
-    network_manager.cpp
-    connection_handler.cpp
+set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} 
+    ${CMAKE_CURRENT_SOURCE_DIR}/model
+    ${CMAKE_CURRENT_SOURCE_DIR}/view
+    ${CMAKE_CURRENT_SOURCE_DIR}/presenter 
+    ${CMAKE_CURRENT_SOURCE_DIR}/application
 )
-set(GRAPHICS OFF)
-if(${GRAPHICS}) 
-    set(CLIENT_SOURCE ${CLIENT_SOURCE} 
-        main_graphics.cpp
-    )
+#add_subdirectory(model)
+add_subdirectory(view)
+#add_subdirectory(presenter)
+if(${TESTING}) 
+    #    add_subdirectory(tests)
 endif()
-add_library(client ${CLIENT_SOURCE})
-target_link_libraries(client PUBLIC base)
-target_include_directories(client PUBLIC ${INCLUDE_DIRECTORIES}) 
-target_compile_options(client PUBLIC -frtti -Wall -Wextra -Wpedantic)
 
-if(${GRAPHICS})
+add_library(client INTERFACE)
+target_link_libraries(client INTERFACE 
+    #client_model 
+    client_view 
+    #client_presenter
+    ${LINK_LIBRARIES})
+
+#if(${GRAPHICS})
     qt_add_executable(p2ptransfer main_graphics.cpp)
-else()
-    add_executable(p2ptransfer main.cpp)
-endif()
-target_link_libraries(p2ptransfer PUBLIC client base ${LINK_LIBRARIES})
+#else()
+    #add_executable(p2ptransfer main_cli.cpp)
+#endif()
+target_link_libraries(p2ptransfer PUBLIC 
+    base 
+    client 
+)
+target_include_directories(p2ptransfer PUBLIC ${INCLUDE_DIRECTORIES})
+target_precompile_headers(p2ptransfer REUSE_FROM base)
+set(SERVER_INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} PARENT_SCOPE)

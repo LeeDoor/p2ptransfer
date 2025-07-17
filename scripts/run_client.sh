@@ -1,1 +1,1 @@
-../build/client/p2ptransfer $@
+../build/Linux/graphics/client/p2ptransfer $@
