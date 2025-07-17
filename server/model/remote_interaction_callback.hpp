@@ -6,6 +6,7 @@ namespace general {
 namespace server {
 namespace model {
 
+/// The union of \ref ConnectionStatusCallback and \ref FileTransferCallback.
 class RemoteInteractionCallback :
     public ConnectionStatusCallback,
     public FileTransferCallback

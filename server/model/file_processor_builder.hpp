@@ -7,14 +7,21 @@ namespace general {
 namespace server {
 namespace model {
 
+/*!
+* \brief Builder for \ref FileProcessor .
+*
+* Builder pattern allows avoiding object initialization at setup stage.
+*/
 class FileProcessorBuilder {
 public:
     using FileTransferCallbackPtr = std::shared_ptr<FileTransferCallback>;
     using SocketManagerPtr = std::shared_ptr<SocketManager>;
 
-    virtual std::shared_ptr<FileProcessor> create_file_processor(FileTransferCallbackPtr callback,
-                                                                 SocketManagerPtr socket) = 0;
     virtual ~FileProcessorBuilder() = default;
+
+    virtual std::shared_ptr<FileProcessor> create_file_processor(
+        FileTransferCallbackPtr callback,
+        SocketManagerPtr socket) = 0;
 };
 
 }

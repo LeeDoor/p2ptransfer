@@ -6,8 +6,8 @@ namespace general {
 namespace server {
 namespace view {
 
-ViewGUI::ViewGUI(std::shared_ptr<QApplication> application, QWidget *parent)
-    : QMainWindow(parent)
+ViewGUI::ViewGUI(std::shared_ptr<QApplication> application)
+    : QMainWindow(nullptr)
     , ui(new Ui::ViewGUI)
     , application_(application)
 {

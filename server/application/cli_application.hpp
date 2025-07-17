@@ -1,6 +1,4 @@
 #pragma once
-
-#include "logger.hpp"
 #include "presenter_impl.hpp"
 #include "model_builder.hpp"
 #include "signal_handler.hpp"

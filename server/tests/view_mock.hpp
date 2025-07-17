@@ -6,6 +6,7 @@ namespace server {
 namespace view {
 namespace test {
 
+/// Mock implementation for View.
 class ViewMock : public View {
 public:
     MOCK_METHOD(int, run, (), (override));

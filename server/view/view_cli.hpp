@@ -5,6 +5,7 @@ namespace general {
 namespace server {
 namespace view {
 
+/// \ref View implementation for Command Line Interface.
 class ViewCLI : public View {
 public:
      int run() override;

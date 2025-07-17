@@ -6,6 +6,7 @@ namespace server {
 namespace model {
 namespace test {
 
+/// Mock implementation for \ref FileProcessorBuilder .
 class FileProcessorMockBuilder : public FileProcessorBuilder {
 public:
     FileProcessorMockBuilder (std::shared_ptr<FileProcessor> ptr) :

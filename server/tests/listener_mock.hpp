@@ -6,6 +6,7 @@ namespace server {
 namespace model {
 namespace test {
 
+/// Mock implementation for \ref Listener .
 class ListenerMock : public Listener {
 public:
     MOCK_METHOD(void, listen_if_not_already, (Port port), (override));

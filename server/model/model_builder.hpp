@@ -9,6 +9,7 @@ namespace general {
 namespace server {
 namespace model {
 
+/// Creates main Model objects and hides DI overwhelming.
 class ModelBuilder {
 public:
     static std::shared_ptr<ListenerImpl> create_listener() {

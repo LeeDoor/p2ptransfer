@@ -8,6 +8,12 @@ namespace general {
 namespace server {
 namespace model {
 
+/*!
+* \brief Socket implementation for \ref Listener .
+* Implements network integration on separate thread using \ref ThreadWrapper .
+* This class performs headers exchange, such as SendRequest and SendPermission.
+* File sharing responsibility is passed to \ref FileProcessor .
+*/
 class ListenerImpl : public Listener {
 public:
     using ThreadWrapperPtr = std::shared_ptr<ThreadWrapper>;
@@ -16,6 +22,17 @@ public:
     using FileProcessorBuilderPtr = std::shared_ptr<FileProcessorBuilder>;
     using ContextPtr = std::shared_ptr<net::io_context>;
 
+    /*!
+    * \param context Shared pointer to boost::asio::io_context.
+    * \param thread_wrapper pointer to \ref ThreadWrapper for detaching
+    * network communication to other thread.
+    * \param socket_manager_builder pointer to \ref SocketManagerBuilder .
+    * Required to create socket at runtime, scince it's lifetime is tied
+    * with connection duration.
+    * \param file_processor_builder pointer to \ref FileProcessorBuilder .
+    * Required to create FileProcessor at runtime. Used only when file 
+    * sharing is accepted by user.
+    */
     ListenerImpl(ContextPtr context,
                  ThreadWrapperPtr thread_wrapper,
                  SocketManagerBuilderPtr socket_manager_builder,
