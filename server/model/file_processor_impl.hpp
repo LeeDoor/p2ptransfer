@@ -1,9 +1,6 @@
 #pragma once
-
-#include "callback.hpp"
 #include "file_processor.hpp"
 #include "request_structures.hpp"
-#include "file_transfer_callback.hpp"
 #include "socket_manager.hpp"
 
 namespace general {
@@ -14,7 +11,7 @@ namespace presenter { class Presenter; }
 namespace model {
 
 /// Implementation for \ref FileProcessor using \ref SocketManager .
-class FileProcessorImpl : public FileProcessor, public WithCallback<FileTransferCallback> {
+class FileProcessorImpl : public FileProcessor {
 public:
     using SocketManagerPtr = std::shared_ptr<SocketManager>;
     /*

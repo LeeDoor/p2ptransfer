@@ -20,7 +20,10 @@ class Listener : public WithCallback<RemoteInteractionCallback>{
 public:
     virtual ~Listener() = default;
  
-    /// Listens for user connection and starts communication.
+    /*! Listens for user connection and starts communication.
+    * \throws std::runtime_error if file was not gathered due to network 
+    * problems or user cancellation.
+    */
     virtual void listen_if_not_already(Port port) = 0;
     /// Prepares object for destruction.
     virtual void stop() = 0;

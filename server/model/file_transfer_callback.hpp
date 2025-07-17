@@ -12,8 +12,9 @@ class FileTransferCallback {
 public:
     virtual ~FileTransferCallback() = default;
 
-    /// While file sharing, notifying about sending progress.
-    /*! \param persent the floating point number in [0;100] segment */
+    /*! \brief While file sharing, notifying about sending progress.
+     * \param persent the floating point number in [0;100] segment 
+    */
     virtual void set_progressbar(double persent) = 0;
     /// Asks for user input about file gathering confirmation.
     virtual bool verify_file(const Filename& filename, Filesize filesize) = 0;
