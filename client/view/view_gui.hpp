@@ -1,4 +1,6 @@
 #pragma once
+#include <QDragEnterEvent>
+#include <QMimeData>
 
 namespace Ui {
 class ViewGUI;
@@ -21,6 +23,8 @@ public:
     explicit ViewGUI();
     ~ViewGUI();
 
+    void dragEnterEvent(QDragEnterEvent* event) override;
+    void dropEvent(QDropEvent* event) override;
 private:
     Ui::ViewGUI *ui;
 };
