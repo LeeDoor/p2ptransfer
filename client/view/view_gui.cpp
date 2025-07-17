@@ -34,16 +34,19 @@ void ViewGUI::set_if_accessible(QString filepath) {
     std::ifstream ofs(filepath.toStdString(), std::ios::binary);
     if(ofs.is_open()) 
         selected_file_ = filepath;
+    ui->buttonSend->setEnabled(true);
+    ui->buttonSend->setText("Send " + QFileInfo{selected_file_}.fileName());
 }
 
 void ViewGUI::send_button_clicked() {
-    if(selected_file_.isEmpty()) {
-        QString filepath = QFileDialog::getOpenFileName(this);
-        if(filepath.isEmpty())
-            return;
-        set_if_accessible(filepath);
-    }
     QMessageBox::about(this, "Sending file", selected_file_);
+}
+
+void ViewGUI::select_file_button_clicked() {
+    QString filepath = QFileDialog::getOpenFileName(this);
+    if(filepath.isEmpty())
+        return;
+    set_if_accessible(filepath);
 }
 
 }

@@ -7,14 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>221</width>
-    <height>182</height>
+    <height>214</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>P2P Listen</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,1,0,5">
+   <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,1,0,0,5">
     <item>
      <widget class="QLabel" name="_labelYourIP">
       <property name="text">
@@ -98,9 +98,19 @@
      </layout>
     </item>
     <item>
-     <widget class="QPushButton" name="buttonSend">
+     <widget class="QPushButton" name="selectFileButton">
       <property name="text">
-       <string>Send File...</string>
+       <string>Select File...</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="buttonSend">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="text">
+       <string>Select File to Send</string>
       </property>
      </widget>
     </item>
@@ -124,16 +134,33 @@
    <hints>
     <hint type="sourcelabel">
      <x>211</x>
-     <y>140</y>
+     <y>172</y>
     </hint>
     <hint type="destinationlabel">
-     <x>227</x>
+     <x>220</x>
      <y>87</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>selectFileButton</sender>
+   <signal>clicked()</signal>
+   <receiver>ViewGUI</receiver>
+   <slot>select_file_button_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>165</x>
+     <y>131</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>216</x>
+     <y>127</y>
     </hint>
    </hints>
   </connection>
  </connections>
  <slots>
   <slot>send_button_clicked()</slot>
+  <slot>select_file_button_clicked()</slot>
  </slots>
 </ui>

@@ -29,8 +29,8 @@ public:
     void dropEvent(QDropEvent* event) override;
 
 public slots:
-    /// Event for button click.
     void send_button_clicked();
+    void select_file_button_clicked();
 
 private:
     void set_if_accessible(QString filepath);
