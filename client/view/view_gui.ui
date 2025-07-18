@@ -16,21 +16,21 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,1,0,0,5">
     <item>
-     <widget class="QLabel" name="_labelYourIP">
+     <widget class="QLabel" name="_labelYourAddress">
       <property name="text">
        <string>Your LAN Address:</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="ipaddressLabel">
+     <widget class="QLabel" name="addressLabel">
       <property name="text">
        <string>Loading Address...</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="_labelSelectPort">
+     <widget class="QLabel" name="_labelSelectEndpoint">
       <property name="text">
        <string>Send to:</string>
       </property>
@@ -39,7 +39,7 @@
     <item>
      <layout class="QHBoxLayout" name="portLayout" stretch="8,1,4">
       <item>
-       <widget class="QLineEdit" name="IPlineEdit">
+       <widget class="QLineEdit" name="addressLineEdit">
         <property name="minimumSize">
          <size>
           <width>125</width>
@@ -108,7 +108,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="buttonSend">
+     <widget class="QPushButton" name="sendButton">
       <property name="enabled">
        <bool>false</bool>
       </property>
@@ -130,7 +130,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>buttonSend</sender>
+   <sender>sendButton</sender>
    <signal>clicked()</signal>
    <receiver>ViewGUI</receiver>
    <slot>send_button_clicked()</slot>
