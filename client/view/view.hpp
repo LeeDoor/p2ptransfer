@@ -8,6 +8,8 @@ namespace view {
 
 class View : public WithCallback<ViewCallback> {
 public:
+    virtual ~View() = default;
+
     virtual int run() = 0;
     virtual void stop() = 0;
 

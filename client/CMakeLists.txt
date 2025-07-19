@@ -6,7 +6,7 @@ set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES}
 )
 #add_subdirectory(model)
 add_subdirectory(view)
-#add_subdirectory(presenter)
+add_subdirectory(presenter)
 if(${TESTING}) 
     #    add_subdirectory(tests)
 endif()
@@ -15,7 +15,7 @@ add_library(client INTERFACE)
 target_link_libraries(client INTERFACE 
     #client_model 
     client_view 
-    #client_presenter
+    client_presenter
     ${LINK_LIBRARIES})
 
 #if(${GRAPHICS})
