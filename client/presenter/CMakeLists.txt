@@ -1,5 +1,5 @@
 add_library(client_presenter
-    presenter.cpp
+    client_presenter.cpp
 )
 target_precompile_headers(client_presenter REUSE_FROM base)
 target_include_directories(client_presenter PUBLIC ${INCLUDE_DIRECTORIES})

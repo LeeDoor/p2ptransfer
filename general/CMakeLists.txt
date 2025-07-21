@@ -21,6 +21,7 @@ add_library(base
     thread_wrapper/thread_wrapper_impl.cpp
     signal_handler/signal_handler.cpp
     address_gatherer/address_gatherer_impl.cpp
+    #presenter/presenter_impl.cpp
 )
 set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} 
     ${CMAKE_CURRENT_SOURCE_DIR}/headers 
@@ -29,6 +30,8 @@ set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES}
     ${CMAKE_CURRENT_SOURCE_DIR}/signal_handler
     ${CMAKE_CURRENT_SOURCE_DIR}/address_gatherer
     ${CMAKE_CURRENT_SOURCE_DIR}/socket_manager
+    ${CMAKE_CURRENT_SOURCE_DIR}/presenter
+    ${CMAKE_CURRENT_SOURCE_DIR}/view
 )
 target_precompile_headers(base PUBLIC ${PRECOMPILED_HEADERS})
 target_link_libraries(base PUBLIC ${LINK_LIBRARIES})

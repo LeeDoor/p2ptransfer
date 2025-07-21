@@ -1,6 +1,6 @@
 #pragma once
 
-#include "view.hpp"
+#include "client_view.hpp"
 namespace Ui {
 class ViewGUI;
 }
@@ -10,7 +10,7 @@ namespace client {
 namespace view {
 
 /// \ref View implementation for GUI using Qt.
-class ViewGUI : QMainWindow, public View {
+class ViewGUI : QMainWindow, public ClientView {
     Q_OBJECT
 public:
     /*! 

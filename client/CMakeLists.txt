@@ -8,7 +8,7 @@ set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES}
 add_subdirectory(view)
 add_subdirectory(presenter)
 if(${TESTING}) 
-    #    add_subdirectory(tests)
+    add_subdirectory(tests)
 endif()
 
 add_library(client INTERFACE)
