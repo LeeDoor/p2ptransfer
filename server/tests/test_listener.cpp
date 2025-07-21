@@ -1,6 +1,5 @@
 #include "file_processor_mock.hpp"
 #include "listener_impl.hpp"
-#include "logger.hpp"
 #include "remote_interaction_callback_mock.hpp"
 #include "file_processor_mock_builder.hpp"
 #include "socket_manager_mock.hpp"
@@ -21,7 +20,7 @@ protected:
         socket_builder_(std::make_shared<SocketManagerMockBuilder>(socket_manager_)),
         file_processor_(std::make_shared<FileProcessorMock>()),
         thread_wrapper_(std::make_shared<ThreadWrapperMock>()),
-        callback_(std::make_shared<RemoteInteractionCallbackMock>())
+        callback_(std::make_shared<general::presenter::test::RemoteInteractionCallbackMock>())
     {
         listener_ = std::make_shared<ListenerImpl>(
             std::make_shared<net::io_context>(),
@@ -64,7 +63,7 @@ protected:
     std::shared_ptr<SocketManagerMockBuilder> socket_builder_;
     std::shared_ptr<FileProcessorMock> file_processor_;
     std::shared_ptr<ThreadWrapperMock> thread_wrapper_;
-    std::shared_ptr<RemoteInteractionCallbackMock> callback_;
+    std::shared_ptr<general::presenter::test::RemoteInteractionCallbackMock> callback_;
     std::shared_ptr<ListenerImpl> listener_;
 
 };

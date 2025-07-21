@@ -6,7 +6,7 @@
 namespace general {
 namespace server {
 
-namespace presenter { class Presenter; }
+namespace presenter { class ServerPresenter; }
 
 namespace model {
 

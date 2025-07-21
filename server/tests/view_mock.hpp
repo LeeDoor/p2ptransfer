@@ -1,5 +1,5 @@
 #pragma once
-#include "view.hpp"
+#include "server_view.hpp"
 
 namespace general {
 namespace server {
@@ -7,7 +7,7 @@ namespace view {
 namespace test {
 
 /// Mock implementation for View.
-class ViewMock : public View {
+class ViewMock : public ServerView {
 public:
     MOCK_METHOD(int, run, (), (override));
     MOCK_METHOD(void, stop, (), (override));
@@ -18,7 +18,7 @@ public:
     MOCK_METHOD(bool, ask_file_verification, (const Filename& filename, Filesize filesize), (override));
     MOCK_METHOD(void, show_file_success, (), (override));
     MOCK_METHOD(void, show_connection_aborted, (const Address& address, Port port), (override));
-    std::weak_ptr<ViewCallback> get_callback() {
+    std::weak_ptr<ServerViewCallback> get_callback() {
         return callback_;
     }
 };

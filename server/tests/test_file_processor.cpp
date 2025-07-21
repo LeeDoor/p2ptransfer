@@ -16,7 +16,7 @@ protected:
 
     FileProcessorFixture() :
         socket_mock(std::make_shared<SocketManagerMock>()),
-        callback_mock(std::make_shared<RemoteInteractionCallbackMock>()),
+        callback_mock(std::make_shared<general::presenter::test::RemoteInteractionCallbackMock>()),
         file_processor(socket_mock)    
     {
         file_processor.set_callback(callback_mock);
@@ -95,7 +95,7 @@ protected:
     }
 
     std::shared_ptr<SocketManagerMock> socket_mock;
-    std::shared_ptr<RemoteInteractionCallbackMock> callback_mock;
+    std::shared_ptr<general::presenter::test::RemoteInteractionCallbackMock> callback_mock;
     FileProcessorImpl file_processor;
 };
 

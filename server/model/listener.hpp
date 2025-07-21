@@ -16,7 +16,7 @@ namespace model {
 * \ref RemoteInteractionCallback used for notifying 
 * about connection progress and status.
 */
-class Listener : public WithCallback<RemoteInteractionCallback>{
+class Listener : public WithCallback<presenter::RemoteInteractionCallback>{
 public:
     virtual ~Listener() = default;
  

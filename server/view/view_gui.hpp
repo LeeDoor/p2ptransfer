@@ -1,5 +1,5 @@
 #pragma once
-#include "view.hpp"
+#include "server_view.hpp"
 
 namespace Ui {
 class ViewGUI;
@@ -10,7 +10,7 @@ namespace server {
 namespace view {
 
 /// \ref View implementation for GUI using Qt.
-class ViewGUI : QMainWindow, public View {
+class ViewGUI : QMainWindow, public ServerView {
     Q_OBJECT
 public:
     /*! 

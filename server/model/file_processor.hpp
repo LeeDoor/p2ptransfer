@@ -12,7 +12,7 @@ namespace model {
 * Reads remote file, when file gathering is agreed with user.
 * This class is used by the \ref Listener.
 */
-class FileProcessor : public WithCallback<FileTransferCallback> {
+class FileProcessor : public WithCallback<general::presenter::FileTransferCallback> {
 public:
     virtual ~FileProcessor() = default;
 

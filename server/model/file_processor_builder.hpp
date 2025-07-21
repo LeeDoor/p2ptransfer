@@ -14,7 +14,7 @@ namespace model {
 */
 class FileProcessorBuilder {
 public:
-    using FileTransferCallbackPtr = std::shared_ptr<FileTransferCallback>;
+    using FileTransferCallbackPtr = std::shared_ptr<general::presenter::FileTransferCallback>;
     using SocketManagerPtr = std::shared_ptr<SocketManager>;
 
     virtual ~FileProcessorBuilder() = default;

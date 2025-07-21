@@ -5,12 +5,6 @@ set(SOURCES
     test_listener.cpp
 )
 
-if(${GRAPHICS}) 
-    set(SOURCES ${SOURCES} 
-        test_gui_application.cpp
-    )
-endif()
-
 add_executable(server_tests ${SOURCES})
 target_link_libraries(server_tests PUBLIC server ${LINK_LIBRARIES} GTest::gtest_main GTest::gmock)
 target_precompile_headers(server_tests REUSE_FROM base)

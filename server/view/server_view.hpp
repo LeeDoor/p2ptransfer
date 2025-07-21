@@ -1,9 +1,9 @@
 #pragma once
 #include "address.hpp"
-#include "callback.hpp"
 #include "port.hpp"
+#include "view.hpp"
 #include "request_structures.hpp"
-#include "view_callback.hpp"
+#include "server_view_callback.hpp"
 
 namespace general {
 namespace server {
@@ -16,7 +16,7 @@ namespace view {
 * The \ref ViewCallback Callback is implemented to allow presenter
 * get user input.
 */
-class View : public WithCallback<ViewCallback> {
+class ServerView : public general::view::View<ServerViewCallback> {
 public:
     /// Runs application cycle. Should be called from \ref presenter::Presenter
     virtual int run() = 0;

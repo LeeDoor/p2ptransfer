@@ -1,12 +1,12 @@
 #pragma once
-#include "view.hpp"
+#include "server_view.hpp"
 
 namespace general {
 namespace server {
 namespace view {
 
 /// \ref View implementation for Command Line Interface.
-class ViewCLI : public View {
+class ViewCLI : public ServerView {
 public:
      int run() override;
      void stop() override;
