@@ -7,9 +7,10 @@ namespace server {
 namespace view {
 
 ViewGUI::ViewGUI(std::shared_ptr<QApplication> application)
-    : QMainWindow(nullptr)
-    , ui(new Ui::ViewGUI)
-    , application_(application)
+    : QMainWindow{nullptr}
+    , ui{new Ui::ViewGUI}
+    , action_{Listen}
+    , application_{application}
 {
     ui->setupUi(this);
 }
@@ -35,7 +36,7 @@ void ViewGUI::stop() {
 void ViewGUI::show_address(const Address& address) {
     QString qaddress = address.c_str();
     run_sync([=, this] {
-        ui->ipaddressLabel->setText(qaddress);
+        ui->addressLabel->setText(qaddress);
     });
 }
 void ViewGUI::update_progressbar_status(double persent) {
@@ -47,7 +48,7 @@ void ViewGUI::show_connected(const Address& address, Port port) {
     QString qaddress = address.c_str();
     QString qport = QString::number(port);
     run_sync([=, this] {
-        ui->buttonListen->setText("Connected to " + qaddress + ":" + qport);
+        ui->actionButton->setText("Connected to " + qaddress + ":" + qport);
     });
 }
 void ViewGUI::show_connection_aborted(const Address& address, Port port) {
@@ -83,7 +84,12 @@ void ViewGUI::show_socket_error() {
 }
 
 Port ViewGUI::get_port() const {
-    QString text = ui->portLineEdit->text();
+    QString text;
+    if(is_listen()) {
+        text = ui->listenPortLineEdit->text();
+    } else if (is_transfer()) {
+        text = ui->transferPortLineEdit->text();
+    }
     bool ok;
     Port port = text.toUInt(&ok);
     if(!ok) throw std::runtime_error("port is not an integer");
@@ -92,29 +98,75 @@ Port ViewGUI::get_port() const {
     }
     return port;
 }
+Address ViewGUI::get_address() const {
+    if(!is_transfer())
+        throw std::logic_error("Can't get address while not transfering tab opened");
+    QString ip = ui->addressLineEdit->text();
+    QRegularExpression ip_regex("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$");
+    QRegularExpressionValidator validator(ip_regex);
+    int pos = 0;
+    if(validator.validate(ip, pos) != QValidator::Acceptable) {
+        throw std::runtime_error("No ip provided or ip is incorrect");
+    }
+    return ip.toStdString();
+}
 
-void ViewGUI::listen_pressed() {
+void ViewGUI::action_button_pressed() {
+    disable_ui();
     try {
-        disable_ui();
-        callback()->listen(get_port());
+        if(is_listen())
+            callback()->listen(get_port());
+        //else if (is_transfer())
+        //    callback()->transfer(get_port());
     } catch (const std::runtime_error& ex) {
-        QMessageBox::warning(this, "Listen error", ex.what());
+        QMessageBox::warning(this, "Action error", ex.what());
         enable_ui();
     }   
 }
 void ViewGUI::disable_ui() {
-    ui->portLineEdit->setEnabled(false);
-    ui->buttonListen->setEnabled(false);
+    ui->actionButton->setEnabled(false);
+    ui->tabWidget->setEnabled(false);
 }
 void ViewGUI::enable_ui() {
-    ui->buttonListen->setText("Listen");
-    ui->buttonListen->setEnabled(true);
-    ui->portLineEdit->setEnabled(true);
+    ui->actionButton->setEnabled(true);
+    ui->tabWidget->setEnabled(true);
     ui->progressBar->setValue(0);
+    prepare_ui();
+}
+
+void ViewGUI::prepare_ui() {
+    switch(action()) {
+    case Listen:
+        ui->actionButton->setText("Listen");
+        break;
+    case Transfer:
+        ui->actionButton->setText("Transfer");
+        break;
+    }
 }
 
 void ViewGUI::closeEvent([[maybe_unused]] QCloseEvent* e) {
     std::raise(SIGINT);
+}
+void ViewGUI::action_changed(int index) {
+    switch(index) {
+        case 0:
+            action_ = Listen;
+            break;
+        case 1:
+            action_ = Transfer;
+            break;
+    }
+    prepare_ui();
+}
+ViewGUI::Action ViewGUI::action() const {
+    return action_;
+}
+bool ViewGUI::is_listen() const {
+    return action() == Listen;
+}
+bool ViewGUI::is_transfer() const {
+    return action() == Transfer;
 }
 
 }

@@ -32,15 +32,28 @@ public:
     bool ask_file_verification(const Filename& filename, Filesize filesize) override;
     void show_socket_error() override;
 public slots:
-    /// Slot for Listen button pressed event.
-    void listen_pressed();
+    /// Slot for Action button pressed even
+    void action_button_pressed();
+    /// Slot for changing tabs to detect current action
+    void action_changed(int index);
 
 private:
+    enum Action { Listen, Transfer };
+    Action action() const;
+    bool is_listen() const;
+    bool is_transfer() const;
+    void prepare_ui();
+
     /// Event for closing window.
     void closeEvent(QCloseEvent* e) override;
 
     /// Reads port from user input.
+    /*! \throws std::runtime_error if port from label is not an integer or too big */
     Port get_port() const;
+    /// Reads IP address from transfer input line.
+    /*! \throws std::logic_error if called while from the opened listening bar */
+    /*! \throws std::runtime_error if does not match a port regex */
+    Address get_address() const;
     /// disables the button and port input.
     /// Enable with \ref enable_ui()
     void disable_ui();
@@ -55,6 +68,7 @@ private:
     }
 
     Ui::ViewGUI *ui;
+    Action action_;
     std::weak_ptr<QApplication> application_;
 };
 
