@@ -163,9 +163,10 @@ void ViewGUI::select_file_button_clicked() {
 }
 
 void ViewGUI::set_file_if_accessible(QString filepath) {
+    if(QFileInfo{filepath}.isDir()) return;
     std::ifstream ofs(filepath.toStdString(), std::ios::binary);
-    if(ofs.is_open()) 
-        selected_file_ = filepath;
+    if(!ofs.is_open()) return;
+    selected_file_ = filepath;
     prepare_ui();
 }
 
