@@ -21,9 +21,6 @@ public:
     explicit ViewGUI(std::shared_ptr<QApplication> application);
     ~ViewGUI();
 
-    /// Required to filter drop events.
-    void dragEnterEvent(QDragEnterEvent* event) override;
-    void dropEvent(QDropEvent* event) override;
 
     int run() override;
     void stop() override;

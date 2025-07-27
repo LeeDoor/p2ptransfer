@@ -37,6 +37,9 @@
       <property name="tabShape">
        <enum>QTabWidget::TabShape::Rounded</enum>
       </property>
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
       <widget class="QWidget" name="listenerTab">
        <attribute name="title">
         <string>listen</string>
@@ -194,11 +197,11 @@
    <sender>actionButton</sender>
    <signal>clicked()</signal>
    <receiver>ViewGUI</receiver>
-   <slot>action_button_pressed()</slot>
+   <slot>action_button_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>169</x>
-     <y>189</y>
+     <x>166</x>
+     <y>190</y>
     </hint>
     <hint type="destinationlabel">
      <x>303</x>
@@ -222,9 +225,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>selectFileButton</sender>
+   <signal>clicked()</signal>
+   <receiver>ViewGUI</receiver>
+   <slot>select_file_button_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>123</x>
+     <y>145</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1</x>
+     <y>191</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
-  <slot>action_button_pressed()</slot>
+  <slot>action_button_clicked()</slot>
   <slot>action_changed(int)</slot>
+  <slot>select_file_button_clicked()</slot>
  </slots>
 </ui>

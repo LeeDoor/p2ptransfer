@@ -21,6 +21,10 @@ public:
     explicit ViewGUI(std::shared_ptr<QApplication> application);
     ~ViewGUI();
 
+    /// Required to filter drop events.
+    void dragEnterEvent(QDragEnterEvent* event) override;
+    void dropEvent(QDropEvent* event) override;
+
     int run() override;
     void stop() override;
 
@@ -31,21 +35,27 @@ public:
     void show_file_success() override;
     bool ask_file_verification(const Filename& filename, Filesize filesize) override;
     void show_socket_error() override;
+
 public slots:
-    /// Slot for Action button pressed even
-    void action_button_pressed();
+    /// Slot for Action button pressed event
+    void action_button_clicked();
+    /// Slot for select_file button pressed event
+    void select_file_button_clicked();
     /// Slot for changing tabs to detect current action
     void action_changed(int index);
 
 private:
+    /// Attach \ref function execution to the \ref run() 's thread. Qt requirement.
+    template<typename Func>
+    void run_sync(Func&& function) {
+        QMetaObject::invokeMethod(this, std::move(function), Qt::BlockingQueuedConnection);
+    }
+
     enum Action { Listen, Transfer };
     Action action() const;
     bool is_listen() const;
     bool is_transfer() const;
     void prepare_ui();
-
-    /// Event for closing window.
-    void closeEvent(QCloseEvent* e) override;
 
     /// Reads port from user input.
     /*! \throws std::runtime_error if port from label is not an integer or too big */
@@ -54,6 +64,12 @@ private:
     /*! \throws std::logic_error if called while from the opened listening bar */
     /*! \throws std::runtime_error if does not match a port regex */
     Address get_address() const;
+
+    void set_file_if_accessible(QString filepath);
+
+    /// Event for closing window.
+    void closeEvent(QCloseEvent* e) override;
+
     /// disables the button and port input.
     /// Enable with \ref enable_ui()
     void disable_ui();
@@ -61,15 +77,10 @@ private:
     /// Disable with \ref disable_ui()
     void enable_ui();
 
-    /// Attach \ref function execution to the \ref run() 's thread. Qt requirement.
-    template<typename Func>
-    void run_sync(Func&& function) {
-        QMetaObject::invokeMethod(this, std::move(function), Qt::BlockingQueuedConnection);
-    }
-
     Ui::ViewGUI *ui;
-    Action action_;
     std::weak_ptr<QApplication> application_;
+    Action action_;
+    QString selected_file_;
 };
 
 }
