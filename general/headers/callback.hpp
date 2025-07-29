@@ -12,6 +12,7 @@ namespace general {
 template<typename CallbackType>
 class WithCallback {
 public:
+    using Callback = std::shared_ptr<CallbackType>;
     WithCallback() :
         callback_{}
     {}

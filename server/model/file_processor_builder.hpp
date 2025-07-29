@@ -1,6 +1,5 @@
 #pragma once
 #include "file_processor.hpp"
-#include "network_status_callback.hpp"
 #include "socket_manager.hpp"
 
 namespace general {
@@ -14,16 +13,17 @@ namespace model {
 */
 class FileProcessorBuilder {
 public:
-    using CallbackPtr = std::shared_ptr<presenter::NetworkStatusCallback>;
     using SocketManagerPtr = std::shared_ptr<SocketManager>;
 
     virtual ~FileProcessorBuilder() = default;
 
     virtual std::shared_ptr<FileProcessor> create_file_processor(
-        CallbackPtr callback,
+        NetworkCallback::Callback network_callback,
+        FileVerifyCallback::Callback file_callback,
         SocketManagerPtr socket) = 0;
 };
 
 }
 }
 }
+

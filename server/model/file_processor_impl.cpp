@@ -13,10 +13,10 @@ net::awaitable<void> FileProcessorImpl::try_read_file() {
     try {
         auto send_request = co_await header_handshake();
         co_await read_file(send_request);
-        callback()->file_transfered();
+        NetworkCallback::callback()->file_transfered();
     } catch (const std::exception& ex) {
         auto remote_endpoint = socket_manager_->get_remote_endpoint();
-        callback()->connection_aborted(remote_endpoint.address, remote_endpoint.port);
+        NetworkCallback::callback()->connection_aborted(remote_endpoint.address, remote_endpoint.port);
         throw;
     }
 }
@@ -47,10 +47,7 @@ void FileProcessorImpl::validate_filename(const Filename& filename) {
 }
 
 bool FileProcessorImpl::ask_file_confirmation(const SendRequest& send_request) {
-    if(auto callback = callback_.lock()) {
-        return callback->verify_file(send_request.filename, send_request.filesize);
-    }
-    throw std::runtime_error("callback of FileProcessor is dead");
+    return FileVerifyCallback::callback()->verify_file(send_request.filename, send_request.filesize);
 }
 
 net::awaitable<void> FileProcessorImpl::send_permission(const SendRequest& send_request) {
@@ -82,7 +79,7 @@ net::awaitable<void> FileProcessorImpl::handle_file(std::ofstream& os, size_t fi
 } 
 
 void FileProcessorImpl::calculate_notify_progressbar(size_t bytes_remaining, size_t filesize) {
-    if(auto callback = callback_.lock()) {
+    if(auto callback = NetworkCallback::callback_.lock()) {
         double progress = 100.0 - (bytes_remaining * 100.0 / filesize);
         callback->set_progressbar(progress);
     }

@@ -1,6 +1,7 @@
 if(${GRAPHICS}) 
     add_library(server_view
         general_view_gui.cpp
+        listener_view_gui.cpp
     )
 else()
     add_library(server_view
