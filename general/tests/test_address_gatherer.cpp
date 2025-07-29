@@ -1,5 +1,5 @@
 #include "address_gatherer_impl.hpp"
-#include "gather_address_callback_mock.hpp"
+#include "address_gatherer_callback_mock.hpp"
 #include "socket_manager_mock.hpp"
 #include "socket_manager_mock_builder.hpp"
 #include "thread_wrapper_mock.hpp"

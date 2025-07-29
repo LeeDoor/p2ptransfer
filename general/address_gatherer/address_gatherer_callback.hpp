@@ -8,9 +8,9 @@ namespace general {
 *
 * Requires \ref AddressGatherer users to be notifiable with gathered address.
 */
-class GatherAddressCallback {
+class AddressGathererCallback {
 public:
-    virtual ~GatherAddressCallback() = default;
+    virtual ~AddressGathererCallback() = default;
 
     /// Called when AddressGatherer finished it's job and gathered address.
     virtual void set_address(const Address& address) = 0;

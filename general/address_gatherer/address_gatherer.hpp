@@ -1,7 +1,7 @@
 #pragma once
 
 #include "callback.hpp"
-#include "gather_address_callback.hpp"
+#include "address_gatherer_callback.hpp"
 
 namespace general {
 
@@ -11,7 +11,7 @@ namespace general {
 * Gathers LAN address using SocketManager.
 * Uses \ref WithCallback to notify users about gathering finish.
 */
-class AddressGatherer : public WithCallback<GatherAddressCallback> {
+class AddressGatherer : public WithCallback<AddressGathererCallback> {
 public:
     virtual ~AddressGatherer() = default;
 

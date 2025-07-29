@@ -1,6 +1,6 @@
 #pragma once
 #include "address_gatherer.hpp"
-#include "gather_address_callback.hpp"
+#include "address_gatherer_callback.hpp"
 #include "general_presenter_callback.hpp"
 #include "general_view.hpp"
 
@@ -15,7 +15,7 @@ namespace presenter {
 * Implements callback interfaces to communicate with each of them.
 */
 class GeneralPresenter final :
-    public GatherAddressCallback,
+    public AddressGathererCallback,
     public GeneralPresenterCallback,
     public Stoppable,
     public std::enable_shared_from_this<GeneralPresenter> {
@@ -31,7 +31,6 @@ public:
     /// Starts infinite execution loop, which can be stoppped with \ref stop() method. 
     /// Should be called after \ref setup(). 
     virtual int run();
-    /// Prepares objects' for stopping. Calling View's and Model's stop() methods.
     void stop() override;
 
     void set_progressbar(double persent) override;
