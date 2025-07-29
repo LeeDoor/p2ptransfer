@@ -1,7 +1,7 @@
 #pragma once
 #include "address_gatherer.hpp"
 #include "address_gatherer_callback.hpp"
-#include "general_presenter_callback.hpp"
+#include "network_status_callback.hpp"
 #include "general_view.hpp"
 
 namespace general {
@@ -16,7 +16,7 @@ namespace presenter {
 */
 class GeneralPresenter final :
     public AddressGathererCallback,
-    public GeneralPresenterCallback,
+    public NetworkStatusCallback,
     public Stoppable,
     public std::enable_shared_from_this<GeneralPresenter> {
 

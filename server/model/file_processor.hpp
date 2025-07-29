@@ -1,6 +1,6 @@
 #pragma once
 #include "callback.hpp"
-#include "general_presenter_callback.hpp"
+#include "network_status_callback.hpp"
 
 namespace general {
 namespace server {
@@ -12,7 +12,7 @@ namespace model {
 * Reads remote file, when file gathering is agreed with user.
 * This class is used by the \ref Listener.
 */
-class FileProcessor : public WithCallback<presenter::GeneralPresenterCallback> {
+class FileProcessor : public WithCallback<presenter::NetworkStatusCallback> {
 public:
     virtual ~FileProcessor() = default;
 
