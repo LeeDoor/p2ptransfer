@@ -1,5 +1,4 @@
-#include "view_gui.hpp"
-#include "filesize_formatter.hpp"
+#include "general_view_gui.hpp"
 #include "ui_view_gui.h"
 
 namespace general {
@@ -8,7 +7,7 @@ namespace view {
 
 ViewGUI::ViewGUI(std::shared_ptr<QApplication> application)
     : QMainWindow{nullptr}
-    , ui{new Ui::ViewGUI}
+    , ui{new Ui::GeneralViewGUI}
     , application_{application}
     , action_{Listen}
     , selected_file_{""}
@@ -88,7 +87,7 @@ void ViewGUI::show_file_success() {
         QMessageBox::information(this, "Success", "File transferred successfully.");
     });
 }
-
+#if 0
 bool ViewGUI::ask_file_verification(const Filename& filename, Filesize filesize) {
     QString qfilename = filename.c_str();
     QString qfilesize = FilesizeFormatter::to_string(filesize).c_str();
@@ -100,19 +99,20 @@ bool ViewGUI::ask_file_verification(const Filename& filename, Filesize filesize)
     });
     return confirmed;
 }
-
+#endif
 void ViewGUI::show_socket_error() {
     run_sync([=, this] {
         QMessageBox::warning(this, "Socket failure", "Unable to open socket. Please change port and try again.");
         enable_ui();
     });
 }
-
 void ViewGUI::action_button_clicked() {
     disable_ui();
     try {
         if(is_listen()) {
+#if 0
             callback()->listen(get_port());
+#endif
         }
         else if (is_transfer()) {
             if(selected_file_.isEmpty()) 
@@ -126,7 +126,6 @@ void ViewGUI::action_button_clicked() {
         enable_ui();
     }   
 }
-
 Port ViewGUI::get_port() const {
     QString text;
     if(is_listen()) {

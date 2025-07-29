@@ -1,12 +1,12 @@
 #pragma once
-#include "server_view.hpp"
+#include "general_view.hpp"
 
 namespace general {
 namespace server {
 namespace view {
 
 /// \ref View implementation for Command Line Interface.
-class ViewCLI : public ServerView {
+class GeneralViewCLI : public GeneralView {
 public:
      int run() override;
      void stop() override;
@@ -14,7 +14,6 @@ public:
      void show_connected(const Address& address, Port port) override;
      void show_socket_error() override;
      void update_progressbar_status(double persent) override;
-     bool ask_file_verification(const Filename& filename, Filesize filesize) override;
      void show_file_success() override;
      void show_connection_aborted(const Address& address, Port port) override;
 

@@ -11,7 +11,7 @@ class ListenerMock : public Listener {
 public:
     MOCK_METHOD(void, listen_if_not_already, (Port port), (override));
     MOCK_METHOD(void, stop, (), (override));
-    std::weak_ptr<general::presenter::RemoteInteractionCallback> get_callback() {
+    std::weak_ptr<presenter::GeneralPresenterCallback> get_callback() {
         return callback_;
     }
 };

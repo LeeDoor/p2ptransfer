@@ -1,7 +1,7 @@
 #pragma once
 #include "callback.hpp"
 #include "port.hpp"
-#include "remote_interaction_callback.hpp"
+#include "general_presenter_callback.hpp"
 
 namespace general {
 namespace server {
@@ -16,7 +16,7 @@ namespace model {
 * \ref RemoteInteractionCallback used for notifying 
 * about connection progress and status.
 */
-class Listener : public WithCallback<presenter::RemoteInteractionCallback>{
+class Listener : public WithCallback<presenter::GeneralPresenterCallback>{
 public:
     virtual ~Listener() = default;
  

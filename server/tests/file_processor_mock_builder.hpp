@@ -12,7 +12,7 @@ public:
     FileProcessorMockBuilder (std::shared_ptr<FileProcessor> ptr) :
         ptr_(ptr) {}
     std::shared_ptr<FileProcessor> create_file_processor(
-        FileTransferCallbackPtr,
+        CallbackPtr,
         SocketManagerPtr) override {
         return ptr_;
     }

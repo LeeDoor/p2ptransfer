@@ -12,7 +12,7 @@ shift
 # if build mode unspecified run both
 if [[ $graphics -eq 2 ]];
 then
-    ./build.sh 0 && ./build.sh 1
+    ./build.sh 0 $@ && ./build.sh 1 $@
     exit
 fi
 

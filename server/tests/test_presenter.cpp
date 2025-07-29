@@ -1,6 +1,6 @@
+#include "general_presenter.hpp"
 #include "listener_mock.hpp"
 #include "address_gatherer_mock.hpp"
-#include "server_presenter_impl.hpp"
 #include "view_mock.hpp"
 
 namespace general {
@@ -19,7 +19,7 @@ protected:
         address_gatherer_(std::make_shared<AddressGathererMock>()),
         view_(std::make_shared<ViewMock>())
     {
-        presenter_ = std::make_shared<PresenterImpl>(
+        presenter_ = std::make_shared<GeneralPresenter>(
             listener_,
             address_gatherer_,
             view_
@@ -35,7 +35,7 @@ protected:
     std::shared_ptr<ListenerMock> listener_;
     std::shared_ptr<AddressGathererMock> address_gatherer_;
     std::shared_ptr<ViewMock> view_;
-    std::shared_ptr<PresenterImpl> presenter_;
+    std::shared_ptr<GeneralPresenter> presenter_;
 };
 
 

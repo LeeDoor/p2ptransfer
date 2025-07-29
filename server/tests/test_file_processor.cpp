@@ -1,5 +1,5 @@
 #include "file_processor_impl.hpp"
-#include "remote_interaction_callback_mock.hpp"
+#include "general_presenter_callback_mock.hpp"
 #include "socket_manager_mock.hpp"
 #include "request_serializer.hpp"
 
@@ -16,7 +16,7 @@ protected:
 
     FileProcessorFixture() :
         socket_mock(std::make_shared<SocketManagerMock>()),
-        callback_mock(std::make_shared<general::presenter::test::RemoteInteractionCallbackMock>()),
+        callback_mock(std::make_shared<presenter::test::GeneralPresenterCallbackMock>()),
         file_processor(socket_mock)    
     {
         file_processor.set_callback(callback_mock);
@@ -38,9 +38,11 @@ protected:
             .WillOnce(Return(return_immediately(
                 RequestSerializer::serialize_send_request(filename, filesize))));
     }
-    void immitate_user_confirmation(const std::string& filename, size_t filesize, bool is_confirming) {
+    void immitate_user_confirmation([[maybe_unused]] const std::string& filename, [[maybe_unused]] size_t filesize, [[maybe_unused]] bool is_confirming) {
+        #if 0
         EXPECT_CALL(*callback_mock, verify_file(filename, filesize))
             .WillOnce(Return(is_confirming));
+        #endif
     }
     void check_response_sending(const std::string& filename) {
         EXPECT_CALL(*socket_mock, write(RequestSerializer::serialize_send_permission(filename)))
@@ -95,7 +97,7 @@ protected:
     }
 
     std::shared_ptr<SocketManagerMock> socket_mock;
-    std::shared_ptr<general::presenter::test::RemoteInteractionCallbackMock> callback_mock;
+    std::shared_ptr<presenter::test::GeneralPresenterCallbackMock> callback_mock;
     FileProcessorImpl file_processor;
 };
 

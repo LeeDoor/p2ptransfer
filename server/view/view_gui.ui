@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ViewGUI</class>
- <widget class="QMainWindow" name="ViewGUI">
+ <class>GeneralViewGUI</class>
+ <widget class="QMainWindow" name="GeneralViewGUI">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -196,7 +196,7 @@
   <connection>
    <sender>actionButton</sender>
    <signal>clicked()</signal>
-   <receiver>ViewGUI</receiver>
+   <receiver>GeneralViewGUI</receiver>
    <slot>action_button_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -212,7 +212,7 @@
   <connection>
    <sender>tabWidget</sender>
    <signal>currentChanged(int)</signal>
-   <receiver>ViewGUI</receiver>
+   <receiver>GeneralViewGUI</receiver>
    <slot>action_changed(int)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -228,7 +228,7 @@
   <connection>
    <sender>selectFileButton</sender>
    <signal>clicked()</signal>
-   <receiver>ViewGUI</receiver>
+   <receiver>GeneralViewGUI</receiver>
    <slot>select_file_button_clicked()</slot>
    <hints>
     <hint type="sourcelabel">

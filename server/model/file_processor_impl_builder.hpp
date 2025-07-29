@@ -10,7 +10,7 @@ namespace model {
 class FileProcessorImplBuilder : public FileProcessorBuilder {
 public:
     std::shared_ptr<FileProcessor> create_file_processor(
-        FileTransferCallbackPtr callback, 
+        CallbackPtr callback, 
         SocketManagerPtr socket) override {
 
         auto fp = std::make_shared<FileProcessorImpl>(socket);

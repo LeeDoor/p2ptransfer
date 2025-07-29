@@ -1,8 +1,8 @@
 #pragma once
-#include "server_view.hpp"
+#include "general_view.hpp"
 
 namespace Ui {
-class ViewGUI;
+class GeneralViewGUI;
 }
 
 namespace general {
@@ -10,7 +10,7 @@ namespace server {
 namespace view {
 
 /// \ref View implementation for GUI using Qt.
-class ViewGUI : QMainWindow, public ServerView {
+class ViewGUI : QMainWindow, public GeneralView {
     Q_OBJECT
 public:
     /*! 
@@ -33,7 +33,6 @@ public:
     void show_connected(const Address& address, Port port) override;
     void show_connection_aborted(const Address& address, Port port) override;
     void show_file_success() override;
-    bool ask_file_verification(const Filename& filename, Filesize filesize) override;
     void show_socket_error() override;
 
 public slots:
@@ -77,7 +76,7 @@ private:
     /// Disable with \ref disable_ui()
     void enable_ui();
 
-    Ui::ViewGUI *ui;
+    Ui::GeneralViewGUI *ui;
     std::weak_ptr<QApplication> application_;
     Action action_;
     QString selected_file_;

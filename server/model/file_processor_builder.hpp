@@ -1,6 +1,6 @@
 #pragma once
 #include "file_processor.hpp"
-#include "file_transfer_callback.hpp"
+#include "general_presenter_callback.hpp"
 #include "socket_manager.hpp"
 
 namespace general {
@@ -14,13 +14,13 @@ namespace model {
 */
 class FileProcessorBuilder {
 public:
-    using FileTransferCallbackPtr = std::shared_ptr<general::presenter::FileTransferCallback>;
+    using CallbackPtr = std::shared_ptr<presenter::GeneralPresenterCallback>;
     using SocketManagerPtr = std::shared_ptr<SocketManager>;
 
     virtual ~FileProcessorBuilder() = default;
 
     virtual std::shared_ptr<FileProcessor> create_file_processor(
-        FileTransferCallbackPtr callback,
+        CallbackPtr callback,
         SocketManagerPtr socket) = 0;
 };
 
