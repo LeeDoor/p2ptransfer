@@ -11,10 +11,10 @@ public:
     ListenerViewCLI(std::shared_ptr<GeneralViewCLI> view);
 
     void setup() override;
-    void stop() override;
     bool ask_file_verification(const Filename& filename, Filesize filesize) override;
 
 private:
+    void stop_impl() override;
     void read_port_and_listen();
 
     std::shared_ptr<GeneralViewCLI> general_view_;

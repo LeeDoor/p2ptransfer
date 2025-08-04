@@ -16,7 +16,7 @@ void GeneralViewCLI::notify_listen() {
     }   
 }
 
-void GeneralViewCLI::stop() {
+void GeneralViewCLI::stop_impl() {
     std::cout << "bye, world!" << std::endl;
     is_running_ = false;
 }

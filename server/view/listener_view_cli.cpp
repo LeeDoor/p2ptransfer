@@ -12,7 +12,7 @@ ListenerViewCLI::ListenerViewCLI(std::shared_ptr<GeneralViewCLI> view) :
 void ListenerViewCLI::setup() {
     general_view_->subscribe_listen([self = shared_from_this()]{ self->read_port_and_listen(); });
 }
-void ListenerViewCLI::stop() {}
+void ListenerViewCLI::stop_impl() {}
 
 void ListenerViewCLI::read_port_and_listen() {
     std::cout << 

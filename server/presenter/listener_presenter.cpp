@@ -14,7 +14,7 @@ void ListenerPresenter::setup() {
     listener_->set_callback(shared_from_this());
     listener_->set_callback(general_presenter_);
 }
-void ListenerPresenter::stop() {
+void ListenerPresenter::stop_impl() {
     listener_->stop();
     view_->stop();
 }

@@ -21,7 +21,7 @@ int GeneralPresenter::run() {
     return view_->run();
 }
 /// Prepares objects' for stopping. Calling View's and Model's stop() methods.
-void GeneralPresenter::stop() {
+void GeneralPresenter::stop_impl() {
     address_gatherer_->stop();
     view_->stop();
 }

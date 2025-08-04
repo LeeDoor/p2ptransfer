@@ -38,9 +38,9 @@ public:
                  SocketManagerBuilderPtr socket_manager_builder,
                  FileProcessorBuilderPtr file_processor_builder);
     void listen_if_not_already(Port port) override;
-    void stop() override;
 
 private:
+    void stop_impl() override;
     void spawn_listen_coroutine(Port port);
     net::awaitable<void> listen_async(Port port);
     void spawn_and_run(Port port);

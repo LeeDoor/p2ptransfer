@@ -12,7 +12,7 @@ public:
     ListenerViewGUI(std::shared_ptr<GeneralViewGUI> view);
 
     void setup() override;
-    void stop() override;
+    void stop_impl() override;
     bool ask_file_verification(const Filename& filename, Filesize filesize) override;
 public slots:
     void listening(Port port);

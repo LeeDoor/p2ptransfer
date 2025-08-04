@@ -22,11 +22,12 @@ public:
     ListenerPresenter(GeneralPresenterPtr general, ListenerPtr listener, ViewPtr view);
 
     void setup();
-    void stop() override;
     void listen(Port port) override;
     bool verify_file(const Filename& filename, Filesize filesize) override;
 
 private:
+    void stop_impl() override;
+
     GeneralPresenterPtr general_presenter_;
     ListenerPtr listener_;
     ViewPtr view_;

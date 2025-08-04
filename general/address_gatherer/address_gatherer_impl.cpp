@@ -40,7 +40,7 @@ AddressGathererImpl::build_socket_manager(const Address& address, Port port) {
     co_return co_await socket_builder_->udp_connecting_to(address, port);
 }
 
-void AddressGathererImpl::stop() {
+void AddressGathererImpl::stop_impl() {
     context_->stop();
     thread_wrapper_->join();
 }

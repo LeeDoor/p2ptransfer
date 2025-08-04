@@ -8,18 +8,18 @@ namespace view {
 /// \ref View implementation for Command Line Interface.
 class GeneralViewCLI : public GeneralView {
 public:
-     int run() override;
-     void stop() override;
-     void show_address(const Address& address) override;
-     void show_connected(const Address& address, Port port) override;
-     void show_socket_error() override;
-     void update_progressbar_status(double persent) override;
-     void show_file_success() override;
-     void show_connection_aborted(const Address& address, Port port) override;
+    int run() override;
+    void show_address(const Address& address) override;
+    void show_connected(const Address& address, Port port) override;
+    void show_socket_error() override;
+    void update_progressbar_status(double persent) override;
+    void show_file_success() override;
+    void show_connection_aborted(const Address& address, Port port) override;
 
     void subscribe_listen(std::function<void()> func);
 
 private:
+    void stop_impl() override;
     void notify_listen();
 
     std::list<std::function<void()>> listen_subs_;

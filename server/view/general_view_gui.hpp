@@ -25,7 +25,6 @@ public:
     void dropEvent(QDropEvent* event) override;
 
     int run() override;
-    void stop() override;
 
     void show_address(const Address& ipaddress) override;
     void update_progressbar_status(double persent) override;
@@ -53,6 +52,8 @@ signals:
     void listening(Port port);
 
 private:
+    void stop_impl() override;
+
     enum Action { Listen, Transfer };
     Action action() const;
     bool is_listen() const;

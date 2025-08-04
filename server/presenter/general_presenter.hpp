@@ -31,7 +31,6 @@ public:
     /// Starts infinite execution loop, which can be stoppped with \ref stop() method. 
     /// Should be called after \ref setup(). 
     virtual int run();
-    void stop() override;
 
     void set_progressbar(double persent) override;
     void set_address(const Address& address) override;
@@ -42,6 +41,8 @@ public:
     void file_transfered() override;
 
 protected:
+    void stop_impl() override;
+
     AddressGathererPtr address_gatherer_;
     ViewPtr view_;
 

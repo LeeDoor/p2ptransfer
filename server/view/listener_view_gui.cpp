@@ -12,7 +12,7 @@ ListenerViewGUI::ListenerViewGUI(std::shared_ptr<GeneralViewGUI> view) :
 void ListenerViewGUI::setup() {
     QObject::connect(general_view_.get(), &GeneralViewGUI::listening, this, &ListenerViewGUI::listening);
 }
-void ListenerViewGUI::stop() {}
+void ListenerViewGUI::stop_impl() {}
 
 bool ListenerViewGUI::ask_file_verification(const Filename& filename, Filesize filesize) {
     QString qfilename = filename.c_str();

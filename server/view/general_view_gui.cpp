@@ -38,7 +38,7 @@ int GeneralViewGUI::run() {
     }
 }
 
-void GeneralViewGUI::stop() {
+void GeneralViewGUI::stop_impl() {
     if(auto application = application_.lock()) {
         application->quit();
     } else {

@@ -1,6 +1,7 @@
 #pragma once
 #include "file_processor.hpp"
 #include "port.hpp"
+#include "stoppable.hpp"
 
 namespace general {
 namespace server {
@@ -15,7 +16,7 @@ namespace model {
 * \ref RemoteInteractionCallback used for notifying 
 * about connection progress and status.
 */
-class Listener : public NetworkCallback, public FileVerifyCallback {
+class Listener : public NetworkCallback, public FileVerifyCallback, public Stoppable {
 public:
     using NetworkCallback::set_callback;
     using FileVerifyCallback::set_callback;
@@ -26,8 +27,6 @@ public:
     * problems or user cancellation.
     */
     virtual void listen_if_not_already(Port port) = 0;
-    /// Prepares object for destruction.
-    virtual void stop() = 0;
 };
 
 }
