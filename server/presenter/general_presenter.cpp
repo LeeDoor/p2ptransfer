@@ -16,7 +16,7 @@ void GeneralPresenter::setup() {
 /// Should be called after \ref setup(). 
 int GeneralPresenter::run() {
     if(!is_initialized_) 
-        throw std::runtime_error("Should call Presenter::setup() before run");
+        throw std::logic_error("Should call Presenter::setup() before run");
     address_gatherer_->gather_local_address();
     return view_->run();
 }

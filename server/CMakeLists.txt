@@ -13,7 +13,7 @@ endif()
 
 add_library(server INTERFACE)
 target_link_libraries(server INTERFACE 
-    #server_model 
+    server_model 
     server_view 
     server_presenter
     ${LINK_LIBRARIES})

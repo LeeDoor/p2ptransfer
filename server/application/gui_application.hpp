@@ -1,27 +1,21 @@
 #pragma once
-#include "general_presenter.hpp"
-#include "model_builder.hpp"
-#include "signal_handler.hpp"
+#include "application.hpp"
 #include "general_view_gui.hpp"
+#include "listener_view_gui.hpp"
 
 namespace general {
 namespace server {
 
-class GuiApplication {
+class GUIApplication {
 public:
-    int run(int argc, char** argv) {
-        auto application = std::make_shared<QApplication>(argc, argv);
-        auto presenter = std::make_shared<presenter::GeneralPresenter>(
-            //model::ModelBuilder::create_listener(),
-            model::ModelBuilder::create_address_gatherer(),
-            std::make_shared<view::ViewGUI>(application)
-        );
-        SignalHandler::handle_SIGINT([presenter]() {
-            presenter->stop();
-        });
-        presenter->setup();
-        return presenter->run();
-    }
+    GUIApplication(int argc, char** argv) : 
+        qapplication_{std::make_shared<QApplication>(argc, argv)},
+        application_{[this] { return qapplication_; } }
+    {}
+    int run() { return application_.run(); }
+private:
+    std::shared_ptr<QApplication> qapplication_;
+    Application<view::GeneralViewGUI, view::ListenerViewGUI> application_;
 };
 
 }

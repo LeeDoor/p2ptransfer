@@ -10,7 +10,7 @@ namespace server {
 namespace view {
 
 /// \ref View implementation for GUI using Qt.
-class ViewGUI : QMainWindow, public GeneralView {
+class GeneralViewGUI : public QMainWindow, public GeneralView {
     Q_OBJECT
 public:
     /*! 
@@ -18,8 +18,7 @@ public:
      * Original std::shared_ptr to QApplication should 
      * be accessible for an entire ViewGUI lifetime.
     */
-    explicit ViewGUI(std::shared_ptr<QApplication> application);
-    ~ViewGUI();
+    explicit GeneralViewGUI(std::shared_ptr<QApplication> application);
 
     /// Required to filter drop events.
     void dragEnterEvent(QDragEnterEvent* event) override;
@@ -35,6 +34,13 @@ public:
     void show_file_success() override;
     void show_socket_error() override;
 
+    std::shared_ptr<Ui::GeneralViewGUI> get_ui();
+    /// Attach \ref function execution to the \ref run() 's thread. Qt requirement.
+    template<typename Func>
+    void run_sync(Func&& function) {
+        QMetaObject::invokeMethod(this, std::move(function), Qt::BlockingQueuedConnection);
+    }
+
 public slots:
     /// Slot for Action button pressed event
     void action_button_clicked();
@@ -43,13 +49,10 @@ public slots:
     /// Slot for changing tabs to detect current action
     void action_changed(int index);
 
-private:
-    /// Attach \ref function execution to the \ref run() 's thread. Qt requirement.
-    template<typename Func>
-    void run_sync(Func&& function) {
-        QMetaObject::invokeMethod(this, std::move(function), Qt::BlockingQueuedConnection);
-    }
+signals:
+    void listening(Port port);
 
+private:
     enum Action { Listen, Transfer };
     Action action() const;
     bool is_listen() const;
@@ -76,7 +79,7 @@ private:
     /// Disable with \ref disable_ui()
     void enable_ui();
 
-    Ui::GeneralViewGUI *ui;
+    std::shared_ptr<Ui::GeneralViewGUI> ui_;
     std::weak_ptr<QApplication> application_;
     Action action_;
     QString selected_file_;

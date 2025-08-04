@@ -5,28 +5,23 @@ namespace general {
 namespace server {
 namespace view {
 
-ViewGUI::ViewGUI(std::shared_ptr<QApplication> application)
+GeneralViewGUI::GeneralViewGUI(std::shared_ptr<QApplication> application)
     : QMainWindow{nullptr}
-    , ui{new Ui::GeneralViewGUI}
+    , ui_{std::make_shared<Ui::GeneralViewGUI>()}
     , application_{application}
     , action_{Listen}
     , selected_file_{""}
 {
-    ui->setupUi(this);
+    ui_->setupUi(this);
     setAcceptDrops(true);
 }
 
-ViewGUI::~ViewGUI()
-{
-    delete ui;
-}
-
-void ViewGUI::dragEnterEvent(QDragEnterEvent* event) {
+void GeneralViewGUI::dragEnterEvent(QDragEnterEvent* event) {
     if(event->mimeData()->hasUrls())
         event->acceptProposedAction();
 }
 
-void ViewGUI::dropEvent(QDropEvent* event) {
+void GeneralViewGUI::dropEvent(QDropEvent* event) {
     auto urls = event->mimeData()->urls();
     for(QUrl url : urls) {
         set_file_if_accessible(url.toLocalFile());
@@ -34,7 +29,7 @@ void ViewGUI::dropEvent(QDropEvent* event) {
     event->acceptProposedAction();
 }
 
-int ViewGUI::run() {
+int GeneralViewGUI::run() {
     QMainWindow::show();
     if(auto application = application_.lock()) {
         return application->exec();
@@ -43,7 +38,7 @@ int ViewGUI::run() {
     }
 }
 
-void ViewGUI::stop() {
+void GeneralViewGUI::stop() {
     if(auto application = application_.lock()) {
         application->quit();
     } else {
@@ -51,28 +46,28 @@ void ViewGUI::stop() {
     }
 }
 
-void ViewGUI::show_address(const Address& address) {
+void GeneralViewGUI::show_address(const Address& address) {
     QString qaddress = address.c_str();
     run_sync([=, this] {
-        ui->addressLabel->setText(qaddress);
+        ui_->addressLabel->setText(qaddress);
     });
 }
 
-void ViewGUI::update_progressbar_status(double persent) {
+void GeneralViewGUI::update_progressbar_status(double persent) {
     run_sync([=, this] {
-        ui->progressBar->setValue(persent);
+        ui_->progressBar->setValue(persent);
     });
 }
 
-void ViewGUI::show_connected(const Address& address, Port port) {
+void GeneralViewGUI::show_connected(const Address& address, Port port) {
     QString qaddress = address.c_str();
     QString qport = QString::number(port);
     run_sync([=, this] {
-        ui->actionButton->setText("Connected to " + qaddress + ":" + qport);
+        ui_->actionButton->setText("Connected to " + qaddress + ":" + qport);
     });
 }
 
-void ViewGUI::show_connection_aborted(const Address& address, Port port) {
+void GeneralViewGUI::show_connection_aborted(const Address& address, Port port) {
     QString qaddress = address.c_str();
     QString qport = QString::number(port);
     run_sync([=, this] {
@@ -81,38 +76,28 @@ void ViewGUI::show_connection_aborted(const Address& address, Port port) {
     });
 }
 
-void ViewGUI::show_file_success() {
+void GeneralViewGUI::show_file_success() {
     run_sync([=, this] {
         enable_ui();
         QMessageBox::information(this, "Success", "File transferred successfully.");
     });
 }
 #if 0
-bool ViewGUI::ask_file_verification(const Filename& filename, Filesize filesize) {
-    QString qfilename = filename.c_str();
-    QString qfilesize = FilesizeFormatter::to_string(filesize).c_str();
-    bool confirmed;
-    run_sync([=, &confirmed, this] {
-        auto result = QMessageBox::question(this, "File request", 
-                                            "Do you want to get a file: " + qfilename + " (" + qfilesize + ")?");
-        confirmed = result == QMessageBox::Yes;
-    });
-    return confirmed;
-}
 #endif
-void ViewGUI::show_socket_error() {
+void GeneralViewGUI::show_socket_error() {
     run_sync([=, this] {
         QMessageBox::warning(this, "Socket failure", "Unable to open socket. Please change port and try again.");
         enable_ui();
     });
 }
-void ViewGUI::action_button_clicked() {
+std::shared_ptr<Ui::GeneralViewGUI> GeneralViewGUI::get_ui() {
+    return ui_;
+}
+void GeneralViewGUI::action_button_clicked() {
     disable_ui();
     try {
         if(is_listen()) {
-#if 0
-            callback()->listen(get_port());
-#endif
+            emit listening(get_port());
         }
         else if (is_transfer()) {
             if(selected_file_.isEmpty()) 
@@ -126,12 +111,12 @@ void ViewGUI::action_button_clicked() {
         enable_ui();
     }   
 }
-Port ViewGUI::get_port() const {
+Port GeneralViewGUI::get_port() const {
     QString text;
     if(is_listen()) {
-        text = ui->listenPortLineEdit->text();
+        text = ui_->listenPortLineEdit->text();
     } else if (is_transfer()) {
-        text = ui->transferPortLineEdit->text();
+        text = ui_->transferPortLineEdit->text();
     }
     bool ok;
     Port port = text.toUInt(&ok);
@@ -141,10 +126,10 @@ Port ViewGUI::get_port() const {
     }
     return port;
 }
-Address ViewGUI::get_address() const {
+Address GeneralViewGUI::get_address() const {
     if(!is_transfer())
         throw std::logic_error("Can't get address while not transfering tab opened");
-    QString ip = ui->addressLineEdit->text();
+    QString ip = ui_->addressLineEdit->text();
     QRegularExpression ip_regex("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$");
     QRegularExpressionValidator validator(ip_regex);
     int pos = 0;
@@ -154,14 +139,14 @@ Address ViewGUI::get_address() const {
     return ip.toStdString();
 }
 
-void ViewGUI::select_file_button_clicked() {
+void GeneralViewGUI::select_file_button_clicked() {
     QString filepath = QFileDialog::getOpenFileName(this);
     if(filepath.isEmpty())
         return;
     set_file_if_accessible(filepath);
 }
 
-void ViewGUI::set_file_if_accessible(QString filepath) {
+void GeneralViewGUI::set_file_if_accessible(QString filepath) {
     if(QFileInfo{filepath}.isDir()) return;
     std::ifstream ofs(filepath.toStdString(), std::ios::binary);
     if(!ofs.is_open()) return;
@@ -169,7 +154,7 @@ void ViewGUI::set_file_if_accessible(QString filepath) {
     prepare_ui();
 }
 
-void ViewGUI::action_changed(int index) {
+void GeneralViewGUI::action_changed(int index) {
     switch(index) {
         case 0:
             action_ = Listen;
@@ -181,39 +166,39 @@ void ViewGUI::action_changed(int index) {
     prepare_ui();
 }
 
-void ViewGUI::disable_ui() {
-    ui->actionButton->setEnabled(false);
-    ui->tabWidget->setEnabled(false);
+void GeneralViewGUI::disable_ui() {
+    ui_->actionButton->setEnabled(false);
+    ui_->tabWidget->setEnabled(false);
 }
 
-void ViewGUI::enable_ui() {
-    ui->actionButton->setEnabled(true);
-    ui->tabWidget->setEnabled(true);
-    ui->progressBar->setValue(0);
+void GeneralViewGUI::enable_ui() {
+    ui_->actionButton->setEnabled(true);
+    ui_->tabWidget->setEnabled(true);
+    ui_->progressBar->setValue(0);
     prepare_ui();
 }
 
-void ViewGUI::prepare_ui() {
+void GeneralViewGUI::prepare_ui() {
     switch(action()) {
         case Listen:
-            ui->actionButton->setText("Listen");
+            ui_->actionButton->setText("Listen");
             break;
         case Transfer:
-            ui->actionButton->setText("Transfer " + QFileInfo{selected_file_}.fileName());
+            ui_->actionButton->setText("Transfer " + QFileInfo{selected_file_}.fileName());
             break;
     }
 }
 
-void ViewGUI::closeEvent([[maybe_unused]] QCloseEvent* e) {
+void GeneralViewGUI::closeEvent([[maybe_unused]] QCloseEvent* e) {
     std::raise(SIGINT);
 }
-ViewGUI::Action ViewGUI::action() const {
+GeneralViewGUI::Action GeneralViewGUI::action() const {
     return action_;
 }
-bool ViewGUI::is_listen() const {
+bool GeneralViewGUI::is_listen() const {
     return action() == Listen;
 }
-bool ViewGUI::is_transfer() const {
+bool GeneralViewGUI::is_transfer() const {
     return action() == Transfer;
 }
 

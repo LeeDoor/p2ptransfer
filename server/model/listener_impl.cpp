@@ -36,7 +36,8 @@ void ListenerImpl::spawn_listen_coroutine(Port port) {
 net::awaitable<void> ListenerImpl::listen_async(Port port) {
     try {
         auto socket_manager = co_await connect_and_listen(port);
-        auto file_processor = file_processor_builder_->create_file_processor(callback(), socket_manager);
+        auto file_processor = file_processor_builder_->create_file_processor(
+            NetworkCallback::callback(), FileVerifyCallback::callback(), socket_manager);
         co_await file_processor->try_read_file();
     } catch(const std::exception& ex) {
         Logger::log() << ex.what() << std::endl;
@@ -47,10 +48,10 @@ net::awaitable<ListenerImpl::SocketManagerPtr> ListenerImpl::connect_and_listen(
     try {
         auto socket_manager = co_await socket_manager_builder_->tcp_listening_at(port);
         auto endpoint = socket_manager->get_remote_endpoint();
-        callback()->connected(endpoint.address, endpoint.port);
+        NetworkCallback::callback()->connected(endpoint.address, endpoint.port);
         co_return socket_manager;
     } catch(const std::exception& ex) {
-        callback()->cant_open_socket();
+        NetworkCallback::callback()->cant_open_socket();
         throw;
     }
 }

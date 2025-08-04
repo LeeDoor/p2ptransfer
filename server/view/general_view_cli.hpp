@@ -17,8 +17,12 @@ public:
      void show_file_success() override;
      void show_connection_aborted(const Address& address, Port port) override;
 
+    void subscribe_listen(std::function<void()> func);
+
 private:
-    void read_port_and_listen();
+    void notify_listen();
+
+    std::list<std::function<void()>> listen_subs_;
 
     bool is_running_ = true;
 };

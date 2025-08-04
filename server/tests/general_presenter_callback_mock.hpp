@@ -1,7 +1,7 @@
 #pragma once
 #include "address.hpp"
 #include "port.hpp"
-#include "general_presenter_callback.hpp"
+#include "network_status_callback.hpp"
 
 namespace general {
 namespace server {

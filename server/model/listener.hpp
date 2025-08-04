@@ -1,7 +1,6 @@
 #pragma once
-#include "callback.hpp"
+#include "file_processor.hpp"
 #include "port.hpp"
-#include "general_presenter_callback.hpp"
 
 namespace general {
 namespace server {
@@ -16,8 +15,10 @@ namespace model {
 * \ref RemoteInteractionCallback used for notifying 
 * about connection progress and status.
 */
-class Listener : public WithCallback<presenter::GeneralPresenterCallback>{
+class Listener : public NetworkCallback, public FileVerifyCallback {
 public:
+    using NetworkCallback::set_callback;
+    using FileVerifyCallback::set_callback;
     virtual ~Listener() = default;
  
     /*! Listens for user connection and starts communication.

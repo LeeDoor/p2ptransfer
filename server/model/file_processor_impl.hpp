@@ -5,9 +5,6 @@
 
 namespace general {
 namespace server {
-
-namespace presenter { class ServerPresenter; }
-
 namespace model {
 
 /// Implementation for \ref FileProcessor using \ref SocketManager .

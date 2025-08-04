@@ -1,0 +1,39 @@
+#include "listener_view_cli.hpp"
+#include "filesize_formatter.hpp"
+
+namespace general {
+namespace server {
+namespace view {
+
+ListenerViewCLI::ListenerViewCLI(std::shared_ptr<GeneralViewCLI> view) :
+    general_view_{view}
+{
+    general_view_->subscribe_listen([this]{ read_port_and_listen(); });
+}
+
+void ListenerViewCLI::stop() {}
+
+void ListenerViewCLI::read_port_and_listen() {
+    std::cout << 
+        "Ready to listen for connections\n"
+        "Enter your port: ";
+    Port port;
+    std::cin >> port;
+    if(!std::cin.good() || port > 65535) 
+        return;
+    callback()->listen(port);
+}
+
+bool ListenerViewCLI::ask_file_verification(const Filename& filename, Filesize filesize) {
+    std::cout << "Do you want to download file \"" << filename 
+        << "\" (" << FilesizeFormatter::to_string(filesize) << ")? [y/n]: " << std::endl;
+    char input = '\0';
+    do {
+        std::cin >> input;
+    } while (input != 'y' || input != 'n' || input != 'Y' || input != 'N');
+    return input == 'y' || input == 'Y';;
+}
+
+}
+}
+}

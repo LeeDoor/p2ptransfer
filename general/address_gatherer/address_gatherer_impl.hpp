@@ -28,6 +28,7 @@ public:
     void stop() override;
 
 private:
+    void run_gathering();
     net::awaitable<void> gather_async();
     net::awaitable<SocketManagerPtr> build_socket_manager(const Address& address, Port port);
 

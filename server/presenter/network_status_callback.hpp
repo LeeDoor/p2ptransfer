@@ -1,15 +1,15 @@
 #pragma once
-
 #include "address.hpp"
 #include "port.hpp"
+
 namespace general {
 namespace server {
 namespace presenter {
 
 /// The union of \ref ConnectionStatusCallback and \ref FileTransferCallback.
-class GeneralPresenterCallback {
+class NetworkStatusCallback {
 public:
-    virtual ~GeneralPresenterCallback() = default;
+    virtual ~NetworkStatusCallback() = default;
 
     /*! \brief While file sharing, notifying about sending progress.
      * \param persent the floating point number in [0;100] segment 
