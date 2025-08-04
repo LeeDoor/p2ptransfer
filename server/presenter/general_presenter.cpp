@@ -7,20 +7,16 @@ namespace presenter {
 GeneralPresenter::GeneralPresenter(AddressGathererPtr address_gatherer, ViewPtr view) :
     address_gatherer_{address_gatherer}, view_{view} {}
 
-/// Should be called after initialization before run.
 void GeneralPresenter::setup() {
     is_initialized_ = true;
     address_gatherer_->set_callback(this->shared_from_this());
 }
-/// Starts infinite execution loop, which can be stoppped with \ref stop() method. 
-/// Should be called after \ref setup(). 
 int GeneralPresenter::run() {
     if(!is_initialized_) 
         throw std::logic_error("Should call Presenter::setup() before run");
     address_gatherer_->gather_local_address();
     return view_->run();
 }
-/// Prepares objects' for stopping. Calling View's and Model's stop() methods.
 void GeneralPresenter::stop_impl() {
     address_gatherer_->stop();
     view_->stop();

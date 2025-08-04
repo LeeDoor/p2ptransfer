@@ -18,8 +18,13 @@ public:
         initialized_{false}
     {}
     virtual ~WithCallback() {
-        if(!initialized_)
+        if(!initialized_) {
             std::cerr << "\n\nWARNING: Callback is not set to somebody. Check the stack trace.\n\n";
+#ifdef TESTING
+            // Forcing tests to fail if forgot to initialize the callback
+            std::terminate();
+#endif
+        }
     }
 
     /// Should be called before usage
