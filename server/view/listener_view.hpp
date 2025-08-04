@@ -16,6 +16,8 @@ namespace view {
 */
 class ListenerView : public WithCallback<ListenerViewCallback>, public Stoppable {
 public:
+    /// Should be called immediately after initialization.
+    virtual void setup() = 0;
     /// Asks user about file gathering confirmation.
     virtual bool ask_file_verification(const Filename& filename, Filesize filesize) = 0;
 };

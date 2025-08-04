@@ -19,7 +19,7 @@ public:
         )},
         listener_view_{std::make_shared<ListenerViewType>(general_view_)},
         listener_{model::ModelBuilder::create_listener()},
-        listener_presenter_{std::make_shared<presenter::ListenerPresenter>(listener_, listener_view_)}
+        listener_presenter_{std::make_shared<presenter::ListenerPresenter>(general_presenter_, listener_, listener_view_)}
     {}
 
     int run() {

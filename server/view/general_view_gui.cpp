@@ -82,8 +82,6 @@ void GeneralViewGUI::show_file_success() {
         QMessageBox::information(this, "Success", "File transferred successfully.");
     });
 }
-#if 0
-#endif
 void GeneralViewGUI::show_socket_error() {
     run_sync([=, this] {
         QMessageBox::warning(this, "Socket failure", "Unable to open socket. Please change port and try again.");

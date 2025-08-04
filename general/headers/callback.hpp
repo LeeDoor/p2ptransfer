@@ -14,13 +14,18 @@ class WithCallback {
 public:
     using Callback = std::shared_ptr<CallbackType>;
     WithCallback() :
-        callback_{}
+        callback_{},
+        initialized_{false}
     {}
-    virtual ~WithCallback() = default;
+    virtual ~WithCallback() {
+        if(!initialized_)
+            std::cerr << "\n\nWARNING: Callback is not set to somebody. Check the stack trace.\n\n";
+    }
 
     /// Should be called before usage
     void set_callback(std::shared_ptr<CallbackType> callback) {
         callback_ = callback;
+        initialized_ = true;
     }
 
 protected:
@@ -33,6 +38,7 @@ protected:
     }
 
     std::weak_ptr<CallbackType> callback_;
+    bool initialized_;
 };
 
 }

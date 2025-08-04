@@ -38,8 +38,6 @@ public:
         co_return sm;
     }
 
-    ~SocketManagerImpl() = default;
-
     bool connected() const noexcept override {
         return socket_ != nullptr;
     }

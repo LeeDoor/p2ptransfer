@@ -11,6 +11,7 @@ class ListenerViewGUI : public QObject, public ListenerView {
 public:
     ListenerViewGUI(std::shared_ptr<GeneralViewGUI> view);
 
+    void setup() override;
     void stop() override;
     bool ask_file_verification(const Filename& filename, Filesize filesize) override;
 public slots:

@@ -22,8 +22,8 @@ void ListenerImpl::listen_if_not_already(Port port) {
 }
 
 void ListenerImpl::spawn_and_run(Port port) {
-    thread_wrapper_->execute([port, this] {
-        spawn_listen_coroutine(port);
+    spawn_listen_coroutine(port);
+    thread_wrapper_->execute([this] {
         context_->run();
         context_->restart();
     });

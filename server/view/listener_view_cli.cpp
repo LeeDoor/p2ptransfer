@@ -7,10 +7,11 @@ namespace view {
 
 ListenerViewCLI::ListenerViewCLI(std::shared_ptr<GeneralViewCLI> view) :
     general_view_{view}
-{
-    general_view_->subscribe_listen([this]{ read_port_and_listen(); });
-}
+{}
 
+void ListenerViewCLI::setup() {
+    general_view_->subscribe_listen([self = shared_from_this()]{ self->read_port_and_listen(); });
+}
 void ListenerViewCLI::stop() {}
 
 void ListenerViewCLI::read_port_and_listen() {

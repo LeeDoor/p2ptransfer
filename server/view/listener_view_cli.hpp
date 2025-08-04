@@ -6,10 +6,11 @@ namespace general {
 namespace server {
 namespace view {
 
-class ListenerViewCLI : public ListenerView {
+class ListenerViewCLI : public ListenerView, public std::enable_shared_from_this<ListenerViewCLI> {
 public:
     ListenerViewCLI(std::shared_ptr<GeneralViewCLI> view);
 
+    void setup() override;
     void stop() override;
     bool ask_file_verification(const Filename& filename, Filesize filesize) override;
 
