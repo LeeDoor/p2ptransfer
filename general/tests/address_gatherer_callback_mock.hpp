@@ -4,7 +4,7 @@
 namespace general {
 namespace test {
 
-class GatherAddressCallbackMock : public GatherAddressCallback {
+class AddressGathererCallbackMock : public AddressGathererCallback {
 public:
     MOCK_METHOD(void, set_address, (const Address& address), (override));
 };

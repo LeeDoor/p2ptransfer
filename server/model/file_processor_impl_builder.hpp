@@ -10,13 +10,13 @@ namespace model {
 class FileProcessorImplBuilder : public FileProcessorBuilder {
 public:
     std::shared_ptr<FileProcessor> create_file_processor(
-        NetworkCallback::Callback network_callback,
-        FileVerifyCallback::Callback file_callback,
+        NetworkStatusCallback::Callback network_callback,
+        ListenerCallback::Callback file_callback,
         SocketManagerPtr socket) override {
 
         auto fp = std::make_shared<FileProcessorImpl>(socket);
-        fp->NetworkCallback::set_callback(network_callback);
-        fp->FileVerifyCallback::set_callback(file_callback);
+        fp->NetworkStatusCallback::set_callback(network_callback);
+        fp->ListenerCallback::set_callback(file_callback);
         return fp;
     }
 };

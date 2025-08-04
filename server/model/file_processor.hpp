@@ -13,9 +13,9 @@ namespace model {
 * Reads remote file, when file gathering is agreed with user.
 * This class is used by the \ref Listener.
 */
-using NetworkCallback = WithCallback<presenter::NetworkStatusCallback>;
-using FileVerifyCallback = WithCallback<presenter::ListenerCallback>;
-class FileProcessor : public NetworkCallback, public FileVerifyCallback {
+using NetworkStatusCallback = WithCallback<presenter::NetworkStatusCallback>;
+using ListenerCallback = WithCallback<presenter::ListenerCallback>;
+class FileProcessor : public NetworkStatusCallback, public ListenerCallback {
 public:
     virtual ~FileProcessor() = default;
 

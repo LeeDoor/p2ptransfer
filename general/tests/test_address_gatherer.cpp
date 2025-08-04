@@ -13,7 +13,7 @@ protected:
         socket_manager_(std::make_shared<SocketManagerMock>()),
         socket_builder_(std::make_shared<SocketManagerMockBuilder>(socket_manager_)),
         thread_wrapper_(std::make_shared<ThreadWrapperMock>()),
-        callback_(std::make_shared<GatherAddressCallbackMock>())
+        callback_(std::make_shared<AddressGathererCallbackMock>())
     {
         address_gatherer_ = std::make_shared<AddressGathererImpl>(
             std::make_shared<net::io_context>(),
@@ -45,7 +45,7 @@ protected:
     std::shared_ptr<SocketManagerMockBuilder> socket_builder_;
     std::shared_ptr<ThreadWrapperMock> thread_wrapper_;
     std::shared_ptr<AddressGathererImpl> address_gatherer_;
-    std::shared_ptr<GatherAddressCallbackMock> callback_;
+    std::shared_ptr<AddressGathererCallbackMock> callback_;
 };
 
 TEST_F(AddressGathererFixture, gatheringAddress_success) {

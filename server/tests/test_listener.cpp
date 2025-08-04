@@ -1,6 +1,7 @@
 #include "file_processor_mock.hpp"
+#include "listener_callback_mock.hpp"
 #include "listener_impl.hpp"
-#include "general_presenter_callback_mock.hpp"
+#include "network_status_callback_mock.hpp"
 #include "file_processor_mock_builder.hpp"
 #include "socket_manager_mock.hpp"
 #include "socket_manager_mock_builder.hpp"
@@ -20,7 +21,8 @@ protected:
         socket_builder_(std::make_shared<SocketManagerMockBuilder>(socket_manager_)),
         file_processor_(std::make_shared<FileProcessorMock>()),
         thread_wrapper_(std::make_shared<ThreadWrapperMock>()),
-        callback_(std::make_shared<presenter::test::GeneralPresenterCallbackMock>())
+        network_callback_(std::make_shared<presenter::test::NetworkStatusCallbackMock>()),
+        listener_callback_(std::make_shared<presenter::test::ListenerCallbackMock>())
     {
         listener_ = std::make_shared<ListenerImpl>(
             std::make_shared<net::io_context>(),
@@ -28,7 +30,8 @@ protected:
             socket_builder_,
             std::make_shared<FileProcessorMockBuilder>(file_processor_)
         );
-        listener_->set_callback(callback_);
+        listener_->set_callback(network_callback_);
+        listener_->set_callback(listener_callback_);
 
         expect_remote_endpoint_as_required();
     }
@@ -53,17 +56,18 @@ protected:
     }
 
     void check_connection_success_callback() {
-        EXPECT_CALL(*callback_, connected(TEST_LOCADDR, TEST_PORT));
+        EXPECT_CALL(*network_callback_, connected(TEST_LOCADDR, TEST_PORT));
     }
     void check_failure_callback() {
-        EXPECT_CALL(*callback_, cant_open_socket());
+        EXPECT_CALL(*network_callback_, cant_open_socket());
     }
 
     std::shared_ptr<SocketManagerMock> socket_manager_;
     std::shared_ptr<SocketManagerMockBuilder> socket_builder_;
     std::shared_ptr<FileProcessorMock> file_processor_;
     std::shared_ptr<ThreadWrapperMock> thread_wrapper_;
-    std::shared_ptr<presenter::test::GeneralPresenterCallbackMock> callback_;
+    std::shared_ptr<presenter::test::NetworkStatusCallbackMock> network_callback_;
+    std::shared_ptr<presenter::test::ListenerCallbackMock> listener_callback_;
     std::shared_ptr<ListenerImpl> listener_;
 
 };

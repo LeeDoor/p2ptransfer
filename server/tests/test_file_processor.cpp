@@ -1,5 +1,6 @@
 #include "file_processor_impl.hpp"
-#include "general_presenter_callback_mock.hpp"
+#include "listener_callback_mock.hpp"
+#include "network_status_callback_mock.hpp"
 #include "socket_manager_mock.hpp"
 #include "request_serializer.hpp"
 
@@ -16,10 +17,12 @@ protected:
 
     FileProcessorFixture() :
         socket_mock(std::make_shared<SocketManagerMock>()),
-        callback_mock(std::make_shared<presenter::test::GeneralPresenterCallbackMock>()),
+        network_callback(std::make_shared<presenter::test::NetworkStatusCallbackMock>()),
+        listener_callback(std::make_shared<presenter::test::ListenerCallbackMock>()),
         file_processor(socket_mock)    
     {
-        file_processor.set_callback(callback_mock);
+        file_processor.set_callback(network_callback);
+        file_processor.set_callback(listener_callback);
     }
 
     void success_lifecycle(const std::string& filename, const std::string& file_content) {
@@ -38,11 +41,9 @@ protected:
             .WillOnce(Return(return_immediately(
                 RequestSerializer::serialize_send_request(filename, filesize))));
     }
-    void immitate_user_confirmation([[maybe_unused]] const std::string& filename, [[maybe_unused]] size_t filesize, [[maybe_unused]] bool is_confirming) {
-        #if 0
-        EXPECT_CALL(*callback_mock, verify_file(filename, filesize))
+    void immitate_user_confirmation(const std::string& filename, size_t filesize, bool is_confirming) {
+        EXPECT_CALL(*listener_callback, verify_file(filename, filesize))
             .WillOnce(Return(is_confirming));
-        #endif
     }
     void check_response_sending(const std::string& filename) {
         EXPECT_CALL(*socket_mock, write(RequestSerializer::serialize_send_permission(filename)))
@@ -59,11 +60,11 @@ protected:
             });
     }
     void check_progressbar_callbacks() {
-        EXPECT_CALL(*callback_mock, set_progressbar(::testing::_))
+        EXPECT_CALL(*network_callback, set_progressbar(::testing::_))
             .Times(::testing::AtLeast(1));
     }
     void check_file_transfered_callback() {
-        EXPECT_CALL(*callback_mock, file_transfered());
+        EXPECT_CALL(*network_callback, file_transfered());
     }
     void run_read_file() {
         net::io_context context;
@@ -86,7 +87,7 @@ protected:
     void check_connection_aborted_callback() {
         EXPECT_CALL(*socket_mock, get_remote_endpoint())
             .WillOnce(Return(SocketManager::Endpoint{TEST_LOCADDR, TEST_PORT}));
-        EXPECT_CALL(*callback_mock, connection_aborted(TEST_LOCADDR, TEST_PORT));
+        EXPECT_CALL(*network_callback, connection_aborted(TEST_LOCADDR, TEST_PORT));
     }
 
     void assert_filesize(size_t filesize) {
@@ -97,7 +98,8 @@ protected:
     }
 
     std::shared_ptr<SocketManagerMock> socket_mock;
-    std::shared_ptr<presenter::test::GeneralPresenterCallbackMock> callback_mock;
+    std::shared_ptr<presenter::test::NetworkStatusCallbackMock> network_callback;
+    std::shared_ptr<presenter::test::ListenerCallbackMock> listener_callback;
     FileProcessorImpl file_processor;
 };
 

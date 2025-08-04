@@ -10,6 +10,8 @@ namespace model {
 /// Implementation for \ref FileProcessor using \ref SocketManager .
 class FileProcessorImpl : public FileProcessor {
 public:
+    using NetworkStatusCallback::set_callback;
+    using ListenerCallback::set_callback;
     using SocketManagerPtr = std::shared_ptr<SocketManager>;
     /*
     * \param socket_manager provided \ref SocketManager pointer 

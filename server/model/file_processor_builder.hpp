@@ -18,8 +18,8 @@ public:
     virtual ~FileProcessorBuilder() = default;
 
     virtual std::shared_ptr<FileProcessor> create_file_processor(
-        NetworkCallback::Callback network_callback,
-        FileVerifyCallback::Callback file_callback,
+        NetworkStatusCallback::Callback network_callback,
+        ListenerCallback::Callback file_callback,
         SocketManagerPtr socket) = 0;
 };
 

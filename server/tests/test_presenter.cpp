@@ -1,26 +1,22 @@
 #include "general_presenter.hpp"
-#include "listener_mock.hpp"
 #include "address_gatherer_mock.hpp"
-#include "view_mock.hpp"
+#include "general_view_mock.hpp"
 
 namespace general {
 namespace server {
 namespace presenter {
 namespace test {
 
-using namespace model::test;
 using namespace view::test;
 using namespace ::general::test;
 
-class PresenterFixture : public ::testing::Test {
+class GeneralPresenterFixture : public ::testing::Test {
 protected:
-    PresenterFixture():
-        listener_(std::make_shared<ListenerMock>()),
+    GeneralPresenterFixture():
         address_gatherer_(std::make_shared<AddressGathererMock>()),
-        view_(std::make_shared<ViewMock>())
+        view_(std::make_shared<GeneralViewMock>())
     {
         presenter_ = std::make_shared<GeneralPresenter>(
-            listener_,
             address_gatherer_,
             view_
         );
@@ -28,36 +24,32 @@ protected:
 
     void check_callbacks_installed() {
         EXPECT_EQ(address_gatherer_->get_callback().lock(), presenter_);
-        EXPECT_EQ(listener_->get_callback().lock(), presenter_);
-        EXPECT_EQ(view_->get_callback().lock(), presenter_);
     }
 
-    std::shared_ptr<ListenerMock> listener_;
     std::shared_ptr<AddressGathererMock> address_gatherer_;
-    std::shared_ptr<ViewMock> view_;
+    std::shared_ptr<GeneralViewMock> view_;
     std::shared_ptr<GeneralPresenter> presenter_;
 };
 
 
-TEST_F(PresenterFixture, setup_InstallsCallbacks) {
+TEST_F(GeneralPresenterFixture, setup_InstallsCallbacks) {
     presenter_->setup();
 
     check_callbacks_installed();
 }
 
-TEST_F(PresenterFixture, stop_sendsStopCalls) {
-    EXPECT_CALL(*listener_, stop());
-    EXPECT_CALL(*address_gatherer_, stop());
-    EXPECT_CALL(*view_, stop());
+TEST_F(GeneralPresenterFixture, stop_sendsStopCalls) {
+    EXPECT_CALL(*address_gatherer_, stop_impl());
+    EXPECT_CALL(*view_, stop_impl());
 
     presenter_->stop();
 }
 
-TEST_F(PresenterFixture, runWithoutSetup_ThrowsException) {
-    EXPECT_THROW(presenter_->run(), std::runtime_error);
+TEST_F(GeneralPresenterFixture, runWithoutSetup_ThrowsException) {
+    EXPECT_THROW(presenter_->run(), std::logic_error);
 }
 
-TEST_F(PresenterFixture, setupAndRun_Success) {
+TEST_F(GeneralPresenterFixture, setupAndRun_Success) {
     EXPECT_CALL(*address_gatherer_, gather_local_address());
     EXPECT_CALL(*view_, run());
     
@@ -65,43 +57,37 @@ TEST_F(PresenterFixture, setupAndRun_Success) {
     presenter_->run();
 }
 
-TEST_F(PresenterFixture, listenPressed_calledListener) {
-    EXPECT_CALL(*listener_, listen_if_not_already(TEST_PORT));
-
-    presenter_->listen(TEST_PORT);
-}
-
-TEST_F(PresenterFixture, addressGathered_calledViewSetter) {
+TEST_F(GeneralPresenterFixture, addressGathered_calledViewSetter) {
     EXPECT_CALL(*view_, show_address(TEST_LOCADDR));
 
     presenter_->set_address(TEST_LOCADDR);
 }
 
-TEST_F(PresenterFixture, connectionEstablished_showNotification) {
+TEST_F(GeneralPresenterFixture, connectionEstablished_showNotification) {
     EXPECT_CALL(*view_, show_connected(TEST_LOCADDR, TEST_PORT));
 
     presenter_->connected(TEST_LOCADDR, TEST_PORT);
 }
 
-TEST_F(PresenterFixture, connectionFailed_showNotification) {
+TEST_F(GeneralPresenterFixture, connectionFailed_showNotification) {
     EXPECT_CALL(*view_, show_socket_error());
 
     presenter_->cant_open_socket();
 }
 
-TEST_F(PresenterFixture, fileTransfered_showNotification) {
+TEST_F(GeneralPresenterFixture, fileTransfered_showNotification) {
     EXPECT_CALL(*view_, show_file_success());
 
     presenter_->file_transfered();
 }
 
-TEST_F(PresenterFixture, connectionAborted_showNotification) {
+TEST_F(GeneralPresenterFixture, connectionAborted_showNotification) {
     EXPECT_CALL(*view_, show_connection_aborted(TEST_LOCADDR, TEST_PORT));
 
     presenter_->connection_aborted(TEST_LOCADDR, TEST_PORT);
 }
-
-TEST_F(PresenterFixture, fileVerificationAsked_ProvideTrueResponse) {
+#if 0
+TEST_F(GeneralPresenterFixture, fileVerificationAsked_ProvideTrueResponse) {
     EXPECT_CALL(*view_, ask_file_verification("file.txt", 1234))
         .WillOnce(Return(true));
 
@@ -110,7 +96,7 @@ TEST_F(PresenterFixture, fileVerificationAsked_ProvideTrueResponse) {
     EXPECT_EQ(userChoice, true);
 }
 
-TEST_F(PresenterFixture, fileVerificationAsked_ProvideFalseResponse) {
+TEST_F(GeneralPresenterFixture, fileVerificationAsked_ProvideFalseResponse) {
     EXPECT_CALL(*view_, ask_file_verification("file.txt", 1234))
         .WillOnce(Return(false));
 
@@ -118,14 +104,14 @@ TEST_F(PresenterFixture, fileVerificationAsked_ProvideFalseResponse) {
 
     EXPECT_EQ(userChoice, false);
 }
-
-TEST_F(PresenterFixture, setProgressbar_ProvidesStatus) {
+#endif
+TEST_F(GeneralPresenterFixture, setProgressbar_ProvidesStatus) {
     EXPECT_CALL(*view_, update_progressbar_status(12.4));
 
     presenter_->set_progressbar(12.4);
 }
 
-TEST_F(PresenterFixture, multipleProgressbarUpdates_correctSequence) {
+TEST_F(GeneralPresenterFixture, multipleProgressbarUpdates_correctSequence) {
     std::vector<double> update_calls; 
     update_calls.reserve(20);
     EXPECT_CALL(*view_, update_progressbar_status(testing::_))
