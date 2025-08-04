@@ -4,15 +4,15 @@ namespace general {
 namespace server {
 namespace presenter {
 
-ListenerPresenter::ListenerPresenter(GeneralPresenterPtr general_presenter, ListenerPtr listener, ViewPtr view) :
-    general_presenter_{general_presenter}, listener_{listener}, view_{view}
+ListenerPresenter::ListenerPresenter(NetworkStatusCallbackPtr network_callback, ListenerPtr listener, ViewPtr view) :
+    network_callback_{network_callback}, listener_{listener}, view_{view}
 {}
 
 void ListenerPresenter::setup() {
     view_->set_callback(shared_from_this());
     view_->setup();
     listener_->set_callback(shared_from_this());
-    listener_->set_callback(general_presenter_);
+    listener_->set_callback(network_callback_);
 }
 void ListenerPresenter::stop_impl() {
     listener_->stop();

@@ -1,7 +1,8 @@
 set(SOURCES 
     main.cpp
     test_file_processor.cpp
-    test_presenter.cpp
+    test_general_presenter.cpp
+    test_listener_presenter.cpp
     test_listener.cpp
 )
 

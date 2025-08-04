@@ -1,5 +1,4 @@
 #pragma once
-#include "general_presenter.hpp"
 #include "listener.hpp"
 #include "listener_view.hpp"
 #include "listener_view_callback.hpp"
@@ -15,11 +14,11 @@ class ListenerPresenter final :
     public Stoppable,
     public std::enable_shared_from_this<ListenerPresenter> {
 public:
-    using GeneralPresenterPtr = std::shared_ptr<GeneralPresenter>;
+    using NetworkStatusCallbackPtr = std::shared_ptr<NetworkStatusCallback>;
     using ListenerPtr = std::shared_ptr<model::Listener>;
     using ViewPtr = std::shared_ptr<view::ListenerView>;
 
-    ListenerPresenter(GeneralPresenterPtr general, ListenerPtr listener, ViewPtr view);
+    ListenerPresenter(NetworkStatusCallbackPtr network_callback, ListenerPtr listener, ViewPtr view);
 
     void setup();
     void listen(Port port) override;
@@ -28,7 +27,7 @@ public:
 private:
     void stop_impl() override;
 
-    GeneralPresenterPtr general_presenter_;
+    NetworkStatusCallbackPtr network_callback_;
     ListenerPtr listener_;
     ViewPtr view_;
 };

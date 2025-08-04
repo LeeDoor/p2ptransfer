@@ -6,11 +6,11 @@ namespace server {
 namespace view {
 namespace test {
 
-/// Mock implementation for View.
-class ListenerViewMock: public ListenerView {
+/// Mock implementation for Listener View.
+class ListenerViewMock : public ListenerView {
 public:
-    MOCK_METHOD(int, setup, (), (override));
-    MOCK_METHOD(int, ask_file_verification, (const Filename& filename, Filesize filesize), (override));
+    MOCK_METHOD(void, setup, (), (override));
+    MOCK_METHOD(bool, ask_file_verification, (const Filename& filename, Filesize filesize), (override));
     std::weak_ptr<ListenerViewCallback> get_callback() {
         return callback_;
     }
