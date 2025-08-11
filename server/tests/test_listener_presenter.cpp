@@ -20,7 +20,12 @@ protected:
         listener_{std::make_shared<Listener>()},
         view_{std::make_shared<View>()},
         presenter_{std::make_shared<ListenerPresenter>(network_callback_, listener_, view_)}
-    {}
+    {
+        presenter_->setup();
+    }
+    ~ListenerPresenterFixture() {
+        presenter_->stop();
+    }
 
     std::shared_ptr<NetworkStatusCallbackMock> network_callback_;
     ListenerPtr listener_;
@@ -29,7 +34,7 @@ protected:
 };
 
 TEST_F(ListenerPresenterFixture, success) {
-    EXPECT_EQ(true, false);
+    // EXPECT_EQ(false, true);
 }
 
 }

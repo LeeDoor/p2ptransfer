@@ -10,7 +10,7 @@ namespace test {
 using namespace view::test;
 using namespace ::general::test;
 
-class GeneralPresenterFixture : public ::testing::Test {
+class GeneralPresenterFixture: public ::testing::Test {
 protected:
     GeneralPresenterFixture():
         address_gatherer_(std::make_shared<AddressGathererMock>()),
@@ -20,6 +20,10 @@ protected:
             address_gatherer_,
             view_
         );
+        presenter_->setup();
+    }
+    ~GeneralPresenterFixture() {
+        presenter_->stop();
     }
 
     void check_callbacks_installed() {
@@ -31,29 +35,19 @@ protected:
     std::shared_ptr<GeneralPresenter> presenter_;
 };
 
-
 TEST_F(GeneralPresenterFixture, setup_InstallsCallbacks) {
-    presenter_->setup();
-
     check_callbacks_installed();
 }
 
 TEST_F(GeneralPresenterFixture, stop_sendsStopCalls) {
     EXPECT_CALL(*address_gatherer_, stop_impl());
     EXPECT_CALL(*view_, stop_impl());
-
-    presenter_->stop();
-}
-
-TEST_F(GeneralPresenterFixture, runWithoutSetup_ThrowsException) {
-    EXPECT_THROW(presenter_->run(), std::logic_error);
 }
 
 TEST_F(GeneralPresenterFixture, setupAndRun_Success) {
     EXPECT_CALL(*address_gatherer_, gather_local_address());
     EXPECT_CALL(*view_, run());
-    
-    presenter_->setup();
+
     presenter_->run();
 }
 

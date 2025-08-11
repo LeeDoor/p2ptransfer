@@ -1,4 +1,5 @@
 #pragma once
+#include "logger.hpp"
 
 namespace general {
 
@@ -19,7 +20,9 @@ public:
     {}
     virtual ~WithCallback() {
         if(!initialized_) {
-            std::cerr << "\n\nWARNING: Callback is not set to somebody. Check the stack trace.\n\n";
+            std::cerr << Logger::ERROR_COLOR << "Callback is not set to somebody: " 
+                << Logger::CLEAR_COLOR << std::endl
+                << boost::stacktrace::stacktrace() << std::endl;;
 #ifdef TESTING
             // Forcing tests to fail if forgot to initialize the callback
             std::terminate();

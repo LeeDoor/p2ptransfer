@@ -35,6 +35,9 @@ protected:
 
         expect_remote_endpoint_as_required();
     }
+    ~ListenerFixture() {
+        listener_->stop();
+    }
 
     void expect_remote_endpoint_as_required() {
         EXPECT_CALL(*socket_manager_, get_remote_endpoint())
@@ -61,6 +64,10 @@ protected:
     void check_failure_callback() {
         EXPECT_CALL(*network_callback_, cant_open_socket());
     }
+    void stub_file_processor_callback_setup() {
+        file_processor_->NetworkStatusCallback::set_callback(nullptr);
+        file_processor_->ListenerCallback::set_callback(nullptr);
+    }
 
     std::shared_ptr<SocketManagerMock> socket_manager_;
     std::shared_ptr<SocketManagerMockBuilder> socket_builder_;
@@ -73,6 +80,7 @@ protected:
 };
 
 TEST_F(ListenerFixture, ifListeningAlready_doNothing) {
+    stub_file_processor_callback_setup();
     EXPECT_CALL(*thread_wrapper_, is_running())
         .WillOnce(Return(true));
 
@@ -89,6 +97,7 @@ TEST_F(ListenerFixture, ifNotListening_connectAndReadFile) {
 }
 
 TEST_F(ListenerFixture, connectingAttemptThrewException_HandleWithoutRethrow) {
+    stub_file_processor_callback_setup();
     check_thread_wrapper_executing();
     EXPECT_CALL(*socket_builder_, mock_tcp_listening_at(TEST_PORT))
         .WillOnce([]() {
@@ -109,12 +118,6 @@ TEST_F(ListenerFixture, FileProcessorThrew_HandleWithoutRethrow) {
     check_connection_success_callback();
 
     EXPECT_NO_THROW(listener_->listen_if_not_already(TEST_PORT));
-}
-
-TEST_F(ListenerFixture, stoppingWhileThreadOff_doNothing) {
-    EXPECT_CALL(*thread_wrapper_, join());
-
-    listener_->stop();
 }
 
 }

@@ -23,6 +23,10 @@ protected:
         address_gatherer_->set_callback(callback_);
     }
 
+    ~AddressGathererFixture() {
+        address_gatherer_->stop();
+    }
+
     void check_thread_execute() {
         EXPECT_CALL(*thread_wrapper_, is_running())
             .WillOnce(Return(false));
@@ -59,8 +63,6 @@ TEST_F(AddressGathererFixture, gatheringAddress_success) {
 
 TEST_F(AddressGathererFixture, stopped_joinThread) {
     EXPECT_CALL(*thread_wrapper_, join());
-
-    address_gatherer_->stop();
 }
 
 TEST_F(AddressGathererFixture, gatheringTwice_shouldThrow) {

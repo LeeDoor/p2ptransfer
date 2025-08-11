@@ -10,6 +10,7 @@ namespace test {
 class ListenerViewMock : public ListenerView {
 public:
     MOCK_METHOD(void, setup, (), (override));
+    MOCK_METHOD(void, stop_impl, (), (override));
     MOCK_METHOD(bool, ask_file_verification, (const Filename& filename, Filesize filesize), (override));
     std::weak_ptr<ListenerViewCallback> get_callback() {
         return callback_;
