@@ -12,8 +12,6 @@ ListenerViewCLI::ListenerViewCLI(std::shared_ptr<GeneralViewCLI> view) :
 void ListenerViewCLI::setup() {
     general_view_->subscribe_listen([self = shared_from_this()]{ self->read_port_and_listen(); });
 }
-void ListenerViewCLI::stop_impl() {}
-
 void ListenerViewCLI::read_port_and_listen() {
     std::cout << 
         "Ready to listen for connections\n"
@@ -30,7 +28,7 @@ bool ListenerViewCLI::ask_file_verification(const Filename& filename, Filesize f
         << "\" (" << FilesizeFormatter::to_string(filesize) << ")? [y/n]: " << std::endl;
     char input = '\0';
     do {
-        std::cin >> input;
+        std::cin.getline(&input, 1);
     } while (input != 'y' || input != 'n' || input != 'Y' || input != 'N');
     return input == 'y' || input == 'Y';;
 }

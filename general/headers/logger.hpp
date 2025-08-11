@@ -10,6 +10,11 @@ public:
         return std::osyncstream(std::cout);
 #endif
     }
+    static void log_stacktrace(const std::string& err_header) {
+        log() 
+            << ERROR_COLOR << err_header << CLEAR_COLOR << std::endl
+            << boost::stacktrace::stacktrace() << std::endl;
+    }
     static void progressbar_init() {
         log() << std::setprecision(5) << std::right;
     }

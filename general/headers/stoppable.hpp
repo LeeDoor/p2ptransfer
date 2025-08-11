@@ -5,10 +5,17 @@ namespace general {
 
 class Stoppable {
 public:
+    Stoppable() = default;
+    Stoppable(const Stoppable& other) = default;
+    Stoppable(Stoppable&& other) {
+        stopped_ = other.stopped_;
+        other.stopped_ = true;
+    }
+    Stoppable& operator= (const Stoppable& other) = default;
+    Stoppable& operator= (Stoppable&& other) = default;
     virtual ~Stoppable() {
         if(!stopped_) {
-            std::cerr << Logger::ERROR_COLOR << "Object not stopped correctly:" << Logger::CLEAR_COLOR << "\n"
-                << boost::stacktrace::stacktrace() << std::endl;
+            Logger::log_stacktrace("Object not stopped correctly");
 #ifdef TESTING 
             std::terminate();   
 #endif
@@ -16,12 +23,12 @@ public:
     }
 
     void stop() {
-#ifdef TESTING 
         if(stopped_) {
-            std::cerr << "Object stopped twice.\n";
+            Logger::log_stacktrace("Object stopped twice");
+#ifdef TESTING 
             std::terminate();   
-        }
 #endif
+        }
         stop_impl();
         stopped_ = true;
     }

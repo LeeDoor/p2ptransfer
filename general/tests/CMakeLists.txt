@@ -10,6 +10,7 @@ add_executable(general_tests
 target_link_libraries(general_tests PUBLIC server ${LINK_LIBRARIES} GTest::gtest_main GTest::gmock)
 target_precompile_headers(general_tests REUSE_FROM base)
 target_include_directories(general_tests PUBLIC ${INCLUDE_DIRECTORIES})
+target_compile_definitions(general_tests PUBLIC TESTING)
 if (UNIX)
     gtest_discover_tests(general_tests)
 endif()

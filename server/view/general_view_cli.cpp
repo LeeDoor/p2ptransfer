@@ -7,6 +7,7 @@ namespace view {
 int GeneralViewCLI::run() {
     notify_listen();
     while(is_running_);
+    std::raise(SIGINT);
     return 0;
 }
 

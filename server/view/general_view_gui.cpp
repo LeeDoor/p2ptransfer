@@ -40,9 +40,9 @@ int GeneralViewGUI::run() {
 
 void GeneralViewGUI::stop_impl() {
     if(auto application = application_.lock()) {
-        application->quit();
+        close();
     } else {
-        throw std::logic_error("application removed before ViewGUI::stop");
+        throw std::logic_error("application removed before ViewGUI::stop_impl");
     }
 }
 
@@ -102,7 +102,7 @@ void GeneralViewGUI::action_button_clicked() {
                 throw std::runtime_error(
                     "No file selected. Please drag your file to "
                     "this window or press the \"select file\" button");
-        //    callback()->transfer(get_port());
+            //    callback()->transfer(get_port());
         }
     } catch (const std::runtime_error& ex) {
         QMessageBox::warning(this, "Action error", ex.what());
@@ -188,7 +188,9 @@ void GeneralViewGUI::prepare_ui() {
 }
 
 void GeneralViewGUI::closeEvent([[maybe_unused]] QCloseEvent* e) {
-    std::raise(SIGINT);
+    if(e->spontaneous()) { // Cross X pressed
+        std::raise(SIGINT);
+    }
 }
 GeneralViewGUI::Action GeneralViewGUI::action() const {
     return action_;

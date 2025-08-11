@@ -16,7 +16,6 @@ void ListenerPresenter::setup() {
 }
 void ListenerPresenter::stop_impl() {
     listener_->stop();
-    view_->stop();
 }
 void ListenerPresenter::listen(Port port) {
     listener_->listen_if_not_already(port);

@@ -14,7 +14,7 @@ namespace view {
 * Provides the interface for the Listener module to
 * communicate with the user.
 */
-class ListenerView : public WithCallback<ListenerViewCallback>, public Stoppable {
+class ListenerView : public WithCallback<ListenerViewCallback> {
 public:
     /// Should be called immediately after initialization.
     virtual void setup() = 0;

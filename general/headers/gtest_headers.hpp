@@ -3,7 +3,6 @@
 #include <gmock/gmock.h>
 #define BOOST_STACKTRACE_USE_BACKTRACE
 #include <boost/stacktrace.hpp>
-#define TESTING GOOGLETEST_INCLUDE_GTEST_GTEST_H_
 
 namespace general {
 
