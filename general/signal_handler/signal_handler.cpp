@@ -14,6 +14,7 @@ void SignalHandler::handle_SIGINT(std::function<void()>&& stop_func) {
 void SignalHandler::handle_signal([[maybe_unused]] int signal) {
     stop_func_();
     Logger::log() << "SIGINT successfully handled\n";
+    std::exit(0);
 }
 
 }

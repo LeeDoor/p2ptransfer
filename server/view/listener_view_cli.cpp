@@ -28,7 +28,7 @@ bool ListenerViewCLI::ask_file_verification(const Filename& filename, Filesize f
         << "\" (" << FilesizeFormatter::to_string(filesize) << ")? [y/n]: " << std::endl;
     char input = '\0';
     do {
-        std::cin.getline(&input, 1);
+        std::cin >> input;
     } while (input != 'y' || input != 'n' || input != 'Y' || input != 'N');
     return input == 'y' || input == 'Y';;
 }
