@@ -26,17 +26,13 @@ protected:
         presenter_->stop();
     }
 
-    void check_callbacks_installed() {
-        EXPECT_EQ(address_gatherer_->get_callback().lock(), presenter_);
-    }
-
     std::shared_ptr<AddressGathererMock> address_gatherer_;
     std::shared_ptr<GeneralViewMock> view_;
     std::shared_ptr<GeneralPresenter> presenter_;
 };
 
 TEST_F(GeneralPresenterFixture, setup_InstallsCallbacks) {
-    check_callbacks_installed();
+    EXPECT_EQ(address_gatherer_->get_callback().lock(), presenter_);
 }
 
 TEST_F(GeneralPresenterFixture, stop_sendsStopCalls) {
@@ -80,25 +76,6 @@ TEST_F(GeneralPresenterFixture, connectionAborted_showNotification) {
 
     presenter_->connection_aborted(TEST_LOCADDR, TEST_PORT);
 }
-#if 0
-TEST_F(GeneralPresenterFixture, fileVerificationAsked_ProvideTrueResponse) {
-    EXPECT_CALL(*view_, ask_file_verification("file.txt", 1234))
-        .WillOnce(Return(true));
-
-    bool userChoice = presenter_->verify_file("file.txt", 1234);
-
-    EXPECT_EQ(userChoice, true);
-}
-
-TEST_F(GeneralPresenterFixture, fileVerificationAsked_ProvideFalseResponse) {
-    EXPECT_CALL(*view_, ask_file_verification("file.txt", 1234))
-        .WillOnce(Return(false));
-
-    bool userChoice = presenter_->verify_file("file.txt", 1234);
-
-    EXPECT_EQ(userChoice, false);
-}
-#endif
 TEST_F(GeneralPresenterFixture, setProgressbar_ProvidesStatus) {
     EXPECT_CALL(*view_, update_progressbar_status(12.4));
 
