@@ -20,9 +20,7 @@ public:
     {}
     virtual ~WithCallback() {
         if(!initialized_) {
-            std::cerr << Logger::ERROR_COLOR << "Callback is not set to somebody: " 
-                << Logger::CLEAR_COLOR << std::endl
-                << boost::stacktrace::stacktrace() << std::endl;;
+            Logger::log_stacktrace("Callback is not set here:");
 #ifdef TESTING
             // Forcing tests to fail if forgot to initialize the callback
             std::terminate();
@@ -42,10 +40,12 @@ protected:
     std::shared_ptr<CallbackType> callback() {
         if(auto callback = callback_.lock())
             return callback;
-        throw std::logic_error("callback is dead");
+        Logger::log_stacktrace("Callback is used before setting:");
+        throw std::logic_error("callback is not set");
     }
 
     std::weak_ptr<CallbackType> callback_;
+private:
     bool initialized_;
 };
 
