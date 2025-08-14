@@ -1,5 +1,5 @@
 #pragma once
-namespace general {
+namespace p2ptransfer {
 
 using SerializedText = std::string;
 using Filename = std::string;

@@ -1,7 +1,7 @@
 #include "listener_view_gui.hpp"
 #include "filesize_formatter.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace server {
 namespace view {
 ListenerViewGUI::ListenerViewGUI(std::shared_ptr<GeneralViewGUI> view) :

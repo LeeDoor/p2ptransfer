@@ -1,7 +1,7 @@
 #pragma once
 #include "file_processor.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace server {
 namespace model {
 namespace test {

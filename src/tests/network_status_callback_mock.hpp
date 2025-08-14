@@ -3,7 +3,7 @@
 #include "port.hpp"
 #include "network_status_callback.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace server {
 namespace presenter {
 namespace test {

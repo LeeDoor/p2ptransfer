@@ -2,7 +2,7 @@
 #include "address.hpp"
 #include "port.hpp"
 
-namespace general {
+namespace p2ptransfer {
 
 /*!
 * \brief SocketManager interface for network communication.

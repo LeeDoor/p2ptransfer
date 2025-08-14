@@ -3,7 +3,7 @@
 #include "listener_view_mock.hpp"
 #include "network_status_callback_mock.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace server {
 namespace presenter {
 namespace test {

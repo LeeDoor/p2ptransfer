@@ -1,6 +1,6 @@
 #include "address_gatherer_impl.hpp"
 
-namespace general {
+namespace p2ptransfer {
 
 AddressGathererImpl::AddressGathererImpl(
     ContextPtr context,

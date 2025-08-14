@@ -1,7 +1,7 @@
 #pragma once
 #include "socket_manager.hpp"
 
-namespace general {
+namespace p2ptransfer {
 
 /*!
 * \brief socket builder for immediate connection

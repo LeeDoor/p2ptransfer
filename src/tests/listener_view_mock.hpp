@@ -1,7 +1,7 @@
 #pragma once
 #include "listener_view.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace server {
 namespace view {
 namespace test {

@@ -2,7 +2,7 @@
 #include "ui_view_gui.h"
 
 
-namespace general {
+namespace p2ptransfer {
 namespace client {
 namespace view {
 

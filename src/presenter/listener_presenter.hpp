@@ -4,7 +4,7 @@
 #include "listener_view_callback.hpp"
 #include "listener_callback.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace server {
 namespace presenter {
 

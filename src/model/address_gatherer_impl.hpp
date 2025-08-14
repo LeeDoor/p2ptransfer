@@ -3,7 +3,7 @@
 #include "thread_wrapper.hpp"
 #include "socket_manager_builder.hpp"
 
-namespace general {
+namespace p2ptransfer {
 
 /*!
 * \brief Implements \ref AddressGatherer interface.

@@ -1,7 +1,7 @@
 #pragma once
 #include "socket_manager.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace test {
 
 /// Mocks the interface of \ref SocketManager.

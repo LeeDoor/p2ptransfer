@@ -2,7 +2,7 @@
 #include "file_processor_builder.hpp"
 #include "file_processor_impl.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace server {
 namespace model {
 

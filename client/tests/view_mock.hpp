@@ -1,7 +1,7 @@
 #pragma once
 #include "client_view.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace client {
 namespace view {
 namespace test {

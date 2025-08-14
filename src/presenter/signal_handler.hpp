@@ -1,6 +1,6 @@
 #pragma once
 
-namespace general {
+namespace p2ptransfer {
 
 class SignalHandler {
 public:

@@ -2,7 +2,7 @@
 #include "general_view_gui.hpp"
 #include "listener_view.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace server {
 namespace view {
 

@@ -4,7 +4,7 @@
 #include "signal_handler.hpp"
 #include "general_presenter.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace server {
 
 template<typename GeneralViewType, typename ListenerViewType>

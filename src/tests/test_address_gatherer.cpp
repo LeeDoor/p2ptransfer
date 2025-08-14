@@ -4,7 +4,7 @@
 #include "socket_manager_mock_builder.hpp"
 #include "thread_wrapper_mock.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace test {
 
 class AddressGathererFixture : public ::testing::Test {

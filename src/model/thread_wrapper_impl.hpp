@@ -1,7 +1,7 @@
 #pragma once
 #include "thread_wrapper.hpp"
 
-namespace general {
+namespace p2ptransfer {
 
 /*!
 * \brief Implementation for \ref ThreadWrapper .

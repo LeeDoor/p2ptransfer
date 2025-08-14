@@ -1,6 +1,6 @@
 #include "thread_wrapper_impl.hpp"    
 
-namespace general {
+namespace p2ptransfer {
 
 ThreadWrapperImpl::ThreadWrapperImpl() :
     is_running_(false),

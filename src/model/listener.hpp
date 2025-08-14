@@ -3,7 +3,7 @@
 #include "port.hpp"
 #include "stoppable.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace server {
 namespace model {
 

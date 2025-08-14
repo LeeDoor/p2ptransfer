@@ -1,5 +1,5 @@
 #pragma once
-namespace general {
+namespace p2ptransfer {
 
 struct SendRequest {
     std::string filename;

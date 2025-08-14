@@ -4,7 +4,7 @@
 #include "address_gatherer_callback.hpp"
 #include "stoppable.hpp"
 
-namespace general {
+namespace p2ptransfer {
 
 /*!
 * \brief class for gathering LAN address.

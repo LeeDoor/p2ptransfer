@@ -1,6 +1,6 @@
 #include "general_view_cli.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace server {
 namespace view {
 

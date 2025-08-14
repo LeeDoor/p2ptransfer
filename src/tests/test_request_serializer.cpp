@@ -1,7 +1,7 @@
 #include "request_serializer.hpp"
 #include "request_structures.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace test {
 
 TEST(RequestSerializer, serializeRequest_defaultData) {

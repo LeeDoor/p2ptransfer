@@ -2,7 +2,7 @@
 #include "socket_manager_builder.hpp"
 #include "socket_manager_impl.hpp"
 
-namespace general {
+namespace p2ptransfer {
 
 /*!
 * \brief Implementation of @ref SocketManagerBuilder class

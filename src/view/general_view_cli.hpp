@@ -1,7 +1,7 @@
 #pragma once
 #include "general_view.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace server {
 namespace view {
 

@@ -1,5 +1,5 @@
 #pragma once
-namespace general {
+namespace p2ptransfer {
 
 using HeaderType = std::string_view;
 // generates constexpr string and calculates it's size at compile time.

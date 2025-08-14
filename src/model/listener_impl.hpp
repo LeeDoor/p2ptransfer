@@ -4,7 +4,7 @@
 #include "socket_manager_builder.hpp"
 #include "thread_wrapper.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace server {
 namespace model {
 

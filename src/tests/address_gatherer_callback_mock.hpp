@@ -1,7 +1,7 @@
 #pragma once
 #include "address_gatherer_callback.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace test {
 
 class AddressGathererCallbackMock : public AddressGathererCallback {

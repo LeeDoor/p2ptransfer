@@ -1,7 +1,7 @@
 #pragma once
 
 #include "address.hpp"
-namespace general {
+namespace p2ptransfer {
 
 /*!
 * \brief Callback interface for \ref AddressGatherer users.

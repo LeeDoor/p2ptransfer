@@ -1,6 +1,6 @@
 #include "request_deserializer.hpp"
 
-namespace general {
+namespace p2ptransfer {
 
 const std::unordered_map<HeaderType, RequestMethod> RequestDeserializer::request_methods_ = {
         { REQUEST_HEADER, RequestMethod::REQUEST },

@@ -1,5 +1,5 @@
 #pragma once
-namespace general {
+namespace p2ptransfer {
 
 class Logger {
 public:

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace general {
+namespace p2ptransfer {
 
 /// \brief Thread execution manager to detach applications on other thread.
 class ThreadWrapper {

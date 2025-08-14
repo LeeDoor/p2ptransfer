@@ -1,6 +1,6 @@
 #include "request_deserializer.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace test {
 
 TEST(RequestDeserializer, SuccessSerializing_avg) {

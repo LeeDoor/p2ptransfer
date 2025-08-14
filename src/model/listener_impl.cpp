@@ -1,7 +1,7 @@
 #include "listener_impl.hpp"
 #include "logger.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace server {
 namespace model {
 

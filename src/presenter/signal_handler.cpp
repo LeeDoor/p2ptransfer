@@ -1,7 +1,7 @@
 #include "signal_handler.hpp"
 #include "logger.hpp"
 
-namespace general {
+namespace p2ptransfer {
 
 std::function<void()> SignalHandler::stop_func_;
 

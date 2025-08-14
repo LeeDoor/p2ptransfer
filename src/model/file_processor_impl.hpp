@@ -3,7 +3,7 @@
 #include "request_structures.hpp"
 #include "socket_manager.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace server {
 namespace model {
 

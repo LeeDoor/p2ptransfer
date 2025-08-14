@@ -3,7 +3,7 @@
 #include <gmock/gmock.h>
 #define BOOST_STACKTRACE_USE_BACKTRACE
 
-namespace general {
+namespace p2ptransfer {
 
 using ::testing::Return;
 

@@ -3,7 +3,7 @@
 #include "general_view_gui.hpp"
 #include "listener_view_gui.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace server {
 
 class GUIApplication {

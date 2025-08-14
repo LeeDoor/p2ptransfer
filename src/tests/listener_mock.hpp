@@ -1,7 +1,7 @@
 #pragma once
 #include "listener.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace server {
 namespace model {
 namespace test {

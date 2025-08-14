@@ -4,7 +4,7 @@
 #include "request_structures.hpp"
 #include "listener_view_callback.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace server {
 namespace view {
 

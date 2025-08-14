@@ -2,7 +2,7 @@
 #include "file_processor.hpp"
 #include "socket_manager.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace server {
 namespace model {
 

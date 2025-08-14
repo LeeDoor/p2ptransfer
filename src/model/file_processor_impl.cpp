@@ -2,7 +2,7 @@
 #include "request_deserializer.hpp"
 #include "request_serializer.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace server {
 namespace model {
 

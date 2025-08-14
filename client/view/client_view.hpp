@@ -2,11 +2,11 @@
 #include "client_view_callback.hpp"
 #include "view.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace client {
 namespace view {
 
-class ClientView : public general::view::View<ClientViewCallback> {
+class ClientView : public p2ptransfer::view::View<ClientViewCallback> {
 public:
     virtual ~ClientView() = default;
 

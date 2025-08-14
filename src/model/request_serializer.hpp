@@ -1,7 +1,7 @@
 #pragma once
 #include "request_structures.hpp"
 
-namespace general {
+namespace p2ptransfer {
 
 class RequestSerializer {
 public:

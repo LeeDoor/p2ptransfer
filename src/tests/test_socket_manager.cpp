@@ -2,7 +2,7 @@
 #include "socket_manager_impl_builder.hpp"
 #include "thread_wrapper_impl.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace test {
 
 template<typename Func>

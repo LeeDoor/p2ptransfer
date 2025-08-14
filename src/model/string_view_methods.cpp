@@ -1,6 +1,6 @@
 #include "string_view_methods.hpp"
 
-namespace general {
+namespace p2ptransfer {
 
 template<>
 size_t SVMethods::deserialize_value(std::string_view line_sv) {

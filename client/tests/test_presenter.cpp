@@ -1,7 +1,7 @@
 #include "client_presenter.hpp"
 #include "view_mock.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace client {
 namespace presenter {
 namespace test {

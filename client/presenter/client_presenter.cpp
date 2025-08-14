@@ -1,6 +1,6 @@
 #include "client_presenter.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace client {
 namespace presenter {
 

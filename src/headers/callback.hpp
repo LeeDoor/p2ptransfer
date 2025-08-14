@@ -1,7 +1,7 @@
 #pragma once
 #include "logger.hpp"
 
-namespace general {
+namespace p2ptransfer {
 
 /*!
 * \brief provides logic for keeping and managing callback type.

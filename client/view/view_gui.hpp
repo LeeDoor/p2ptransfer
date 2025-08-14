@@ -5,7 +5,7 @@ namespace Ui {
 class ViewGUI;
 }
 
-namespace general {
+namespace p2ptransfer {
 namespace client {
 namespace view {
 

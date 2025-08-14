@@ -2,13 +2,13 @@
 #include "address_gatherer_mock.hpp"
 #include "general_view_mock.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace server {
 namespace presenter {
 namespace test {
 
 using namespace view::test;
-using namespace ::general::test;
+using namespace ::p2ptransfer::test;
 
 class GeneralPresenterFixture: public ::testing::Test {
 protected:

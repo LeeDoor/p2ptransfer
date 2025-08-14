@@ -4,7 +4,7 @@
 #include "network_status_callback.hpp"
 #include "general_view.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace server {
 namespace presenter {
 

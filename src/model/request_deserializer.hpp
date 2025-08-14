@@ -3,7 +3,7 @@
 #include "request_structures.hpp"
 #include "string_view_methods.hpp"
 
-namespace general {
+namespace p2ptransfer {
 
 class RequestDeserializer {
 public:

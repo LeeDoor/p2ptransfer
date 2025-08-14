@@ -2,7 +2,7 @@
 #include "client_presenter.hpp"
 
 int main(int argc, char** argv) {
-    using namespace general::client;
+    using namespace p2ptransfer::client;
     auto application = std::make_shared<QApplication>(argc, argv);
     auto presenter = std::make_shared<presenter::ServerPresenter>(
         std::make_shared<view::ViewGUI>(application)

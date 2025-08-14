@@ -4,11 +4,11 @@
 #include "client_view.hpp"
 #include "presenter.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace client {
 namespace presenter {
 
-class ClientPresenter : public general::presenter::Presenter<view::ClientViewCallback, view::ClientView>,
+class ClientPresenter : public p2ptransfer::presenter::Presenter<view::ClientViewCallback, view::ClientView>,
                   public std::enable_shared_from_this<ClientPresenter> {
 public:
     using ViewPtr = std::shared_ptr<view::ClientView>;

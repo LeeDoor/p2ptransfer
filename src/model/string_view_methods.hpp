@@ -1,6 +1,6 @@
 #pragma once
 
-namespace general {
+namespace p2ptransfer {
 
 template<typename T>
 concept Deserializable = requires(std::istringstream& is, T& v){

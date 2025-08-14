@@ -7,12 +7,12 @@
 #include "socket_manager_mock_builder.hpp"
 #include "thread_wrapper_mock.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace server {
 namespace model {
 namespace test {
 
-using namespace ::general::test;
+using namespace ::p2ptransfer::test;
 
 class ListenerFixture : public ::testing::Test {
 protected:

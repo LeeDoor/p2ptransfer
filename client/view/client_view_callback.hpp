@@ -4,11 +4,11 @@
 #include "request_structures.hpp"
 #include "view_callback.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace client {
 namespace view {
 
-class ClientViewCallback : public general::view::ViewCallback {
+class ClientViewCallback : public p2ptransfer::view::ViewCallback {
 public:
     virtual ~ClientViewCallback() = default;
 

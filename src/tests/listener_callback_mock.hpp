@@ -1,7 +1,7 @@
 #pragma once
 #include "listener_callback.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace server {
 namespace presenter {
 namespace test {

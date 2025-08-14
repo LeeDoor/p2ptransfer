@@ -1,7 +1,7 @@
 #include "general_view_gui.hpp"
 #include "ui_view_gui.h"
 
-namespace general {
+namespace p2ptransfer {
 namespace server {
 namespace view {
 

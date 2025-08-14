@@ -1,7 +1,7 @@
 #pragma once
 #include "socket_manager_builder.hpp"
 
-namespace general {
+namespace p2ptransfer {
 namespace test {
 
 /*!
