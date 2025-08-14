@@ -4,7 +4,6 @@
 #include "network_status_callback.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace model {
 
 /*!
@@ -24,6 +23,5 @@ public:
     virtual net::awaitable<void> try_read_file() = 0;
 };
 
-}
 }
 }

@@ -1,7 +1,6 @@
 #include "listener_presenter.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace presenter {
 
 ListenerPresenter::ListenerPresenter(NetworkStatusCallbackPtr network_callback, ListenerPtr listener, ViewPtr view) :
@@ -24,6 +23,5 @@ bool ListenerPresenter::verify_file(const Filename& filename, Filesize filesize)
     return view_->ask_file_verification(filename, filesize);
 }
 
-}
 }
 }

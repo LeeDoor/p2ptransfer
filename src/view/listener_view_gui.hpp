@@ -3,7 +3,6 @@
 #include "listener_view.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace view {
 
 class ListenerViewGUI : public QObject, public ListenerView {
@@ -20,6 +19,5 @@ private:
     std::shared_ptr<GeneralViewGUI> general_view_;
 };
 
-}
 }
 }

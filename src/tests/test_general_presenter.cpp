@@ -3,7 +3,6 @@
 #include "general_view_mock.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace presenter {
 namespace test {
 
@@ -100,7 +99,6 @@ TEST_F(GeneralPresenterFixture, multipleProgressbarUpdates_correctSequence) {
     }
 }
 
-}
 }
 }
 }

@@ -4,7 +4,6 @@
 #include "network_status_callback_mock.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace presenter {
 namespace test {
 
@@ -59,7 +58,6 @@ TEST_F(ListenerPresenterFixture, fileVerificationAsked_ProvideFalseResponse) {
     bool userChoice = presenter_->verify_file("file.txt", 1234);
 
     EXPECT_EQ(userChoice, false);
-}
 }
 }
 }

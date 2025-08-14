@@ -2,7 +2,6 @@
 #include "file_processor.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace model {
 namespace test {
 
@@ -12,7 +11,6 @@ public:
     MOCK_METHOD(net::awaitable<void>, try_read_file, (), (override));
 };
 
-}
 }
 }
 }

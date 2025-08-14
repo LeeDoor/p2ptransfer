@@ -4,7 +4,6 @@
 #include "port.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace view {
 
 /*!
@@ -36,6 +35,5 @@ public:
     virtual void show_connection_aborted(const Address& address, Port port) = 0;
 };
 
-}
 }
 }

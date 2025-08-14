@@ -3,7 +3,6 @@
 #include "listener_view.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace view {
 
 class ListenerViewCLI : public ListenerView, public std::enable_shared_from_this<ListenerViewCLI> {
@@ -19,6 +18,5 @@ private:
     std::shared_ptr<GeneralViewCLI> general_view_;
 };
 
-}
 }
 }

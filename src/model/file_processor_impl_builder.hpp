@@ -3,7 +3,6 @@
 #include "file_processor_impl.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace model {
 
 /// Implementation for \ref FileProcessorBuilder .
@@ -21,6 +20,5 @@ public:
     }
 };
 
-}
 }
 }

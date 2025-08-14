@@ -2,7 +2,6 @@
 #include "ui_view_gui.h"
 
 namespace p2ptransfer {
-namespace server {
 namespace view {
 
 GeneralViewGUI::GeneralViewGUI(std::shared_ptr<QApplication> application)
@@ -202,6 +201,5 @@ bool GeneralViewGUI::is_transfer() const {
     return action() == Transfer;
 }
 
-}
 }
 }

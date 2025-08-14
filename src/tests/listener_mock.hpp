@@ -2,7 +2,6 @@
 #include "listener.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace model {
 namespace test {
 
@@ -19,7 +18,6 @@ public:
     }
 };
 
-}
 }
 }
 }

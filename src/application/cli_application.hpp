@@ -4,7 +4,6 @@
 #include "listener_view_cli.hpp"
 
 namespace p2ptransfer {
-namespace server {
 
 class CLIApplication {
 public:
@@ -18,5 +17,4 @@ private:
     Application<view::GeneralViewCLI, view::ListenerViewCLI> application_;
 };
 
-}
 }

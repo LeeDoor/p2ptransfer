@@ -2,7 +2,6 @@
 #include "port.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace view {
 
 /// \brief Interface for getting information about User Input.
@@ -15,6 +14,5 @@ public:
     virtual void listen(Port port) = 0;
 };
 
-}
 }
 }

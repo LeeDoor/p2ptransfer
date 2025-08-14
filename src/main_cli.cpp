@@ -1,6 +1,6 @@
 #include "cli_application.hpp"
 
 int main() {
-    p2ptransfer::server::CLIApplication application;
+    p2ptransfer::CLIApplication application;
     return application.run();
 }

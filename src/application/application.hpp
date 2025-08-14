@@ -5,7 +5,6 @@
 #include "general_presenter.hpp"
 
 namespace p2ptransfer {
-namespace server {
 
 template<typename GeneralViewType, typename ListenerViewType>
 class Application {
@@ -41,5 +40,4 @@ private:
     std::shared_ptr<presenter::ListenerPresenter> listener_presenter_;
 };
 
-}
 }

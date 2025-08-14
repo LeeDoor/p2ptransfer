@@ -4,7 +4,6 @@
 #include "stoppable.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace model {
 
 /*!
@@ -29,6 +28,5 @@ public:
     virtual void listen_if_not_already(Port port) = 0;
 };
 
-}
 }
 }

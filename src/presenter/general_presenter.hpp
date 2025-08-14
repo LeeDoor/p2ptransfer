@@ -5,7 +5,6 @@
 #include "general_view.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace presenter {
 
 /*!
@@ -51,6 +50,5 @@ private:
     bool is_initialized_ = false;
 };
 
-}
 }
 }

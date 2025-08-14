@@ -2,7 +2,6 @@
 #include "request_structures.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace presenter {
 
 /// The union of \ref ConnectionStatusCallback and \ref FileTransferCallback.
@@ -14,6 +13,5 @@ public:
     virtual bool verify_file(const Filename& filename, Filesize filesize) = 0;
 };
 
-}
 }
 }

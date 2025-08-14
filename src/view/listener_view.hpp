@@ -5,7 +5,6 @@
 #include "listener_view_callback.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace view {
 
 /*!
@@ -22,6 +21,5 @@ public:
     virtual bool ask_file_verification(const Filename& filename, Filesize filesize) = 0;
 };
 
-}
 }
 }

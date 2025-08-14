@@ -8,7 +8,6 @@
 #include "thread_wrapper_mock.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace model {
 namespace test {
 
@@ -120,7 +119,6 @@ TEST_F(ListenerFixture, FileProcessorThrew_HandleWithoutRethrow) {
     EXPECT_NO_THROW(listener_->listen_if_not_already(TEST_PORT));
 }
 
-}
 }
 }
 }

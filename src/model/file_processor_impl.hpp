@@ -4,7 +4,6 @@
 #include "socket_manager.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace model {
 
 /// Implementation for \ref FileProcessor using \ref SocketManager .
@@ -44,6 +43,5 @@ private:
     SocketManagerPtr socket_manager_;
 };
 
-}
 }
 }

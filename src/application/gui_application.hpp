@@ -4,7 +4,6 @@
 #include "listener_view_gui.hpp"
 
 namespace p2ptransfer {
-namespace server {
 
 class GUIApplication {
 public:
@@ -18,5 +17,4 @@ private:
     Application<view::GeneralViewGUI, view::ListenerViewGUI> application_;
 };
 
-}
 }

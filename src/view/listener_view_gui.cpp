@@ -2,7 +2,6 @@
 #include "filesize_formatter.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace view {
 ListenerViewGUI::ListenerViewGUI(std::shared_ptr<GeneralViewGUI> view) :
     QObject{nullptr},
@@ -27,6 +26,5 @@ void ListenerViewGUI::listening(Port port) {
     callback()->listen(port);
 }   
 
-}
 }
 }

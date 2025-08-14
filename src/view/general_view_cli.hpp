@@ -2,7 +2,6 @@
 #include "general_view.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace view {
 
 /// \ref View implementation for Command Line Interface.
@@ -27,6 +26,5 @@ private:
     bool is_running_ = true;
 };
 
-}
 }
 }

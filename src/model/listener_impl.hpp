@@ -5,7 +5,6 @@
 #include "thread_wrapper.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace model {
 
 /*!
@@ -53,6 +52,5 @@ private:
     ContextPtr context_;
 };
 
-}
 }
 }

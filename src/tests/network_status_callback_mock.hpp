@@ -4,7 +4,6 @@
 #include "network_status_callback.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace presenter {
 namespace test {
 
@@ -17,7 +16,6 @@ public:
     MOCK_METHOD(void, set_progressbar, (double present), (override));
 };
 
-}
 }
 }
 }

@@ -6,7 +6,6 @@
 #include "thread_wrapper_impl.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace model {
 
 /// Creates main Model objects and hides DI overwhelming.
@@ -33,6 +32,5 @@ public:
 
 };
 
-}
 }
 }

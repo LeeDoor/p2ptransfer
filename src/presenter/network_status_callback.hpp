@@ -3,7 +3,6 @@
 #include "port.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace presenter {
 
 /// The union of \ref ConnectionStatusCallback and \ref FileTransferCallback.
@@ -27,6 +26,5 @@ public:
     virtual void set_progressbar(double persent) = 0;
 };
 
-}
 }
 }

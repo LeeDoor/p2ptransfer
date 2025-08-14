@@ -1,7 +1,6 @@
 #include "general_presenter.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace presenter {
 
 GeneralPresenter::GeneralPresenter(AddressGathererPtr address_gatherer, ViewPtr view) :
@@ -42,6 +41,5 @@ void GeneralPresenter::file_transfered() {
     view_->show_file_success();
 }
 
-}
 }
 }

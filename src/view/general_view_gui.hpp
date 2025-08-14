@@ -6,7 +6,6 @@ class GeneralViewGUI;
 }
 
 namespace p2ptransfer {
-namespace server {
 namespace view {
 
 /// \ref View implementation for GUI using Qt.
@@ -86,6 +85,5 @@ private:
     QString selected_file_;
 };
 
-}
 }
 }

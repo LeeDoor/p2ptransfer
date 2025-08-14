@@ -3,7 +3,6 @@
 #include "socket_manager.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace model {
 
 /*!
@@ -25,5 +24,3 @@ public:
 
 }
 }
-}
-

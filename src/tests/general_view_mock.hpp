@@ -2,7 +2,6 @@
 #include "general_view.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace view {
 namespace test {
 
@@ -19,7 +18,6 @@ public:
     MOCK_METHOD(void, show_connection_aborted, (const Address& address, Port port), (override));
 };
 
-}
 }
 }
 }

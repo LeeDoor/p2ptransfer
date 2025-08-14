@@ -2,7 +2,6 @@
 #include "logger.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace model {
 
 ListenerImpl::ListenerImpl(ContextPtr context,
@@ -61,6 +60,5 @@ void ListenerImpl::stop_impl() {
     thread_wrapper_->join();
 }
 
-}
 }
 }

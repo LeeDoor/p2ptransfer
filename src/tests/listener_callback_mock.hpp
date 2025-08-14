@@ -2,7 +2,6 @@
 #include "listener_callback.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace presenter {
 namespace test {
 
@@ -11,7 +10,6 @@ public:
     MOCK_METHOD(bool, verify_file, (const Filename& filename, Filesize filesize), (override));
 };
 
-}
 }
 }
 }

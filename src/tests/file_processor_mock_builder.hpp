@@ -2,7 +2,6 @@
 #include "file_processor_builder.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace model {
 namespace test {
 
@@ -23,7 +22,6 @@ private:
     std::shared_ptr<FileProcessor> ptr_;
 };
 
-}
 }
 }
 }

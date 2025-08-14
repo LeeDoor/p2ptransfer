@@ -2,7 +2,6 @@
 #include "filesize_formatter.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace view {
 
 ListenerViewCLI::ListenerViewCLI(std::shared_ptr<GeneralViewCLI> view) :
@@ -33,6 +32,5 @@ bool ListenerViewCLI::ask_file_verification(const Filename& filename, Filesize f
     return input == 'y' || input == 'Y';;
 }
 
-}
 }
 }

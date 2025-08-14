@@ -1,7 +1,6 @@
 #include "general_view_cli.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace view {
 
 int GeneralViewCLI::run() {
@@ -47,6 +46,5 @@ void GeneralViewCLI::subscribe_listen(std::function<void()> func) {
 }
 
 
-}
 }
 }

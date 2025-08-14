@@ -5,7 +5,6 @@
 #include "listener_callback.hpp"
 
 namespace p2ptransfer {
-namespace server {
 namespace presenter {
 
 class ListenerPresenter final :
@@ -32,6 +31,5 @@ private:
     ViewPtr view_;
 };
 
-}
 }
 }
