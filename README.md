@@ -24,12 +24,12 @@ git clone https://github.com/LeeDoor/p2ptransfer --depth 1
 
 # Open PowerShell and run the script.
 # On your receiving machine, run:
-./p2plisten.exe <PORT>
+./p2ptransfer.exe <PORT>
 # On your sending machine, run:
 ./p2ptransfer.exe <ADDRESS> <PORT> <FILENAME>
 ```
 Let's dive into CLI parameters:
-1. `run_server.sh` or `p2plisten.exe`:
+1. `run_server.sh` or `p2ptransfer.exe`:
     * **`<PORT>`** - the port, where you are listening to connections.
 2. `run_client.sh` or `p2ptransfer.exe`:
     * **`<ADDRESS>`** - IPv4 address of receiving machine. Get it using `ifconfig` or `ipconfig` commands.
