@@ -1,5 +1,5 @@
 #pragma once
-#include "file_processor_builder.hpp"
+#include "file_reader_builder.hpp"
 #include "listener.hpp"
 #include "socket_manager_builder.hpp"
 #include "thread_wrapper.hpp"
@@ -11,14 +11,14 @@ namespace model {
 * \brief Socket implementation for \ref Listener .
 * Implements network integration on separate thread using \ref ThreadWrapper .
 * This class performs headers exchange, such as SendRequest and SendPermission.
-* File sharing responsibility is passed to \ref FileProcessor .
+* File sharing responsibility is passed to \ref FileReader .
 */
 class ListenerImpl : public Listener {
 public:
     using ThreadWrapperPtr = std::shared_ptr<ThreadWrapper>;
     using SocketManagerBuilderPtr = std::shared_ptr<SocketManagerBuilder>;
     using SocketManagerPtr = std::shared_ptr<SocketManager>;
-    using FileProcessorBuilderPtr = std::shared_ptr<FileProcessorBuilder>;
+    using FileReaderBuilderPtr = std::shared_ptr<FileReaderBuilder>;
     using ContextPtr = std::shared_ptr<net::io_context>;
 
     /*!
@@ -28,14 +28,14 @@ public:
     * \param socket_manager_builder pointer to \ref SocketManagerBuilder .
     * Required to create socket at runtime, scince it's lifetime is tied
     * with connection duration.
-    * \param file_processor_builder pointer to \ref FileProcessorBuilder .
-    * Required to create FileProcessor at runtime. Used only when file 
+    * \param file_reader_builder pointer to \ref FileReaderBuilder .
+    * Required to create FileReader at runtime. Used only when file 
     * sharing is accepted by user.
     */
     ListenerImpl(ContextPtr context,
                  ThreadWrapperPtr thread_wrapper,
                  SocketManagerBuilderPtr socket_manager_builder,
-                 FileProcessorBuilderPtr file_processor_builder);
+                 FileReaderBuilderPtr file_reader_builder);
     void listen_if_not_already(Port port) override;
 
 private:
@@ -48,7 +48,7 @@ private:
 
     ThreadWrapperPtr thread_wrapper_;
     SocketManagerBuilderPtr socket_manager_builder_;
-    FileProcessorBuilderPtr file_processor_builder_;
+    FileReaderBuilderPtr file_reader_builder_;
     ContextPtr context_;
 };
 

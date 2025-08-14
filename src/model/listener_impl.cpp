@@ -7,10 +7,10 @@ namespace model {
 ListenerImpl::ListenerImpl(ContextPtr context,
                            ThreadWrapperPtr thread_wrapper,
                            SocketManagerBuilderPtr socket_manager_builder,
-                           FileProcessorBuilderPtr file_processor_builder) :
+                           FileReaderBuilderPtr file_reader_builder) :
     thread_wrapper_(thread_wrapper),
     socket_manager_builder_(socket_manager_builder),
-    file_processor_builder_(file_processor_builder),
+    file_reader_builder_(file_reader_builder),
     context_(context)
 {}
 
@@ -35,9 +35,9 @@ void ListenerImpl::spawn_listen_coroutine(Port port) {
 net::awaitable<void> ListenerImpl::listen_async(Port port) {
     try {
         auto socket_manager = co_await connect_and_listen(port);
-        auto file_processor = file_processor_builder_->create_file_processor(
+        auto file_reader = file_reader_builder_->create_file_reader(
             NetworkStatusCallback::callback(), ListenerCallback::callback(), socket_manager);
-        co_await file_processor->try_read_file();
+        co_await file_reader->try_read_file();
     } catch(const std::exception& ex) {
         Logger::log() << ex.what() << std::endl;
     }

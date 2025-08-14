@@ -14,9 +14,9 @@ namespace model {
 */
 using NetworkStatusCallback = WithCallback<presenter::NetworkStatusCallback>;
 using ListenerCallback = WithCallback<presenter::ListenerCallback>;
-class FileProcessor : public NetworkStatusCallback, public ListenerCallback {
+class FileReader : public NetworkStatusCallback, public ListenerCallback {
 public:
-    virtual ~FileProcessor() = default;
+    virtual ~FileReader() = default;
 
     /*! \throws std::runtime_error if file was not gathered due
     * to network problems or user's cancellation. */

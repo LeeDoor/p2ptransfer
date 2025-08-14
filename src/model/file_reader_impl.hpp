@@ -1,13 +1,13 @@
 #pragma once
-#include "file_processor.hpp"
+#include "file_reader.hpp"
 #include "request_structures.hpp"
 #include "socket_manager.hpp"
 
 namespace p2ptransfer {
 namespace model {
 
-/// Implementation for \ref FileProcessor using \ref SocketManager .
-class FileProcessorImpl : public FileProcessor {
+/// Implementation for \ref FileReader using \ref SocketManager .
+class FileReaderImpl : public FileReader {
 public:
     using NetworkStatusCallback::set_callback;
     using ListenerCallback::set_callback;
@@ -16,7 +16,7 @@ public:
     * \param socket_manager provided \ref SocketManager pointer 
     * should be already established with remote user.
     */
-    FileProcessorImpl(SocketManagerPtr socket_manager);
+    FileReaderImpl(SocketManagerPtr socket_manager);
 
     net::awaitable<void> try_read_file() override;
 

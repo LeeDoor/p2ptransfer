@@ -1,4 +1,4 @@
-#include "file_processor_impl.hpp"
+#include "file_reader_impl.hpp"
 #include "listener_callback_mock.hpp"
 #include "network_status_callback_mock.hpp"
 #include "socket_manager_mock.hpp"
@@ -10,18 +10,18 @@ namespace test {
 
 using namespace ::p2ptransfer::test;
 
-class FileProcessorFixture : public ::testing::Test {
+class FileReaderFixture : public ::testing::Test {
 protected:
     using BufferType = SocketManager::BufferType;
 
-    FileProcessorFixture() :
+    FileReaderFixture() :
         socket_mock(std::make_shared<SocketManagerMock>()),
         network_callback(std::make_shared<presenter::test::NetworkStatusCallbackMock>()),
         listener_callback(std::make_shared<presenter::test::ListenerCallbackMock>()),
-        file_processor(socket_mock)    
+        file_reader(socket_mock)    
     {
-        file_processor.set_callback(network_callback);
-        file_processor.set_callback(listener_callback);
+        file_reader.set_callback(network_callback);
+        file_reader.set_callback(listener_callback);
     }
 
     void success_lifecycle(const std::string& filename, const std::string& file_content) {
@@ -67,7 +67,7 @@ protected:
     }
     void run_read_file() {
         net::io_context context;
-        net::co_spawn(context, file_processor.try_read_file(), [](std::exception_ptr ptr) {
+        net::co_spawn(context, file_reader.try_read_file(), [](std::exception_ptr ptr) {
             if(ptr) std::rethrow_exception(ptr);
         });
         context.run();
@@ -99,10 +99,10 @@ protected:
     std::shared_ptr<SocketManagerMock> socket_mock;
     std::shared_ptr<presenter::test::NetworkStatusCallbackMock> network_callback;
     std::shared_ptr<presenter::test::ListenerCallbackMock> listener_callback;
-    FileProcessorImpl file_processor;
+    FileReaderImpl file_reader;
 };
 
-TEST_F(FileProcessorFixture, averageData_successFileProcessing) {
+TEST_F(FileReaderFixture, averageData_successFileProcessing) {
     const std::string filename = "file.txt";
     const std::string filecontent = "short content";
     success_lifecycle(filename, filecontent); 
@@ -112,7 +112,7 @@ TEST_F(FileProcessorFixture, averageData_successFileProcessing) {
     verify_file_content(filename, filecontent);
 }
 
-TEST_F(FileProcessorFixture, LFinContent_successFileProcessing) {
+TEST_F(FileReaderFixture, LFinContent_successFileProcessing) {
     const std::string filename = "file.txt";
     const std::string filecontent = "too many spaces\n\n and LFs\n\n\n\n\n aboba\n";
     success_lifecycle(filename, filecontent); 
@@ -122,7 +122,7 @@ TEST_F(FileProcessorFixture, LFinContent_successFileProcessing) {
     verify_file_content(filename, filecontent);
 }
 
-TEST_F(FileProcessorFixture, spacedFilename_successFileProcessing) {
+TEST_F(FileReaderFixture, spacedFilename_successFileProcessing) {
     const std::string filename = "file name with spaces.txt";
     const std::string filecontent = "Text with\r\n\r\nCRLFS aboba\n";
     success_lifecycle(filename, filecontent); 
@@ -132,7 +132,7 @@ TEST_F(FileProcessorFixture, spacedFilename_successFileProcessing) {
     verify_file_content(filename, filecontent);
 }
 
-TEST_F(FileProcessorFixture, dottedFilename_successFileProcessing) {
+TEST_F(FileReaderFixture, dottedFilename_successFileProcessing) {
     const std::string filename = "...";
     const std::string filecontent = "Text with\r\n\r\nCRLFS aboba\n";
     success_lifecycle(filename, filecontent); 
@@ -142,7 +142,7 @@ TEST_F(FileProcessorFixture, dottedFilename_successFileProcessing) {
     verify_file_content(filename, filecontent);
 }
 
-TEST_F(FileProcessorFixture, emptyContent_successFileProcessing) {
+TEST_F(FileReaderFixture, emptyContent_successFileProcessing) {
     const std::string filename = "filename.txt";
     const std::string filecontent = "";
     success_lifecycle(filename, filecontent); 
@@ -152,7 +152,7 @@ TEST_F(FileProcessorFixture, emptyContent_successFileProcessing) {
     verify_file_content(filename, filecontent);
 }
 
-TEST_F(FileProcessorFixture, sentTooMuch_readOnlyGivenData) {
+TEST_F(FileReaderFixture, sentTooMuch_readOnlyGivenData) {
     const std::string filename = "new_file.txt";
     const std::string filecontent = "some content\n";
     size_t filesize = filecontent.size();
@@ -176,7 +176,7 @@ TEST_F(FileProcessorFixture, sentTooMuch_readOnlyGivenData) {
     verify_file_content(filename, filecontent);
 }
 
-TEST_F(FileProcessorFixture, contentOutOfBufferSize_successFileProcessing) {
+TEST_F(FileReaderFixture, contentOutOfBufferSize_successFileProcessing) {
     const std::string filename = "new_file.txt";
     size_t buffer_size = get_buffer_size();
     size_t filesize = buffer_size * 2;
@@ -208,7 +208,7 @@ TEST_F(FileProcessorFixture, contentOutOfBufferSize_successFileProcessing) {
     verify_file_content(filename, file_content); 
 }
 
-TEST_F(FileProcessorFixture, readSendRequestThrowsException_abortRethrow) {
+TEST_F(FileReaderFixture, readSendRequestThrowsException_abortRethrow) {
     const std::string filename = "new_file.txt";
     const std::string filecontent = "some content\n";
     EXPECT_CALL(*socket_mock, read_request())
@@ -221,7 +221,7 @@ TEST_F(FileProcessorFixture, readSendRequestThrowsException_abortRethrow) {
     EXPECT_FALSE(std::filesystem::exists(filename));
 }
 
-TEST_F(FileProcessorFixture, invalidRequestGiven_abortRethrow) {
+TEST_F(FileReaderFixture, invalidRequestGiven_abortRethrow) {
     EXPECT_CALL(*socket_mock, read_request())
         .WillOnce([=]() -> net::awaitable<std::string> 
                   { using namespace std::literals; return return_immediately("INVALID_REQUEST\nFILEisbad\nSIZETOO\n\n"s); });
@@ -230,7 +230,7 @@ TEST_F(FileProcessorFixture, invalidRequestGiven_abortRethrow) {
     EXPECT_THROW(run_read_file(), std::runtime_error);
 }
 
-TEST_F(FileProcessorFixture, requestFilenameIsDirectory_abortRethrow) {
+TEST_F(FileReaderFixture, requestFilenameIsDirectory_abortRethrow) {
     const std::string filename = "directory/new_file.txt";
     const std::string filecontent = "some content\n";
     size_t filesize = filecontent.size();
@@ -242,7 +242,7 @@ TEST_F(FileProcessorFixture, requestFilenameIsDirectory_abortRethrow) {
     EXPECT_FALSE(std::filesystem::exists(filename));
 }
 
-TEST_F(FileProcessorFixture, userDeclined_exceptionWithoutFile) {
+TEST_F(FileReaderFixture, userDeclined_exceptionWithoutFile) {
     const std::string filename = "new_file.txt";
     const std::string filecontent = "some content\n";
     size_t filesize = filecontent.size();
@@ -255,7 +255,7 @@ TEST_F(FileProcessorFixture, userDeclined_exceptionWithoutFile) {
     EXPECT_FALSE(std::filesystem::exists(filename));
 }
 
-TEST_F(FileProcessorFixture, sendResponseException_abortRethrow) {
+TEST_F(FileReaderFixture, sendResponseException_abortRethrow) {
     const std::string filename = "new_file.txt";
     const std::string filecontent = "some content\n";
     size_t filesize = filecontent.size();
@@ -270,7 +270,7 @@ TEST_F(FileProcessorFixture, sendResponseException_abortRethrow) {
     EXPECT_THROW(run_read_file(), std::runtime_error);
 }
 
-TEST_F(FileProcessorFixture, exceptionWhileReadingFile_abortRethrow) {
+TEST_F(FileReaderFixture, exceptionWhileReadingFile_abortRethrow) {
     const std::string filename = "new_file.txt";
     const std::string filecontent = "some content\n";
     size_t filesize = filecontent.size();

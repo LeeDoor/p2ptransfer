@@ -1,16 +1,16 @@
 #pragma once
-#include "file_processor_builder.hpp"
+#include "file_reader_builder.hpp"
 
 namespace p2ptransfer {
 namespace model {
 namespace test {
 
-/// Mock implementation for \ref FileProcessorBuilder .
-class FileProcessorMockBuilder : public FileProcessorBuilder {
+/// Mock implementation for \ref FileReaderBuilder .
+class FileReaderMockBuilder : public FileReaderBuilder {
 public:
-    FileProcessorMockBuilder (std::shared_ptr<FileProcessor> ptr) :
+    FileReaderMockBuilder (std::shared_ptr<FileReader> ptr) :
         ptr_(ptr) {}
-    std::shared_ptr<FileProcessor> create_file_processor(
+    std::shared_ptr<FileReader> create_file_reader(
         NetworkStatusCallback::Callback nsc,
         ListenerCallback::Callback lcc,
         SocketManagerPtr) override {
@@ -19,7 +19,7 @@ public:
         return ptr_;
     }
 private:
-    std::shared_ptr<FileProcessor> ptr_;
+    std::shared_ptr<FileReader> ptr_;
 };
 
 }

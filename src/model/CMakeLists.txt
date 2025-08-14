@@ -1,6 +1,6 @@
 add_library(server_model
     listener_impl.cpp
-    file_processor_impl.cpp
+    file_reader_impl.cpp
     address_gatherer_impl.cpp
     request_serializer.cpp
     request_deserializer.cpp
