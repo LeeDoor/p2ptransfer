@@ -22,7 +22,6 @@ public:
         if(!initialized_) {
             Logger::log_stacktrace("Callback is not set here:");
 #ifdef TESTING
-            // Forcing tests to fail if forgot to initialize the callback
             std::terminate();
 #endif
         }

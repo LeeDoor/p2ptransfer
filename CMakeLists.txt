@@ -8,7 +8,7 @@ set(CMAKE_BUILD_TYPE Debug)
 option(TESTING "Build tests" ON)
 option(GRAPHICS "Build with Qt" ON) # graphics executable
 if(${GRAPHICS})
-    add_compile_definitions(GRAPHICS)
+    #add_compile_definitions(GRAPHICS)
 endif()
 
 set(LINK_LIBRARIES ) # libraries to link
@@ -35,10 +35,6 @@ pthread dl backtrace)
 if(${GRAPHICS})
     find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets Core)
     find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Core)
-    message("CMAKE found QT: ${Qt6Core_INCLUDE_DIRS} and ${Qt6Core_LINK_LIBRARIES}")
-    qt_standard_project_setup()
-    set(LINK_LIBRARIES ${LINK_LIBRARIES} ${Qt6Widgets_LIBRARIES} ${Qt6Core_LIBRARIES})
-    set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} ${Qt6Widgets_INCLUDE_DIRS} ${Qt6Core_INCLUDE_DIRS})
 endif()
 
 if(${TESTING})
@@ -46,5 +42,4 @@ if(${TESTING})
     enable_testing()
 endif()
 
-add_subdirectory(general)
 add_subdirectory(src)

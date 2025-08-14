@@ -16,6 +16,7 @@ namespace general {
 template<typename InternetProtocol>
 class SocketManagerImpl : public SocketManager {
 public:
+    using ContextPtr = std::shared_ptr<net::io_context>;
     using SocketType = net::basic_stream_socket<InternetProtocol>;
     using SocketDeleter = std::function<void(SocketType*)>;
     using SocketPtr = std::unique_ptr<SocketType, SocketDeleter>;
@@ -24,7 +25,7 @@ public:
 
     /// Object initialization with pre-established connection. Listens for incoming connection at port.
     /*! \throws std::runtime_error if connection failed. */
-    static net::awaitable<std::shared_ptr<SocketManagerImpl>> open_for_listening(net::io_context& context, Port port) {
+    static net::awaitable<std::shared_ptr<SocketManagerImpl>> open_for_listening(ContextPtr context, Port port) {
         auto sm = std::shared_ptr<SocketManagerImpl>(new SocketManagerImpl(context));
         co_await sm->listen_connection_at(port);
         co_return sm;
@@ -32,7 +33,7 @@ public:
 
     /// Object initialization with pre-established connection. Connecting to Endpoint.
     /*! \throws std::runtime_error if connection failed. */
-    static net::awaitable<std::shared_ptr<SocketManagerImpl>> open_for_connecting(net::io_context& context, const Address& address, Port port) {
+    static net::awaitable<std::shared_ptr<SocketManagerImpl>> open_for_connecting(ContextPtr context, const Address& address, Port port) {
         auto sm = std::shared_ptr<SocketManagerImpl>(new SocketManagerImpl(context));
         co_await sm->connect_to(address, port);
         co_return sm;
@@ -93,7 +94,7 @@ public:
     }
 
 protected:
-    SocketManagerImpl(net::io_context& context) :
+    SocketManagerImpl(ContextPtr context) :
         context_(context){}
 
     SocketDeleter get_socket_deleter() {
@@ -108,19 +109,19 @@ protected:
     /*! \throws std::runtime_error if connection failed */
     net::awaitable<void> listen_connection_at(Port port) {
         EndpointType endpoint(InternetProtocol::v4(), port);
-        AcceptorType acceptor(context_, endpoint);
-        socket_ = SocketPtr(new SocketType(context_), get_socket_deleter());
+        AcceptorType acceptor(*context_, endpoint);
+        socket_ = SocketPtr(new SocketType(*context_), get_socket_deleter());
         co_await acceptor.async_accept(*socket_, net::use_awaitable);
     }
 
     /*! \throws std::runtime_error if connection failed */
     net::awaitable<void> connect_to(const Address& address, Port port) {
         const EndpointType ep (net::ip::make_address(address), port);
-        socket_ = SocketPtr(new SocketType(context_, InternetProtocol::v4()), get_socket_deleter());
+        socket_ = SocketPtr(new SocketType(*context_, InternetProtocol::v4()), get_socket_deleter());
         co_await socket_->async_connect(ep, net::use_awaitable);
     }
     
-    net::io_context& context_;
+    ContextPtr context_;
     SocketPtr socket_;
     std::string reading_buffer_;
 };

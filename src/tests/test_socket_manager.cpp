@@ -63,7 +63,7 @@ public:
 
 private:
     SocketManagerTest(std::shared_ptr<net::io_context> context) :
-        SocketManagerTcp{*context},
+        SocketManagerTcp{context},
         context_{context},
         thread_{}
     {}

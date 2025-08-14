@@ -95,7 +95,7 @@ void GeneralViewGUI::action_button_clicked() {
     disable_ui();
     try {
         if(is_listen()) {
-            emit listening(get_port());
+            listening(get_port());
         }
         else if (is_transfer()) {
             if(selected_file_.isEmpty()) 

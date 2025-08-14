@@ -33,12 +33,8 @@ clearcolor='\033[0m'
 printf "${highlight}building ${src} at ${build_dir} with: "
 if [[ $graphics -eq 1 ]];
 then
-    mkdir graphics/ -p
-    cd graphics/
     echo "graphics"
 else
-    mkdir cli/ -p
-    cd cli/
     echo "cli"
 fi
 printf "${clearcolor}"
