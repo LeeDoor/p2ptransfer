@@ -11,10 +11,10 @@ public:
     FileReaderMockBuilder (std::shared_ptr<FileReader> ptr) :
         ptr_(ptr) {}
     std::shared_ptr<FileReader> create_file_reader(
-        NetworkStatusCallback::Callback nsc,
+        WithNetworkCallback::Callback nsc,
         ListenerCallback::Callback lcc,
         SocketManagerPtr) override {
-        ptr_->NetworkStatusCallback::set_callback(nsc);
+        ptr_->WithNetworkCallback::set_callback(nsc);
         ptr_->ListenerCallback::set_callback(lcc);
         return ptr_;
     }

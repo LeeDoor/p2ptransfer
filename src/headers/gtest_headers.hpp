@@ -1,7 +1,6 @@
 #pragma once
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#define BOOST_STACKTRACE_USE_BACKTRACE
 
 namespace p2ptransfer {
 

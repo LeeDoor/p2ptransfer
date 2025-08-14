@@ -9,7 +9,7 @@ namespace model {
 /// Implementation for \ref FileReader using \ref SocketManager .
 class FileReaderImpl : public FileReader {
 public:
-    using NetworkStatusCallback::set_callback;
+    using WithNetworkCallback::set_callback;
     using ListenerCallback::set_callback;
     using SocketManagerPtr = std::shared_ptr<SocketManager>;
     /*

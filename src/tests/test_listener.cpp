@@ -64,7 +64,7 @@ protected:
         EXPECT_CALL(*network_callback_, cant_open_socket());
     }
     void stub_file_reader_callback_setup() {
-        file_reader_->NetworkStatusCallback::set_callback(nullptr);
+        file_reader_->WithNetworkCallback::set_callback(nullptr);
         file_reader_->ListenerCallback::set_callback(nullptr);
     }
 

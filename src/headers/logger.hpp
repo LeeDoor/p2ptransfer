@@ -1,4 +1,5 @@
 #pragma once
+
 namespace p2ptransfer {
 
 class Logger {

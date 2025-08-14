@@ -12,7 +12,7 @@ namespace model {
 * Reads remote file, when file gathering is agreed with user.
 * This class is used by the \ref Listener.
 */
-class FileReader : public NetworkStatusCallback, public ListenerCallback {
+class FileReader : public WithNetworkCallback, public ListenerCallback {
 public:
     virtual ~FileReader() = default;
 

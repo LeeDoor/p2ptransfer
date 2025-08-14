@@ -12,10 +12,10 @@ net::awaitable<void> FileReaderImpl::try_read_file() {
     try {
         auto send_request = co_await header_handshake();
         co_await read_file(send_request);
-        NetworkStatusCallback::callback()->file_transfered();
+        WithNetworkCallback::callback()->file_transfered();
     } catch (const std::exception& ex) {
         auto remote_endpoint = socket_manager_->get_remote_endpoint();
-        NetworkStatusCallback::callback()->connection_aborted(remote_endpoint.address, remote_endpoint.port);
+        WithNetworkCallback::callback()->connection_aborted(remote_endpoint.address, remote_endpoint.port);
         throw;
     }
 }
@@ -78,7 +78,7 @@ net::awaitable<void> FileReaderImpl::handle_file(std::ofstream& os, size_t files
 } 
 
 void FileReaderImpl::calculate_notify_progressbar(size_t bytes_remaining, size_t filesize) {
-    if(auto callback = NetworkStatusCallback::callback_.lock()) {
+    if(auto callback = WithNetworkCallback::callback_.lock()) {
         double progress = 100.0 - (bytes_remaining * 100.0 / filesize);
         callback->set_progressbar(progress);
     }

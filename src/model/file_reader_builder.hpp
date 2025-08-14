@@ -17,7 +17,7 @@ public:
     virtual ~FileReaderBuilder() = default;
 
     virtual std::shared_ptr<FileReader> create_file_reader(
-        NetworkStatusCallback::Callback network_callback,
+        WithNetworkCallback::Callback network_callback,
         ListenerCallback::Callback file_callback,
         SocketManagerPtr socket) = 0;
 };

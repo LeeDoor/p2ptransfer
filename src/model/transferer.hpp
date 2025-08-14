@@ -6,7 +6,7 @@
 namespace p2ptransfer {
 namespace model {
 
-class Transferer : public NetworkStatusCallback, public Stoppable {
+class Transferer : public WithNetworkCallback, public Stoppable {
 public:
     virtual ~Transferer() = default;
 

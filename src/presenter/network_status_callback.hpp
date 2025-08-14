@@ -28,5 +28,5 @@ public:
 };
 
 }
-using NetworkStatusCallback = WithCallback<presenter::NetworkStatusCallback>;
+using WithNetworkCallback = WithCallback<presenter::NetworkStatusCallback>;
 }

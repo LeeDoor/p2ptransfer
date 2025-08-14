@@ -16,9 +16,9 @@ endif()
 
 find_package(Boost REQUIRED COMPONENTS 
     stacktrace_basic
-        stacktrace_backtrace
-        stacktrace_addr2line
-        stacktrace_noop
+    stacktrace_backtrace
+    stacktrace_addr2line
+    stacktrace_noop
 )
 set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} ${Boost_INCLUDE_DIRS})
 set(LINK_LIBRARIES 
