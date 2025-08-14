@@ -4,7 +4,7 @@ namespace p2ptransfer {
 namespace view {
 
 int GeneralViewCLI::run() {
-    notify_listen();
+    notify_transfer();
     while(is_running_);
     std::raise(SIGINT);
     return 0;
@@ -12,6 +12,11 @@ int GeneralViewCLI::run() {
 
 void GeneralViewCLI::notify_listen() {
     for(auto iter = listen_subs_.begin(); iter != listen_subs_.end(); ++iter) {
+        (*iter)();
+    }   
+}
+void GeneralViewCLI::notify_transfer() {
+    for(auto iter = transfer_subs_.begin(); iter != transfer_subs_.end(); ++iter) {
         (*iter)();
     }   
 }
@@ -43,6 +48,9 @@ void GeneralViewCLI::show_connection_aborted(const Address& address, Port port) 
 }
 void GeneralViewCLI::subscribe_listen(std::function<void()> func) {
     listen_subs_.push_back(std::move(func));
+}
+void GeneralViewCLI::subscribe_transfer(std::function<void()> func) {
+    transfer_subs_.push_back(std::move(func));
 }
 
 

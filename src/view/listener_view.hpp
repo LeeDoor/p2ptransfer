@@ -1,6 +1,5 @@
 #pragma once
 #include "callback.hpp"
-#include "stoppable.hpp"
 #include "request_structures.hpp"
 #include "listener_view_callback.hpp"
 

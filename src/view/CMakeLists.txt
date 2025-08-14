@@ -13,6 +13,7 @@ else()
     add_library(server_view_cli
         general_view_cli.cpp
         listener_view_cli.cpp
+        transferer_view_cli.cpp
     )
     target_link_libraries(server_view_cli PUBLIC pch_base ${LINK_LIBRARIES})
     target_include_directories(server_view_cli PUBLIC ${INCLUDE_DIRECTORIES})

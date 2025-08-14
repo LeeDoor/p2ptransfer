@@ -16,12 +16,15 @@ public:
     void show_connection_aborted(const Address& address, Port port) override;
 
     void subscribe_listen(std::function<void()> func);
+    void subscribe_transfer(std::function<void()> func);
 
 private:
     void stop_impl() override;
     void notify_listen();
+    void notify_transfer();
 
     std::list<std::function<void()>> listen_subs_;
+    std::list<std::function<void()>> transfer_subs_;
 
     bool is_running_ = true;
 };

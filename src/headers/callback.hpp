@@ -43,6 +43,7 @@ protected:
         throw std::logic_error("callback is not set");
     }
 
+    /// Although this member is protected and not private, access with \ref callback()
     std::weak_ptr<CallbackType> callback_;
 private:
     bool initialized_;

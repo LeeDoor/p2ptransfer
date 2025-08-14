@@ -2,6 +2,7 @@
 #include "application.hpp"
 #include "general_view_cli.hpp"
 #include "listener_view_cli.hpp"
+#include "transferer_view_cli.hpp"
 
 namespace p2ptransfer {
 
@@ -14,7 +15,7 @@ public:
     int run() { return application_.run(); }
 
 private:
-    Application<view::GeneralViewCLI, view::ListenerViewCLI> application_;
+    Application<view::GeneralViewCLI, view::ListenerViewCLI, view::TransfererViewCLI> application_;
 };
 
 }

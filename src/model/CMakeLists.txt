@@ -1,4 +1,5 @@
 add_library(server_model
+    transferer_impl.cpp
     listener_impl.cpp
     file_reader_impl.cpp
     address_gatherer_impl.cpp

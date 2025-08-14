@@ -7,6 +7,9 @@ namespace model {
 class TransfererImpl : public Transferer {
 public:
     void transfer_file(const Address& address, Port port, const Filename& filename) override;
+
+protected:
+    void stop_impl() override;
 };
 
 }
