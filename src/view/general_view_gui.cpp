@@ -10,6 +10,9 @@ GeneralViewGUI::GeneralViewGUI(std::shared_ptr<QApplication> application)
     , application_{application}
     , action_{Listen}
     , selected_file_{""}
+#ifndef NDEBUG
+    , main_thread_id_{std::this_thread::get_id()}
+#endif
 {
     ui_->setupUi(this);
     setAcceptDrops(true);
@@ -101,7 +104,7 @@ void GeneralViewGUI::action_button_clicked() {
                 throw std::runtime_error(
                     "No file selected. Please drag your file to "
                     "this window or press the \"select file\" button");
-            //    callback()->transfer(get_port());
+            transfering(get_address(), get_port(), selected_file_.toStdString());
         }
     } catch (const std::runtime_error& ex) {
         QMessageBox::warning(this, "Action error", ex.what());

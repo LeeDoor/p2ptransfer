@@ -1,5 +1,6 @@
 #pragma once
 #include "general_view.hpp"
+#include "request_structures.hpp"
 
 namespace Ui {
 class GeneralViewGUI;
@@ -36,6 +37,15 @@ public:
     /// Attach \ref function execution to the \ref run() 's thread. Qt requirement.
     template<typename Func>
     void run_sync(Func&& function) {
+#ifndef NDEBUG
+        auto calling_thread_id = std::this_thread::get_id();
+        if(main_thread_id_ == calling_thread_id) {
+            Logger::log_stacktrace("Caused the deadlock by calling "
+                                   "QMetaObject::invokeMethod on the "
+                                   "Same thread with Qt::BlockingQueuedConnection");
+            std::terminate();
+        }
+#endif
         QMetaObject::invokeMethod(this, std::move(function), Qt::BlockingQueuedConnection);
     }
 
@@ -47,9 +57,9 @@ public slots:
     /// Slot for changing tabs to detect current action
     void action_changed(int index);
 
-signals:
+    signals:
     void listening(Port port);
-
+    void transfering(const Address& address, Port port, const Filename& filename);
 private:
     void stop_impl() override;
 
@@ -83,6 +93,9 @@ private:
     std::weak_ptr<QApplication> application_;
     Action action_;
     QString selected_file_;
+#ifndef NDEBUG
+    std::thread::id main_thread_id_;
+#endif
 };
 
 }

@@ -21,9 +21,6 @@ public:
     virtual ~WithCallback() {
         if(!initialized_) {
             Logger::log_stacktrace("Callback is not set here:");
-#ifdef TESTING
-            std::terminate();
-#endif
         }
     }
 

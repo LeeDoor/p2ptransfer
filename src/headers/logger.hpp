@@ -15,6 +15,9 @@ public:
         log() 
             << ERROR_COLOR << err_header << CLEAR_COLOR << std::endl
             << boost::stacktrace::stacktrace() << std::endl;
+#ifdef TESTING
+        std::terminate();
+#endif
     }
     static void progressbar_init() {
         log() << std::setprecision(5) << std::right;

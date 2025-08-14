@@ -16,18 +16,12 @@ public:
     virtual ~Stoppable() {
         if(!stopped_) {
             Logger::log_stacktrace("Object not stopped correctly");
-#ifdef TESTING 
-            std::terminate();   
-#endif
         }
     }
 
     void stop() {
         if(stopped_) {
             Logger::log_stacktrace("Object stopped twice");
-#ifdef TESTING 
-            std::terminate();   
-#endif
         }
         stop_impl();
         stopped_ = true;

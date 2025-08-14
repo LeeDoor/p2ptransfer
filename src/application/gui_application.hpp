@@ -2,6 +2,7 @@
 #include "application.hpp"
 #include "general_view_gui.hpp"
 #include "listener_view_gui.hpp"
+#include "transferer_view_gui.hpp"
 
 namespace p2ptransfer {
 
@@ -14,7 +15,7 @@ public:
     int run() { return application_.run(); }
 private:
     std::shared_ptr<QApplication> qapplication_;
-    Application<view::GeneralViewGUI, view::ListenerViewGUI> application_;
+    Application<view::GeneralViewGUI, view::ListenerViewGUI, view::TransfererViewGUI> application_;
 };
 
 }

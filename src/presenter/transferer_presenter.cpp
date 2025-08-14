@@ -18,7 +18,7 @@ void TransfererPresenter::setup() {
     transferer_->set_callback(network_callback_);   
 }
 void TransfererPresenter::stop_impl() {
-
+    transferer_->stop();
 }
 void TransfererPresenter::transfer(const Address& address, Port port, const Filename& filename) {
     transferer_->transfer_file(address, port, filename);   
