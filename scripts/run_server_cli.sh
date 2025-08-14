@@ -1,1 +1,1 @@
-../build/$(uname)/cli/server/p2plisten $@
+../build/$(uname)/src/p2plisten $@

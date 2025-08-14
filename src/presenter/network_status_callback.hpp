@@ -1,5 +1,6 @@
 #pragma once
 #include "address.hpp"
+#include "callback.hpp"
 #include "port.hpp"
 
 namespace p2ptransfer {
@@ -27,4 +28,5 @@ public:
 };
 
 }
+using NetworkStatusCallback = WithCallback<presenter::NetworkStatusCallback>;
 }

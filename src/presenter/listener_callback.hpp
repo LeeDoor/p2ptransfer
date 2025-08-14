@@ -1,4 +1,5 @@
 #pragma once
+#include "callback.hpp"
 #include "request_structures.hpp"
 
 namespace p2ptransfer {
@@ -14,4 +15,5 @@ public:
 };
 
 }
+using ListenerCallback = WithCallback<presenter::ListenerCallback>;
 }
