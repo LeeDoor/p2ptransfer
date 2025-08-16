@@ -10,20 +10,19 @@ set(SOURCES
     test_address_gatherer.cpp
     test_thread_wrapper.cpp
 )
-if(${GRAPHICS})
-    set(TEST_NAME gui_tests)
-else()
-    set(TEST_NAME cli_tests)
-endif()
+set(TEST_NAME tests)
 add_executable(${TEST_NAME} ${SOURCES})
-target_link_libraries(${TEST_NAME} PUBLIC ${LINK_LIBRARIES} server pch_tests GTest::gtest_main GTest::gmock)
-target_include_directories(${TEST_NAME} PUBLIC ${INCLUDE_DIRECTORIES})
+target_link_libraries(${TEST_NAME} PUBLIC ${LINK_LIBRARIES} 
+    server_model 
+    server_presenter 
+    pch_tests 
+    GTest::gtest_main 
+    GTest::gmock)
+target_include_directories(${TEST_NAME} PUBLIC 
+    ${INCLUDE_DIRECTORIES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/headers
+)
 target_compile_definitions(${TEST_NAME} PUBLIC TESTING)
 
 set(TEST_ARGS "--gtest_brief" "--gtest_break_on_failure")
 add_test(NAME GUI_test COMMAND gui_tests ${TEST_ARGS})
-add_test(NAME CLI_test COMMAND cli_tests ${TEST_ARGS})
-# TODO: remove, if other configuration works
-#if (UNIX)
-#    gtest_discover_tests(${TEST_NAME})
-#endif()
