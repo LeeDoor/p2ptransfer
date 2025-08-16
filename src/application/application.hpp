@@ -25,7 +25,7 @@ public:
         listener_{model_builder_.create_listener()},
         listener_presenter_{std::make_shared<presenter::ListenerPresenter>(general_presenter_, listener_, listener_view_)},
 
-        transferer_{std::make_shared<model::TransfererImpl>()},
+        transferer_{model_builder_.create_transferer()},
         transferer_view_{std::make_shared<TransfererViewType>(general_view_)},
         transferer_presenter_{std::make_shared<presenter::TransfererPresenter>(transferer_view_, transferer_, general_presenter_)}
     {

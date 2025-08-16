@@ -12,12 +12,17 @@ public:
     using SocketManagerBuilderPtr = std::shared_ptr<SocketManagerBuilder>;
     using SocketManagerPtr = std::shared_ptr<SocketManager>;
     using ContextPtr = std::shared_ptr<net::io_context>;
-    /*TransfererImpl(
+    TransfererImpl(
         ContextPtr context,
         ThreadWrapperPtr thread_wrapper,
-        SocketManagerBuilderPtr socket_builder);*/
+        SocketManagerBuilderPtr socket_builder);
 
     void transfer_file(const Address& address, Port port, const Filename& filename) override;
+
+private:
+    ContextPtr context_;
+    ThreadWrapperPtr thread_wrapper_;
+    SocketManagerBuilderPtr socket_builder_;
 };
 
 }

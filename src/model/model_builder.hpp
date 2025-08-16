@@ -4,6 +4,7 @@
 #include "listener_impl.hpp"
 #include "socket_manager_impl_builder.hpp"
 #include "thread_wrapper_impl.hpp"
+#include "transferer_impl.hpp"
 
 namespace p2ptransfer {
 namespace model {
@@ -21,6 +22,14 @@ public:
             std::make_shared<ThreadWrapperImpl>(),
             std::make_shared<SocketManagerImplBuilder>(context_),
             std::make_shared<FileReaderImplBuilder>()
+        );
+    }
+
+    std::shared_ptr<TransfererImpl> create_transferer() {
+        return std::make_shared<TransfererImpl>(
+            context_,
+            std::make_shared<ThreadWrapperImpl>(),
+            std::make_shared<SocketManagerImplBuilder>(context_)
         );
     }
 
