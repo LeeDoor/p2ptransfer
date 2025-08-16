@@ -27,7 +27,6 @@ public:
     void gather_local_address() override;
 
 private:
-    void stop_impl() override;
     void run_gathering();
     net::awaitable<void> gather_async();
     net::awaitable<SocketManagerPtr> build_socket_manager(const Address& address, Port port);

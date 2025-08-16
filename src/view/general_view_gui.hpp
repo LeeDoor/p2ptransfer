@@ -1,6 +1,9 @@
 #pragma once
 #include "general_view.hpp"
 #include "request_structures.hpp"
+#ifndef NDEBUG
+#include "logger.hpp"
+#endif
 
 namespace Ui {
 class GeneralViewGUI;
@@ -61,8 +64,6 @@ public slots:
     void listening(Port port);
     void transfering(const Address& address, Port port, const Filename& filename);
 private:
-    void stop_impl() override;
-
     enum Action { Listen, Transfer };
     Action action() const;
     bool is_listen() const;

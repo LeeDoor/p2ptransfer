@@ -6,7 +6,6 @@ namespace p2ptransfer {
 std::function<void()> SignalHandler::stop_func_;
 
 void SignalHandler::handle_SIGINT(std::function<void()>&& stop_func) {
-    using namespace std::placeholders;
     stop_func_ = std::move(stop_func);
     std::signal(SIGINT, &SignalHandler::handle_signal);
 }

@@ -1,12 +1,11 @@
 #pragma once
 #include "network_status_callback.hpp"
 #include "request_structures.hpp"
-#include "stoppable.hpp"
 
 namespace p2ptransfer {
 namespace model {
 
-class Transferer : public WithNetworkCallback, public Stoppable {
+class Transferer : public WithNetworkCallback {
 public:
     virtual ~Transferer() = default;
 

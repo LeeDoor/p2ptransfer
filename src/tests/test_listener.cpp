@@ -34,9 +34,6 @@ protected:
 
         expect_remote_endpoint_as_required();
     }
-    ~ListenerFixture() {
-        listener_->stop();
-    }
 
     void expect_remote_endpoint_as_required() {
         EXPECT_CALL(*socket_manager_, get_remote_endpoint())

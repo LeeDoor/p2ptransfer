@@ -19,7 +19,6 @@ public:
     void subscribe_transfer(std::function<void()> func);
 
 private:
-    void stop_impl() override;
     void notify_listen();
     void notify_transfer();
 

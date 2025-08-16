@@ -11,25 +11,28 @@ namespace model {
 /// Creates main Model objects and hides DI overwhelming.
 class ModelBuilder {
 public:
-    static std::shared_ptr<ListenerImpl> create_listener() {
-        auto context = std::make_shared<net::io_context>();
+    ModelBuilder(std::shared_ptr<net::io_context> context) :
+        context_{context}
+    {}
+
+    std::shared_ptr<ListenerImpl> create_listener() {
         return std::make_shared<ListenerImpl>(
-            context,
+            context_,
             std::make_shared<ThreadWrapperImpl>(),
-            std::make_shared<SocketManagerImplBuilder>(context),
+            std::make_shared<SocketManagerImplBuilder>(context_),
             std::make_shared<FileReaderImplBuilder>()
         );
     }
 
-    static std::shared_ptr<AddressGatherer> create_address_gatherer() {
-        auto context = std::make_shared<net::io_context>();
+    std::shared_ptr<AddressGatherer> create_address_gatherer() {
         return std::make_shared<AddressGathererImpl>(
-            context,
+            context_,
             std::make_shared<ThreadWrapperImpl>(),
-            std::make_shared<SocketManagerImplBuilder>(context)
+            std::make_shared<SocketManagerImplBuilder>(context_)
         );
     }
-
+private:
+    std::shared_ptr<net::io_context> context_;
 };
 
 }

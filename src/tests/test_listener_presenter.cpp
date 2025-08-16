@@ -22,9 +22,6 @@ protected:
     {
         presenter_->setup();
     }
-    ~ListenerPresenterFixture() {
-        presenter_->stop();
-    }
 
     std::shared_ptr<NetworkStatusCallbackMock> network_callback_;
     ListenerPtr listener_;
@@ -36,10 +33,6 @@ TEST_F(ListenerPresenterFixture, runSetup_callbacksConfigured) {
     EXPECT_EQ(listener_->get_callback_listener().lock(), presenter_);
     EXPECT_EQ(listener_->get_callback_network().lock(), network_callback_);
     EXPECT_EQ(view_->get_callback().lock(), presenter_);
-}
-
-TEST_F(ListenerPresenterFixture, runStop_invokesMemberStops) {
-    EXPECT_CALL(*listener_, stop_impl());
 }
 
 TEST_F(ListenerPresenterFixture, fileVerificationAsked_ProvideTrueResponse) {

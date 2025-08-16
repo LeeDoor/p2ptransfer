@@ -21,10 +21,6 @@ void GeneralViewCLI::notify_transfer() {
     }   
 }
 
-void GeneralViewCLI::stop_impl() {
-    std::cout << "bye, world!" << std::endl;
-    is_running_ = false;
-}
 void GeneralViewCLI::show_address(const Address& address) {
     std::cout << "Your LAN Address: " << address << std::endl;
 }

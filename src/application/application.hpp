@@ -11,29 +11,36 @@ namespace p2ptransfer {
 template<typename GeneralViewType, typename ListenerViewType, typename TransfererViewType>
 class Application {
 public:
-    template<typename GeneralViewGenerator>
-    Application(GeneralViewGenerator&& gvg) :
+    template<typename GeneralViewGenerator, typename SignalFunc>
+    Application(GeneralViewGenerator&& gvg, SignalFunc&& signal_func) :
+        context_{std::make_shared<net::io_context>()},
+        model_builder_{context_},
         general_view_{std::make_shared<GeneralViewType>(gvg())},
         general_presenter_{std::make_shared<presenter::GeneralPresenter>(
-            model::ModelBuilder::create_address_gatherer(),
+            model_builder_.create_address_gatherer(),
             general_view_
         )},
         
         listener_view_{std::make_shared<ListenerViewType>(general_view_)},
-        listener_{model::ModelBuilder::create_listener()},
+        listener_{model_builder_.create_listener()},
         listener_presenter_{std::make_shared<presenter::ListenerPresenter>(general_presenter_, listener_, listener_view_)},
 
         transferer_{std::make_shared<model::TransfererImpl>()},
         transferer_view_{std::make_shared<TransfererViewType>(general_view_)},
         transferer_presenter_{std::make_shared<presenter::TransfererPresenter>(transferer_view_, transferer_, general_presenter_)}
+    {
+        SignalHandler::handle_SIGINT(
+            [this, func = std::move(signal_func)] {
+                func();
+                context_->stop();
+            });
+    }
+    template<typename GeneralViewGenerator>
+    Application(GeneralViewGenerator&& gvg) :
+        Application{std::move(gvg), []{}}
     {}
 
     int run() {
-        SignalHandler::handle_SIGINT([this]() {
-            general_presenter_->stop();
-            listener_presenter_->stop();
-            transferer_presenter_->stop();
-        });
         general_presenter_->setup();
         listener_presenter_->setup();
         transferer_presenter_->setup();
@@ -41,6 +48,9 @@ public:
     }
 
 private:
+    std::shared_ptr<net::io_context> context_;
+    model::ModelBuilder model_builder_;
+
     std::shared_ptr<GeneralViewType> general_view_;
     std::shared_ptr<presenter::GeneralPresenter> general_presenter_;
 

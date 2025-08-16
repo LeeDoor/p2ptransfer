@@ -21,9 +21,6 @@ protected:
         );
         presenter_->setup();
     }
-    ~GeneralPresenterFixture() {
-        presenter_->stop();
-    }
 
     std::shared_ptr<AddressGathererMock> address_gatherer_;
     std::shared_ptr<GeneralViewMock> view_;
@@ -32,11 +29,6 @@ protected:
 
 TEST_F(GeneralPresenterFixture, setup_InstallsCallbacks) {
     EXPECT_EQ(address_gatherer_->get_callback().lock(), presenter_);
-}
-
-TEST_F(GeneralPresenterFixture, stop_sendsStopCalls) {
-    EXPECT_CALL(*address_gatherer_, stop_impl());
-    EXPECT_CALL(*view_, stop_impl());
 }
 
 TEST_F(GeneralPresenterFixture, setupAndRun_Success) {

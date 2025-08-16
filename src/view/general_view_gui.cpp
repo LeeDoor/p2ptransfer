@@ -40,14 +40,6 @@ int GeneralViewGUI::run() {
     }
 }
 
-void GeneralViewGUI::stop_impl() {
-    if(auto application = application_.lock()) {
-        close();
-    } else {
-        throw std::logic_error("application removed before ViewGUI::stop_impl");
-    }
-}
-
 void GeneralViewGUI::show_address(const Address& address) {
     QString qaddress = address.c_str();
     run_sync([=, this] {

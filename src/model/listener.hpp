@@ -1,7 +1,6 @@
 #pragma once
 #include "file_reader.hpp"
 #include "port.hpp"
-#include "stoppable.hpp"
 
 namespace p2ptransfer {
 namespace model {
@@ -15,7 +14,7 @@ namespace model {
 * \ref RemoteInteractionCallback used for notifying 
 * about connection progress and status.
 */
-class Listener : public WithNetworkCallback, public ListenerCallback, public Stoppable {
+class Listener : public WithNetworkCallback, public ListenerCallback {
 public:
     using WithNetworkCallback::set_callback;
     using ListenerCallback::set_callback;

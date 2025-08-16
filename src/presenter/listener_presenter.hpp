@@ -10,7 +10,6 @@ namespace presenter {
 class ListenerPresenter final :
     public view::ListenerViewCallback,
     public ListenerCallback,
-    public Stoppable,
     public std::enable_shared_from_this<ListenerPresenter> {
 public:
     using NetworkStatusCallbackPtr = std::shared_ptr<NetworkStatusCallback>;
@@ -24,8 +23,6 @@ public:
     bool verify_file(const Filename& filename, Filesize filesize) override;
 
 private:
-    void stop_impl() override;
-
     NetworkStatusCallbackPtr network_callback_;
     ListenerPtr listener_;
     ViewPtr view_;

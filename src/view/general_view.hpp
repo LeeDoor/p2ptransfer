@@ -1,5 +1,4 @@
 #pragma once
-#include "stoppable.hpp"
 #include "address.hpp"
 #include "port.hpp"
 
@@ -13,7 +12,7 @@ namespace view {
 * The \ref ViewCallback Callback is implemented to allow presenter
 * get user input.
 */
-class GeneralView : public Stoppable {
+class GeneralView {
 public:
     /// Runs application cycle. Should be called from \ref presenter::Presenter
     virtual int run() = 0;

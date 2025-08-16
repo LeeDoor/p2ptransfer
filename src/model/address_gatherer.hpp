@@ -2,7 +2,6 @@
 
 #include "callback.hpp"
 #include "address_gatherer_callback.hpp"
-#include "stoppable.hpp"
 
 namespace p2ptransfer {
 
@@ -12,7 +11,7 @@ namespace p2ptransfer {
 * Gathers LAN address using SocketManager.
 * Uses \ref WithCallback to notify users about gathering finish.
 */
-class AddressGatherer : public WithCallback<AddressGathererCallback>, public Stoppable {
+class AddressGatherer : public WithCallback<AddressGathererCallback> {
 public:
     virtual ~AddressGatherer() = default;
 

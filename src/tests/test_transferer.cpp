@@ -15,9 +15,6 @@ protected:
     {
         transferer_->set_callback(callback_);
     }
-    ~TransfererFixture() {
-        transferer_->stop();
-    }
 
     std::shared_ptr<NetworkStatusCallbackMock> callback_;
     std::shared_ptr<TransfererImpl> transferer_;

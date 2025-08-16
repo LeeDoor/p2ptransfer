@@ -9,7 +9,6 @@ namespace test {
 class GeneralViewMock : public GeneralView {
 public:
     MOCK_METHOD(int, run, (), (override));
-    MOCK_METHOD(void, stop_impl, (), (override));
     MOCK_METHOD(void, show_address, (const Address& address), (override));
     MOCK_METHOD(void, show_connected, (const Address& address, Port port), (override));
     MOCK_METHOD(void, show_socket_error, (), (override));

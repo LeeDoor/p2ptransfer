@@ -13,9 +13,6 @@ void ListenerPresenter::setup() {
     listener_->set_callback(shared_from_this());
     listener_->set_callback(network_callback_);
 }
-void ListenerPresenter::stop_impl() {
-    listener_->stop();
-}
 void ListenerPresenter::listen(Port port) {
     listener_->listen_if_not_already(port);
 }

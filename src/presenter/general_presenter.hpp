@@ -16,7 +16,6 @@ namespace presenter {
 class GeneralPresenter final :
     public AddressGathererCallback,
     public NetworkStatusCallback,
-    public Stoppable,
     public std::enable_shared_from_this<GeneralPresenter> {
 
 public:
@@ -40,8 +39,6 @@ public:
     void file_transfered() override;
 
 protected:
-    void stop_impl() override;
-
     AddressGathererPtr address_gatherer_;
     ViewPtr view_;
 
