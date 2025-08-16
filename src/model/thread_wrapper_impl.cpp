@@ -15,7 +15,7 @@ void ThreadWrapperImpl::execute(Functor&& func) {
     if(is_running_) 
         throw std::logic_error("Called ThreadWrapperImpl::execute while thread still running. "
                                "Check if it is_running() before execution");
-    try_join_thread();
+    try_join();
     is_running_ = true;
     thread_ = std::jthread([func_ = std::move(func), this] {
         func_();
@@ -23,11 +23,7 @@ void ThreadWrapperImpl::execute(Functor&& func) {
     });
 }
 
-void ThreadWrapperImpl::join() noexcept {
-    try_join_thread();
-}
-
-void ThreadWrapperImpl::try_join_thread() noexcept {
+void ThreadWrapperImpl::try_join() noexcept {
     if(thread_.joinable()) {
         thread_.join();
     }

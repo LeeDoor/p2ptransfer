@@ -57,7 +57,7 @@ net::awaitable<ListenerImpl::SocketManagerPtr> ListenerImpl::connect_and_listen(
 
 void ListenerImpl::stop_impl() {
     context_->stop();
-    thread_wrapper_->join();
+    thread_wrapper_->try_join();
 }
 
 }

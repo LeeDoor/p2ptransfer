@@ -14,11 +14,9 @@ public:
 
     bool is_running() const noexcept override;
     void execute(Functor&& func) override;
-    void join() noexcept override;
+    void try_join() noexcept override;
 
 private:
-    void try_join_thread() noexcept;
-
     bool is_running_;
     std::jthread thread_;
 };

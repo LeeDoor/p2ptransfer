@@ -62,7 +62,7 @@ TEST_F(AddressGathererFixture, gatheringAddress_success) {
 }
 
 TEST_F(AddressGathererFixture, stopped_joinThread) {
-    EXPECT_CALL(*thread_wrapper_, join());
+    EXPECT_CALL(*thread_wrapper_, try_join());
 }
 
 TEST_F(AddressGathererFixture, gatheringTwice_shouldThrow) {

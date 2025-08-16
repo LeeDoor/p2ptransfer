@@ -9,8 +9,9 @@ set(SOURCES
     test_socket_manager.cpp
     test_address_gatherer.cpp
     test_thread_wrapper.cpp
+    test_transferer.cpp
 )
-set(TEST_NAME tests)
+set(TEST_NAME generic_tests)
 add_executable(${TEST_NAME} ${SOURCES})
 target_link_libraries(${TEST_NAME} PUBLIC ${LINK_LIBRARIES} 
     server_model 
@@ -25,4 +26,4 @@ target_include_directories(${TEST_NAME} PUBLIC
 target_compile_definitions(${TEST_NAME} PUBLIC TESTING)
 
 set(TEST_ARGS "--gtest_brief" "--gtest_break_on_failure")
-add_test(NAME GUI_test COMMAND gui_tests ${TEST_ARGS})
+add_test(NAME generic COMMAND ${TEST_NAME} ${TEST_ARGS})

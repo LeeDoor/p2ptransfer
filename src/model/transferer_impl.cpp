@@ -2,6 +2,13 @@
 
 namespace p2ptransfer {
 namespace model {
+/*
+TransfererImpl::TransfererImpl(
+    ContextPtr context,
+    ThreadWrapperPtr thread_wrapper,
+    SocketManagerBuilderPtr socket_builder) {
+
+}*/
 
 void TransfererImpl::stop_impl() {
 }

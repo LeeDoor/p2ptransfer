@@ -8,7 +8,7 @@ namespace test {
 class ThreadWrapperMock : public ThreadWrapper {
 public:
     MOCK_METHOD(bool, is_running, (), (const, noexcept, override));
-    MOCK_METHOD(void, join, (), (noexcept, override));
+    MOCK_METHOD(void, try_join, (), (noexcept, override));
     MOCK_METHOD(void, mock_execute, (), ());
 
 protected:

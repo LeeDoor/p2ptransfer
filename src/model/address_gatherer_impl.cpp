@@ -42,7 +42,7 @@ AddressGathererImpl::build_socket_manager(const Address& address, Port port) {
 
 void AddressGathererImpl::stop_impl() {
     context_->stop();
-    thread_wrapper_->join();
+    thread_wrapper_->try_join();
 }
 
 }

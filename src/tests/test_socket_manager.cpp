@@ -44,7 +44,7 @@ public:
     }
 
     void join() {
-        thread_.join();
+        thread_.try_join();
     }
 
     void run() {

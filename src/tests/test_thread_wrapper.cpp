@@ -22,7 +22,7 @@ TEST_F(ThreadWrapperFixture, notRunning_onStartup) {
 }
 
 TEST_F(ThreadWrapperFixture, joiningWhenNotRunning_doNothing) {
-    EXPECT_NO_THROW(thread_wrapper_->join());
+    EXPECT_NO_THROW(thread_wrapper_->try_join());
     EXPECT_FALSE(thread_wrapper_->is_running());
 }
 
@@ -46,7 +46,7 @@ TEST_F(ThreadWrapperFixture, exec5sJoining_shouldContinueOn5s) {
         sleep_ms(duration);
     }));
     auto begin = std::chrono::steady_clock::now();
-    thread_wrapper_->join();
+    thread_wrapper_->try_join();
     auto end = std::chrono::steady_clock::now();
     auto diff = end - begin;
     unsigned long long elapsed_until_joined = std::chrono::duration_cast<std::chrono::milliseconds>(diff).count();
@@ -61,7 +61,7 @@ TEST_F(ThreadWrapperFixture, afterJoin_neverBeingRun) {
             sleep_ms(duration);
         });
         EXPECT_TRUE(thread_wrapper_->is_running());
-        thread_wrapper_->join();
+        thread_wrapper_->try_join();
         EXPECT_FALSE(thread_wrapper_->is_running());
     }
 }
@@ -84,7 +84,7 @@ TEST_F(ThreadWrapperFixture, executedCommandOnDifferentThread) {
     EXPECT_NO_THROW(thread_wrapper_->execute([&wrappers_tid]{
         wrappers_tid = std::this_thread::get_id();
     }));
-    thread_wrapper_->join();
+    thread_wrapper_->try_join();
 
     EXPECT_NE(wrappers_tid, tid);
 }

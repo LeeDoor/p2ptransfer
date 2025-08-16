@@ -15,7 +15,7 @@ public:
     /*! \throws std::logic_error if attached while running */
     virtual void execute(Functor&& func) = 0;
     /// Joins thread if launched before.
-    virtual void join() noexcept = 0;
+    virtual void try_join() noexcept = 0;
 };
 
 }
