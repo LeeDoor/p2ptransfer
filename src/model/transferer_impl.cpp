@@ -13,8 +13,11 @@ TransfererImpl::TransfererImpl(
 {}
 
 void TransfererImpl::transfer_file(const Address& address, Port port, const Filename& filename) {
-    Logger::log() << "Sending file at " << filename << " to " << address << ":" << port << std::endl;
-    callback()->file_transfered();
+    if(!thread_wrapper_->is_running()) {
+        thread_wrapper_->execute([&] {
+            Logger::log() << "Sending file at " << filename << " to " << address << ":" << port << std::endl;
+        });
+    }
 }
 
 }

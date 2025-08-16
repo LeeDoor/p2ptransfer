@@ -25,5 +25,6 @@ target_include_directories(${TEST_NAME} PUBLIC
 )
 target_compile_definitions(${TEST_NAME} PUBLIC TESTING)
 
-set(TEST_ARGS "--gtest_brief" "--gtest_break_on_failure")
-add_test(NAME generic COMMAND ${TEST_NAME} ${TEST_ARGS})
+if(UNIX)
+    gtest_discover_tests(${TEST_NAME})
+endif()
