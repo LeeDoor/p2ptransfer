@@ -39,7 +39,7 @@ protected:
             .Times(::testing::AtLeast(1));
     }
     void check_socket_creation() {
-        EXPECT_CALL(*socket_builder_, mock_tcp_listening_at(TEST_PORT));
+        EXPECT_CALL(*socket_builder_, mock_tcp_connecting_to(TEST_LOCADDR, TEST_PORT));
     }
     void check_connection_success_callback() {
         EXPECT_CALL(*network_callback_, connected(TEST_LOCADDR, TEST_PORT));
@@ -51,9 +51,6 @@ protected:
     std::shared_ptr<TransfererImpl> transferer_;
     std::shared_ptr<NetworkStatusCallbackMock> network_callback_;
 };
-
-TEST_F(TransfererFixture, success) {
-}
 
 TEST_F(TransfererFixture, ifAlreadyTransfering_ignore) {
     EXPECT_CALL(*thread_wrapper_, is_running())

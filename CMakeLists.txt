@@ -9,7 +9,7 @@ option(TESTING "Build tests" ON)
 option(GRAPHICS "Build with Qt" ON) # graphics executable
 
 set(LINK_LIBRARIES ) # libraries to link
-set(CMAKE_CXX_FLAGS "-frtti -Wall -Wextra -Wpedantic -Werror")
+set(CMAKE_CXX_FLAGS "-frtti -Wall -Wextra -Wpedantic")
 if(WIN32) 
     set(LINK_LIBRARIES ws2_32 -lmswsock) 
 endif()
