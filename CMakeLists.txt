@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 4.0.1)
 project(p2ptransfer)
 set(CMAKE_CXX_STANDARD 20) # use c++20
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # require C++ version
-set(CMAKE_EXPORT_COMPILE_COMMANDS 1) # exporting compile_commands.json for neovim
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # exporting compile_commands.json for clangd 
 set(CMAKE_BUILD_TYPE Debug)
 
 option(TESTING "Build tests" ON)

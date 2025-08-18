@@ -21,7 +21,7 @@ target_link_libraries(${TEST_NAME} PUBLIC ${LINK_LIBRARIES}
     GTest::gmock)
 target_include_directories(${TEST_NAME} PUBLIC 
     ${INCLUDE_DIRECTORIES}
-    ${CMAKE_CURRENT_SOURCE_DIR}/headers
+    ${CMAKE_CURRENT_SOURCE_DIR}/mocks
 )
 target_compile_definitions(${TEST_NAME} PUBLIC TESTING)
 
