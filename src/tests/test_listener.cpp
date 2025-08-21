@@ -18,7 +18,7 @@ protected:
     ListenerFixture() :
         socket_manager_(std::make_shared<SocketManagerMock>()),
         socket_builder_(std::make_shared<SocketManagerMockBuilder>(socket_manager_)),
-        file_reader_(std::make_shared<FileReaderMock>()),
+        file_builder_(std::make_shared<FileReaderMock>()),
         thread_wrapper_(std::make_shared<ThreadWrapperMock>()),
         network_callback_(std::make_shared<presenter::test::NetworkStatusCallbackMock>()),
         listener_callback_(std::make_shared<presenter::test::ListenerCallbackMock>())
@@ -27,7 +27,7 @@ protected:
             std::make_shared<net::io_context>(),
             thread_wrapper_,
             socket_builder_,
-            std::make_shared<FileReaderMockBuilder>(file_reader_)
+            std::make_shared<FileReaderMockBuilder>(file_builder_)
         );
         listener_->set_callback(network_callback_);
         listener_->set_callback(listener_callback_);
@@ -50,7 +50,7 @@ protected:
         EXPECT_CALL(*socket_builder_, mock_tcp_listening_at(TEST_PORT));
     }
     void check_file_processing() {
-        EXPECT_CALL(*file_reader_, try_read_file())
+        EXPECT_CALL(*file_builder_, try_read_file())
             .WillOnce(Return(return_immediately()));
     }
 
@@ -61,13 +61,13 @@ protected:
         EXPECT_CALL(*network_callback_, cant_open_socket());
     }
     void stub_file_reader_callback_setup() {
-        file_reader_->WithNetworkCallback::set_callback(nullptr);
-        file_reader_->ListenerCallback::set_callback(nullptr);
+        file_builder_->WithNetworkCallback::set_callback(nullptr);
+        file_builder_->ListenerCallback::set_callback(nullptr);
     }
 
     std::shared_ptr<SocketManagerMock> socket_manager_;
     std::shared_ptr<SocketManagerMockBuilder> socket_builder_;
-    std::shared_ptr<FileReaderMock> file_reader_;
+    std::shared_ptr<FileReaderMock> file_builder_;
     std::shared_ptr<ThreadWrapperMock> thread_wrapper_;
     std::shared_ptr<presenter::test::NetworkStatusCallbackMock> network_callback_;
     std::shared_ptr<presenter::test::ListenerCallbackMock> listener_callback_;
@@ -107,7 +107,7 @@ TEST_F(ListenerFixture, connectingAttemptThrewException_HandleWithoutRethrow) {
 TEST_F(ListenerFixture, FileReaderThrew_HandleWithoutRethrow) {
     check_thread_wrapper_executing();
     check_socket_creation();
-    EXPECT_CALL(*file_reader_, try_read_file())
+    EXPECT_CALL(*file_builder_, try_read_file())
         .WillOnce([]() -> net::awaitable<void> {
             throw std::runtime_error("immitating filing problem");
         });

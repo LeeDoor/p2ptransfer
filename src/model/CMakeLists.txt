@@ -7,6 +7,7 @@ add_library(server_model
     request_deserializer.cpp
     string_view_methods.cpp
     thread_wrapper_impl.cpp
+    file_writer_impl.cpp
 )
 target_link_libraries(server_model PUBLIC pch_base)
 target_include_directories(server_model PUBLIC ${INCLUDE_DIRECTORIES})

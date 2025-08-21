@@ -1,3 +1,5 @@
+#include "file_writer_mock.hpp"
+#include "file_writer_mock_builder.hpp"
 #include "socket_manager_mock.hpp"
 #include "socket_manager_mock_builder.hpp"
 #include "transferer_impl.hpp"
@@ -17,10 +19,13 @@ protected:
         thread_wrapper_{std::make_shared<ThreadWrapperMock>()},
         socket_manager_{std::make_shared<SocketManagerMock>()},
         socket_builder_{std::make_shared<SocketManagerMockBuilder>(socket_manager_)},
+        file_writer_{std::make_shared<FileWriterMock>()},
+        file_writer_builder_{std::make_shared<FileWriterMockBuilder>(file_writer_)},
         transferer_{std::make_shared<TransfererImpl>(
             std::make_shared<net::io_context>(),
             thread_wrapper_,
-            socket_builder_
+            socket_builder_,
+            file_writer_builder_
         )},
         network_callback_{std::make_shared<NetworkStatusCallbackMock>()}
     {
@@ -48,6 +53,8 @@ protected:
     std::shared_ptr<ThreadWrapperMock> thread_wrapper_;
     std::shared_ptr<SocketManagerMock> socket_manager_;
     std::shared_ptr<SocketManagerMockBuilder> socket_builder_;
+    std::shared_ptr<FileWriter> file_writer_;
+    std::shared_ptr<FileWriterBuilder> file_writer_builder_;
     std::shared_ptr<TransfererImpl> transferer_;
     std::shared_ptr<NetworkStatusCallbackMock> network_callback_;
 };
