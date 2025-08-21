@@ -40,4 +40,4 @@ fi
 printf "${clearcolor}"
 
 # Executing CMake
-cmake $src -DTESTING=ON -DGRAPHICS=$graphics $@ && cmake --build . -j4
+cmake $src -DTESTING=ON -DGRAPHICS=$graphics $@ && cmake --build . -j$(nproc)
