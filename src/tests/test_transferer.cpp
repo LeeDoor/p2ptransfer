@@ -49,6 +49,10 @@ protected:
     void check_connection_success_callback() {
         EXPECT_CALL(*network_callback_, connected(TEST_LOCADDR, TEST_PORT));
     }
+    void simulate_endpoint_receiver() {
+        EXPECT_CALL(*socket_manager_, get_remote_endpoint())
+            .WillRepeatedly(Return(SocketManager::Endpoint{TEST_LOCADDR, TEST_PORT}));
+    }
 
     std::shared_ptr<ThreadWrapperMock> thread_wrapper_;
     std::shared_ptr<SocketManagerMock> socket_manager_;
@@ -71,6 +75,7 @@ TEST_F(TransfererFixture, ifNotListening_connectAndReadFile) {
     check_thread_wrapper_executing();
     check_socket_creation();
     check_connection_success_callback();
+    simulate_endpoint_receiver();
 
     transferer_->transfer_file(TEST_LOCADDR, TEST_PORT, TEST_FILENAME);
 }

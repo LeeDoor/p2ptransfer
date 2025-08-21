@@ -7,7 +7,7 @@ namespace test {
 
 class FileWriterMock : public FileWriter {
 public:
-    MOCK_METHOD(void, write_file_to, (const Address&, Port, const Filename&), (override));
+    MOCK_METHOD(void, write_file, (const Filename&), (override));
 };
 
 }

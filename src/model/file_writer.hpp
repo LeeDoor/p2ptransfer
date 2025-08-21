@@ -9,7 +9,7 @@ class FileWriter : public WithNetworkCallback {
 public:
     virtual ~FileWriter() = default;
 
-    virtual void write_file_to(const Address& address, Port port, const Filename& filename) = 0;
+    virtual void write_file(const Filename& filename) = 0;
 };
 
 }

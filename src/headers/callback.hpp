@@ -18,11 +18,6 @@ public:
         callback_{},
         initialized_{false}
     {}
-    virtual ~WithCallback() {
-        if(!initialized_) {
-            Logger::log_stacktrace("Callback is not set here:");
-        }
-    }
 
     /// Should be called before usage
     void set_callback(std::shared_ptr<CallbackType> callback) {

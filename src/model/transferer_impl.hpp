@@ -23,7 +23,9 @@ public:
     void transfer_file(const Address& address, Port port, const Filename& filename) override;
 
 private:
-    net::awaitable<void> connect(const Address& address, Port port, const Filename& filename);
+    net::awaitable<std::shared_ptr<SocketManager>> connect(const Address& address, Port port);
+    net::awaitable<void> send_file(std::shared_ptr<SocketManager> socket, const Filename& filename);
+    net::awaitable<void> connect_and_send(const Address& address, Port port, const Filename& filename);
 
     ContextPtr context_;
     ThreadWrapperPtr thread_wrapper_;

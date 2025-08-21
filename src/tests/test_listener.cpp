@@ -60,10 +60,6 @@ protected:
     void check_failure_callback() {
         EXPECT_CALL(*network_callback_, cant_open_socket());
     }
-    void stub_file_reader_callback_setup() {
-        file_builder_->WithNetworkCallback::set_callback(nullptr);
-        file_builder_->ListenerCallback::set_callback(nullptr);
-    }
 
     std::shared_ptr<SocketManagerMock> socket_manager_;
     std::shared_ptr<SocketManagerMockBuilder> socket_builder_;
@@ -76,7 +72,6 @@ protected:
 };
 
 TEST_F(ListenerFixture, ifListeningAlready_doNothing) {
-    stub_file_reader_callback_setup();
     EXPECT_CALL(*thread_wrapper_, is_running())
         .WillOnce(Return(true));
 
@@ -93,7 +88,6 @@ TEST_F(ListenerFixture, ifNotListening_connectAndReadFile) {
 }
 
 TEST_F(ListenerFixture, connectingAttemptThrewException_HandleWithoutRethrow) {
-    stub_file_reader_callback_setup();
     check_thread_wrapper_executing();
     EXPECT_CALL(*socket_builder_, mock_tcp_listening_at(TEST_PORT))
         .WillOnce([]() {
