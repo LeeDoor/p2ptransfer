@@ -81,16 +81,21 @@ public:
     }
 
     net::awaitable<size_t> read_part_to(BufferType& buffer, size_t& bytes_remaining) override {
-        size_t bytes; ErrorCode ec;
-        std::tie(ec, bytes) 
-            = co_await net::async_read(*socket_, 
-                                       net::buffer(buffer, std::min(BUFFER_SIZE, bytes_remaining)),
-                                       net::as_tuple(net::use_awaitable));
-        bytes_remaining -= bytes;
-        if(ec && bytes_remaining) {
-            throw std::runtime_error("failed to read file: " + ec.what());
-        }
-        co_return bytes;
+        size_t bytes_read = co_await net::async_read(
+            *socket_, 
+            net::buffer(buffer, std::min(BUFFER_SIZE, bytes_remaining)),
+            net::use_awaitable);
+        bytes_remaining -= bytes_read;
+        co_return bytes_read;
+    }
+
+    net::awaitable<size_t> write_part_from(BufferType& buffer, size_t& bytes_remaining) override {
+        size_t bytes_written = co_await net::async_write(
+            *socket_, 
+            net::buffer(buffer, std::min(BUFFER_SIZE, bytes_remaining)),
+            net::use_awaitable);
+        bytes_remaining -= bytes_written;
+        co_return bytes_written;
     }
 
 protected:
@@ -120,7 +125,7 @@ protected:
         socket_ = SocketPtr(new SocketType(*context_, InternetProtocol::v4()), get_socket_deleter());
         co_await socket_->async_connect(ep, net::use_awaitable);
     }
-    
+
     ContextPtr context_;
     SocketPtr socket_;
     std::string reading_buffer_;

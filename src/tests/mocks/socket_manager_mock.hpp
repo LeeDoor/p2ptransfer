@@ -13,6 +13,7 @@ public:
     MOCK_METHOD(net::awaitable<std::string>, read_request, (), (override));
     MOCK_METHOD(net::awaitable<void>, write, (std::string response), (override));
     MOCK_METHOD(net::awaitable<size_t>, read_part_to, (BufferType& buffer, size_t& bytes_remaining), (override));
+    MOCK_METHOD(net::awaitable<size_t>, write_part_from, (BufferType& buffer, size_t& bytes_remaining), (override));
 };
 
 }

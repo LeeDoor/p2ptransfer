@@ -60,6 +60,9 @@ public:
     [[nodiscard]] Ret spawn_yourself_get(Func&& func) {
         return spawn_get<Ret>(std::move(func), *context_);
     }
+    void disconnect() {
+        socket_->close();
+    }
 
 private:
     SocketManagerTest(std::shared_ptr<net::io_context> context) :
@@ -266,6 +269,19 @@ TEST_F(SocketManagerFixture, readingFile_BuffersInCycle) {
 
     ASSERT_EQ(bytes_gone, many_buffer_sizes);
     ASSERT_EQ(bytes_remaining, 0);
+}
+
+TEST_F(SocketManagerFixture, readingFilePartThrows_shouldThrowRuntimeError) {
+    constexpr size_t many_buffer_sizes = get_buffer_size() * 10;
+    std::string file_immitation(many_buffer_sizes, 'a');
+    client_.disconnect();
+
+    SocketManager::BufferType buffer; 
+    size_t bytes_remaining = many_buffer_sizes;
+    EXPECT_THROW(
+        {
+            std::ignore = server_.spawn_yourself_get<size_t>(server_.read_part_to(buffer, bytes_remaining));
+        }, std::runtime_error);
 }
 
 }

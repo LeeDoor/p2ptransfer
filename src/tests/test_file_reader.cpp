@@ -24,7 +24,7 @@ protected:
         file_reader.set_callback(listener_callback);
     }
 
-    void success_lifecycle(const std::string& filename, const std::string& file_content) {
+    void immitate_file_writing(const std::string& filename, const std::string& file_content) {
         size_t filesize = file_content.size();
         immitate_send_request(filename, filesize);
         immitate_user_confirmation(filename, filesize, true);
@@ -105,7 +105,7 @@ protected:
 TEST_F(FileReaderFixture, averageData_successFileProcessing) {
     const std::string filename = "file.txt";
     const std::string filecontent = "short content";
-    success_lifecycle(filename, filecontent); 
+    immitate_file_writing(filename, filecontent); 
 
     EXPECT_NO_THROW(run_read_file());
 
@@ -115,7 +115,7 @@ TEST_F(FileReaderFixture, averageData_successFileProcessing) {
 TEST_F(FileReaderFixture, LFinContent_successFileProcessing) {
     const std::string filename = "file.txt";
     const std::string filecontent = "too many spaces\n\n and LFs\n\n\n\n\n aboba\n";
-    success_lifecycle(filename, filecontent); 
+    immitate_file_writing(filename, filecontent); 
 
     EXPECT_NO_THROW(run_read_file());
 
@@ -125,7 +125,7 @@ TEST_F(FileReaderFixture, LFinContent_successFileProcessing) {
 TEST_F(FileReaderFixture, spacedFilename_successFileProcessing) {
     const std::string filename = "file name with spaces.txt";
     const std::string filecontent = "Text with\r\n\r\nCRLFS aboba\n";
-    success_lifecycle(filename, filecontent); 
+    immitate_file_writing(filename, filecontent); 
 
     EXPECT_NO_THROW(run_read_file());
 
@@ -135,7 +135,7 @@ TEST_F(FileReaderFixture, spacedFilename_successFileProcessing) {
 TEST_F(FileReaderFixture, dottedFilename_successFileProcessing) {
     const std::string filename = "...";
     const std::string filecontent = "Text with\r\n\r\nCRLFS aboba\n";
-    success_lifecycle(filename, filecontent); 
+    immitate_file_writing(filename, filecontent); 
 
     EXPECT_NO_THROW(run_read_file());
 
@@ -145,7 +145,7 @@ TEST_F(FileReaderFixture, dottedFilename_successFileProcessing) {
 TEST_F(FileReaderFixture, emptyContent_successFileProcessing) {
     const std::string filename = "filename.txt";
     const std::string filecontent = "";
-    success_lifecycle(filename, filecontent); 
+    immitate_file_writing(filename, filecontent); 
 
     EXPECT_NO_THROW(run_read_file());
 

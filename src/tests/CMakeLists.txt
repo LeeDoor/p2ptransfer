@@ -10,6 +10,7 @@ set(SOURCES
     test_address_gatherer.cpp
     test_thread_wrapper.cpp
     test_transferer.cpp
+    test_file_writer.cpp
 )
 set(TEST_NAME generic_tests)
 add_executable(${TEST_NAME} ${SOURCES})

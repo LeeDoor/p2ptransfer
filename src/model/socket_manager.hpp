@@ -35,7 +35,7 @@ public:
     virtual net::awaitable<std::string> read_request() = 0;
     /// Writes data to network connection. User should check the "\n\n" termination if request sent.
     /*! \throws std::runtime_error if connection aborted. */
-    virtual net::awaitable<void> write(std::string response) = 0;
+    virtual net::awaitable<void> write(std::string data) = 0;
     /// Reads a part of required file.
     /*!
     * \param buffer gathered data from remote connection is written to buffer.
@@ -45,6 +45,15 @@ public:
     * \throws std::runtime_error if connection aborted.
     */
     virtual net::awaitable<size_t> read_part_to(BufferType& buffer, size_t& bytes_remaining) = 0;
+    /// Writes a part of required file.
+    /*!
+    * \param buffer buffer with data which should be send to the remote user.
+    * \param bytes_remaining function substracts readed bytes from bytes_remaining.
+    * Guaranteed that bytes_remaining == 0 if file is fully sent.
+    * \returns the amount of bytes of the sent file part.
+    * \throws std::runtime_error if connection aborted.
+    */
+    virtual net::awaitable<size_t> write_part_from(BufferType& buffer, size_t& bytes_remaining) = 0;
 
     constexpr static size_t MAX_SEND_REQUEST_SIZE = 512;
     constexpr static std::string_view REQUEST_COMPLETION = "\n\n";
