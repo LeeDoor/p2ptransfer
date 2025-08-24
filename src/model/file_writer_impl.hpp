@@ -8,7 +8,7 @@ namespace model {
 class FileWriterImpl : public FileWriter {
 public:
     FileWriterImpl(std::shared_ptr<SocketManager> socket);
-    void write_file(const Filename& filename) override;
+    net::awaitable<void> write_file(const Filename& filename) override;
 private:
     std::shared_ptr<SocketManager> socket_;
 };

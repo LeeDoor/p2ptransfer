@@ -1,4 +1,5 @@
 #include "file_reader_impl.hpp"
+#include "file_writer_impl.hpp"
 #include "listener_callback_mock.hpp"
 #include "network_status_callback_mock.hpp"
 #include "socket_manager_mock.hpp"
@@ -25,7 +26,7 @@ protected:
     {
         file_writer_.set_callback(network_callback_);
     }
-    void check_file_reading(const Filename& filename, const std::string& filecontent) {
+    void check_file_writing(const Filename& filename, const std::string& filecontent) {
         verify_and_allow_request(filename, filecontent.size());
         verify_incoming_file(filecontent);
         check_file_transfered();
@@ -39,17 +40,104 @@ protected:
                 RequestSerializer::serialize_send_permission(filename)))
             );
     }
+    /// Verifies only small files fitting in BufferType::size. 
     void verify_incoming_file(const std::string& filecontent) {
+        size_t filesize = filecontent.size();
+        EXPECT_LE(filesize, SocketManager::BUFFER_SIZE);
+        EXPECT_CALL(*socket_, write_part_from(testing::_, filesize))
+            .WillRepeatedly([&] (BufferType& buffer, size_t& bytes_remaining) {
+                EXPECT_TRUE(std::equal(filecontent.begin(), filecontent.end(), buffer.begin()));
+                bytes_remaining = 0;
+                return return_immediately(filecontent.size());
+            });
     }
     void check_file_transfered() {
         EXPECT_CALL(*network_callback_, file_transfered());
     }
 
+    void run_write_file(const Filename& filename) {
+        net::io_context context;
+        net::co_spawn(context, file_writer_.write_file(filename), [](std::exception_ptr ptr) {
+            if(ptr) std::rethrow_exception(ptr);
+        });
+        context.run();
+    }
+
     std::shared_ptr<SocketManagerMock> socket_;
     std::shared_ptr<presenter::test::NetworkStatusCallbackMock> network_callback_;
-    FileReaderImpl file_writer_;
+    FileWriterImpl file_writer_;
 };
 
+class FileCreator {
+public:
+    FileCreator(const Filename& filename, const std::string& filecontent) 
+        : ofs_{filename, std::ios::binary}
+        , filename_{filename} {
+        ofs_ << filecontent;
+    }
+    FileCreator(const Filename& filename) : FileCreator(filename, "") {}
+    FileCreator(const FileCreator& other) = delete;
+    FileCreator(FileCreator&& other) = delete;
+    FileCreator& operator= (const Filename& other) = delete;
+    FileCreator& operator= (Filename&& other) = delete;
+    ~FileCreator() {
+        ofs_.close();
+        std::filesystem::remove(filename_);
+    }
+private:
+    std::ofstream ofs_;
+    std::string filename_;
+};
+
+TEST_F(FileWriterFixture, averageData_successFileProcessing) {
+    const std::string filename = "file.txt";
+    const std::string filecontent = "short content";
+    check_file_writing(filename, filecontent); 
+    EXPECT_NO_THROW(FileCreator file_creator(filename, filecontent));
+
+    EXPECT_NO_THROW(run_write_file(filename));
+}
+/*
+TEST_F(FileWriterFixture, LFinContent_successFileProcessing) {
+    const std::string filename = "file.txt";
+    const std::string filecontent = "too many spaces\n\n and LFs\n\n\n\n\n aboba\n";
+    immitate_file_writing(filename, filecontent); 
+
+    EXPECT_NO_THROW(run_write_file(filename));
+
+    verify_file_content(filename, filecontent);
+}
+
+TEST_F(FileWriterFixture, spacedFilename_successFileProcessing) {
+    const std::string filename = "file name with spaces.txt";
+    const std::string filecontent = "Text with\r\n\r\nCRLFS aboba\n";
+    immitate_file_writing(filename, filecontent); 
+
+    EXPECT_NO_THROW(run_write_file(filename));
+
+    verify_file_content(filename, filecontent);
+}
+
+TEST_F(FileWriterFixture, dottedFilename_successFileProcessing) {
+    const std::string filename = "...";
+    const std::string filecontent = "Text with\r\n\r\nCRLFS aboba\n";
+    immitate_file_writing(filename, filecontent); 
+
+    EXPECT_NO_THROW(run_write_file(filename));
+
+    verify_file_content(filename, filecontent);
+}
+
+TEST_F(FileWriterFixture, emptyContent_successFileProcessing) {
+    const std::string filename = "filename.txt";
+    const std::string filecontent = "";
+    immitate_file_writing(filename, filecontent); 
+
+    EXPECT_NO_THROW(run_write_file(filename));
+
+    verify_file_content(filename, filecontent);
+}
+*/
 }
 }
 }
