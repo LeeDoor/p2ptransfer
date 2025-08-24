@@ -1,4 +1,5 @@
 #include "socket_manager_impl.hpp"
+#include "logger.hpp"
 #include "socket_manager_impl_builder.hpp"
 #include "thread_wrapper_impl.hpp"
 
@@ -59,6 +60,17 @@ public:
     template<typename Ret, typename Func>
     [[nodiscard]] Ret spawn_yourself_get(Func&& func) {
         return spawn_get<Ret>(std::move(func), *context_);
+    }
+    net::awaitable<std::string> read_bytes(size_t bytes) {
+        std::stringstream ss;
+        BufferType buffer;
+        size_t bytes_remaining = bytes;
+        while(bytes_remaining) {
+            size_t bytes_read = co_await read_part_to(buffer, bytes_remaining);
+            std::string data(buffer.data(), bytes_read);
+            ss << data;
+        }
+        co_return ss.str();
     }
     void disconnect() {
         socket_->close();
@@ -282,6 +294,41 @@ TEST_F(SocketManagerFixture, readingFilePartThrows_shouldThrowRuntimeError) {
         {
             std::ignore = server_.spawn_yourself_get<size_t>(server_.read_part_to(buffer, bytes_remaining));
         }, std::runtime_error);
+}
+
+TEST_F(SocketManagerFixture, writingFilePart_lessThanOneBuffer) {
+    constexpr size_t less_than_buffer = get_buffer_size() / 2;
+    std::string file_immitation(less_than_buffer, 'a');
+    SocketManager::BufferType buffer; size_t bytes_remaining = less_than_buffer;
+    std::copy_n(file_immitation.begin(), less_than_buffer, buffer.begin());
+    size_t bytes = server_.spawn_yourself_get<size_t>(server_.write_part_from(buffer, bytes_remaining));
+    std::string gathered_file = client_.spawn_yourself_get<std::string>(client_.read_bytes(bytes));
+
+    EXPECT_LE(bytes, less_than_buffer);
+    EXPECT_GE(bytes_remaining, 0);
+    EXPECT_EQ(gathered_file.substr(0, bytes), file_immitation.substr(0, bytes));
+}
+
+TEST_F(SocketManagerFixture, writingFile_BuffersInCycle) {
+    constexpr size_t many_buffer_sizes = get_buffer_size() * 10;
+    std::string file_immitation(many_buffer_sizes, 'a');
+
+    SocketManager::BufferType buffer; 
+    size_t bytes_remaining = many_buffer_sizes;
+    size_t bytes, bytes_gone = 0;
+    do {
+        size_t old_bytes_remaining = bytes_remaining;
+        std::copy_n(file_immitation.begin(), buffer.size(), buffer.begin());
+        bytes = server_.spawn_yourself_get<size_t>(server_.write_part_from(buffer, bytes_remaining));
+        EXPECT_EQ(old_bytes_remaining - bytes_remaining, bytes);
+        EXPECT_LE(bytes, get_buffer_size());
+        std::string read_data = client_.spawn_yourself_get<std::string>(client_.read_bytes(bytes));
+        EXPECT_TRUE(std::equal(buffer.begin(), buffer.begin() + bytes, read_data.begin()));
+        bytes_gone += bytes;
+    } while(bytes);
+
+    ASSERT_EQ(bytes_gone, many_buffer_sizes);
+    ASSERT_EQ(bytes_remaining, 0);
 }
 
 }
