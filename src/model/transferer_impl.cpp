@@ -40,7 +40,7 @@ net::awaitable<void> TransfererImpl::send_file(std::shared_ptr<SocketManager> so
     co_return;
 }
 
-net::awaitable<void> TransfererImpl::connect_and_send(const Address& address, Port port, const Filename& filename) {
+net::awaitable<void> TransfererImpl::connect_and_send(Address address, Port port, Filename filename) {
     try {
         auto socket = co_await connect(address, port);
         co_await send_file(socket, filename);

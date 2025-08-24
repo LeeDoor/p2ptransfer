@@ -25,7 +25,8 @@ public:
 private:
     net::awaitable<std::shared_ptr<SocketManager>> connect(const Address& address, Port port);
     net::awaitable<void> send_file(std::shared_ptr<SocketManager> socket, const Filename& filename);
-    net::awaitable<void> connect_and_send(const Address& address, Port port, const Filename& filename);
+    /*! Has non-reference parameters to copy incoming objects and avoid SIGSEGV */
+    net::awaitable<void> connect_and_send(Address address, Port port, Filename filename);
 
     ContextPtr context_;
     ThreadWrapperPtr thread_wrapper_;
