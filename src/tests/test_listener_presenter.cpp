@@ -20,6 +20,7 @@ protected:
         view_{std::make_shared<View>()},
         presenter_{std::make_shared<ListenerPresenter>(network_callback_, listener_, view_)}
     {
+        EXPECT_CALL(*view_, setup());
         presenter_->setup();
     }
 

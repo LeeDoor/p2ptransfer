@@ -17,6 +17,13 @@ SendRequest RequestDeserializer::deserialize_send_request(const std::string requ
     send_request.filesize = deserialize_line<Filesize>(SVMethods::pop_line(request_sv), RequestMethod::FILESIZE);
     return send_request;
 }
+SendPermission RequestDeserializer::deserialize_send_permission(const std::string response_str) {
+    SendPermission permission;
+    std::string_view response_sv(response_str);
+    deserialize_line<void>(SVMethods::pop_line(response_sv), RequestMethod::PERMISSION);
+    permission.filename = deserialize_line<Filename>(SVMethods::pop_line(response_sv), RequestMethod::FILENAME);
+    return permission;
+}
 
 void RequestDeserializer::validate_method(std::string_view method_sv, RequestMethod required_method) {
     if(!request_methods_.contains(method_sv)) 

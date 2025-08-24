@@ -61,7 +61,12 @@ protected:
     void check_failure_callback() {
         EXPECT_CALL(*network_callback_, cant_open_socket());
     }
-
+    void check_file_create_and_transfer() {
+        EXPECT_CALL(*file_writer_builder_, create_file_writer_mock());
+        EXPECT_CALL(*file_writer_, write_file).WillOnce(Return(return_immediately()));
+        EXPECT_CALL(*network_callback_, file_transfered());
+    }
+    
     std::shared_ptr<ThreadWrapperMock> thread_wrapper_;
     std::shared_ptr<SocketManagerMock> socket_manager_;
     std::shared_ptr<SocketManagerMockBuilder> socket_builder_;
@@ -80,11 +85,12 @@ TEST_F(TransfererFixture, ifAlreadyTransfering_ignore) {
     transferer_->transfer_file(TEST_LOCADDR, TEST_PORT, TEST_FILENAME);
 }
 
-TEST_F(TransfererFixture, ifNotListening_connectAndReadFile) {
+TEST_F(TransfererFixture, ifNotListening_connectAndTransferFile) {
     check_thread_wrapper_executing();
     check_socket_creation();
     check_connection_success_callback();
     simulate_endpoint_receiver();
+    check_file_create_and_transfer();
 
     transferer_->transfer_file(TEST_LOCADDR, TEST_PORT, TEST_FILENAME);
 }
@@ -110,6 +116,7 @@ TEST_F(TransfererFixture, FileWriterThrew_HandleWithoutRethrow) {
             throw std::runtime_error("immitating filing problem");
         });
     check_connection_success_callback();
+    EXPECT_CALL(*network_callback_, connection_aborted(TEST_LOCADDR, TEST_PORT));
 
     EXPECT_NO_THROW(transferer_->transfer_file(TEST_LOCADDR, TEST_PORT, TEST_FILENAME));
 }

@@ -31,7 +31,7 @@ net::awaitable<void> TransfererImpl::send_file(std::shared_ptr<SocketManager> so
     try {
         rem_endpoint = socket->get_remote_endpoint();
         auto file_writer = file_writer_builder_->create_file_writer(callback(), socket);
-        file_writer->write_file(filename);
+        co_await file_writer->write_file(filename);
         callback()->file_transfered();
     } catch (const std::exception& ex) {
         callback()->connection_aborted(rem_endpoint.address, rem_endpoint.port);

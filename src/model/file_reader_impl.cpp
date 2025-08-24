@@ -78,10 +78,8 @@ net::awaitable<void> FileReaderImpl::handle_file(std::ofstream& os, size_t files
 } 
 
 void FileReaderImpl::calculate_notify_progressbar(size_t bytes_remaining, size_t filesize) {
-    if(auto callback = WithNetworkCallback::callback_.lock()) {
-        double progress = 100.0 - (bytes_remaining * 100.0 / filesize);
-        callback->set_progressbar(progress);
-    }
+    double progress = 100.0 - (bytes_remaining * 100.0 / filesize);
+    WithNetworkCallback::callback()->set_progressbar(progress);
 }
 
 }

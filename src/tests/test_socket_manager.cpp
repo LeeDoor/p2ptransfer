@@ -299,8 +299,10 @@ TEST_F(SocketManagerFixture, readingFilePartThrows_shouldThrowRuntimeError) {
 TEST_F(SocketManagerFixture, writingFilePart_lessThanOneBuffer) {
     constexpr size_t less_than_buffer = get_buffer_size() / 2;
     std::string file_immitation(less_than_buffer, 'a');
-    SocketManager::BufferType buffer; size_t bytes_remaining = less_than_buffer;
-    std::copy_n(file_immitation.begin(), less_than_buffer, buffer.begin());
+    SocketManager::WriteBufferType buffer; size_t bytes_remaining = less_than_buffer;
+    std::stringstream ss(file_immitation);
+    buffer.fill(ss);
+    Logger::log() << "buffer data: " << buffer.get_data() << ":should be: " << std::endl;
     size_t bytes = server_.spawn_yourself_get<size_t>(server_.write_part_from(buffer, bytes_remaining));
     std::string gathered_file = client_.spawn_yourself_get<std::string>(client_.read_bytes(bytes));
 
@@ -313,17 +315,18 @@ TEST_F(SocketManagerFixture, writingFile_BuffersInCycle) {
     constexpr size_t many_buffer_sizes = get_buffer_size() * 10;
     std::string file_immitation(many_buffer_sizes, 'a');
 
-    SocketManager::BufferType buffer; 
+    SocketManager::WriteBufferType buffer; 
     size_t bytes_remaining = many_buffer_sizes;
     size_t bytes, bytes_gone = 0;
+    std::stringstream ss(file_immitation);
     do {
         size_t old_bytes_remaining = bytes_remaining;
-        std::copy_n(file_immitation.begin(), buffer.size(), buffer.begin());
+        buffer.fill(ss);
         bytes = server_.spawn_yourself_get<size_t>(server_.write_part_from(buffer, bytes_remaining));
         EXPECT_EQ(old_bytes_remaining - bytes_remaining, bytes);
         EXPECT_LE(bytes, get_buffer_size());
         std::string read_data = client_.spawn_yourself_get<std::string>(client_.read_bytes(bytes));
-        EXPECT_TRUE(std::equal(buffer.begin(), buffer.begin() + bytes, read_data.begin()));
+        EXPECT_TRUE(std::equal(file_immitation.begin(), file_immitation.begin() + bytes, read_data.begin()));
         bytes_gone += bytes;
     } while(bytes);
 

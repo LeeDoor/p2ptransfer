@@ -10,11 +10,6 @@ namespace model {
 namespace test {
 
 using namespace ::p2ptransfer::test;
-/*! FileWriter --> asks permission --> remote user
-*   remote user --> allows/denies --> FileWriter
-*   ---- if allowed --- 
-*   FileWriter --> partially sends file --> remote user
-*/
 class FileWriterFixture : public ::testing::Test {
 protected:
     using BufferType = SocketManager::BufferType;
@@ -34,25 +29,29 @@ protected:
     void verify_and_allow_request(const Filename& filename, size_t filesize) {
         EXPECT_CALL(*socket_, write(
             RequestSerializer::serialize_send_request(filename, filesize)
-        ));
+        )).WillOnce(Return(return_immediately()));
         EXPECT_CALL(*socket_, read_request())
             .WillOnce(Return(return_immediately(
                 RequestSerializer::serialize_send_permission(filename)))
             );
     }
-    /// Verifies only small files fitting in BufferType::size. 
+    /// \note Verifies only small files fitting in BufferType::size. 
     void verify_incoming_file(const std::string& filecontent) {
         size_t filesize = filecontent.size();
         EXPECT_LE(filesize, SocketManager::BUFFER_SIZE);
         EXPECT_CALL(*socket_, write_part_from(testing::_, filesize))
-            .WillRepeatedly([&] (BufferType& buffer, size_t& bytes_remaining) {
-                EXPECT_TRUE(std::equal(filecontent.begin(), filecontent.end(), buffer.begin()));
+            .WillRepeatedly([&] (SocketManager::WriteBufferType& buffer, size_t& bytes_remaining) {
+                EXPECT_TRUE(std::equal(filecontent.begin(), filecontent.end(), sv_from_write_buffer(buffer).begin()));
+                buffer.grab(bytes_remaining);
                 bytes_remaining = 0;
                 return return_immediately(filecontent.size());
             });
     }
+    inline std::string_view sv_from_write_buffer(SocketManager::WriteBufferType& wb) {
+        return std::string_view(wb.get_data(), wb.get_data_size());
+    }
     void check_file_transfered() {
-        EXPECT_CALL(*network_callback_, file_transfered());
+        EXPECT_CALL(*network_callback_, set_progressbar).Times(AtLeast(1));
     }
 
     void run_write_file(const Filename& filename) {
@@ -71,9 +70,9 @@ protected:
 class FileCreator {
 public:
     FileCreator(const Filename& filename, const std::string& filecontent) 
-        : ofs_{filename, std::ios::binary}
-        , filename_{filename} {
-        ofs_ << filecontent;
+        : filename_{filename} {
+        std::ofstream ofs{filename, std::ios::binary};
+        ofs << filecontent;
     }
     FileCreator(const Filename& filename) : FileCreator(filename, "") {}
     FileCreator(const FileCreator& other) = delete;
@@ -81,11 +80,9 @@ public:
     FileCreator& operator= (const Filename& other) = delete;
     FileCreator& operator= (Filename&& other) = delete;
     ~FileCreator() {
-        ofs_.close();
         std::filesystem::remove(filename_);
     }
 private:
-    std::ofstream ofs_;
     std::string filename_;
 };
 
@@ -93,7 +90,7 @@ TEST_F(FileWriterFixture, averageData_successFileProcessing) {
     const std::string filename = "file.txt";
     const std::string filecontent = "short content";
     check_file_writing(filename, filecontent); 
-    EXPECT_NO_THROW(FileCreator file_creator(filename, filecontent));
+    FileCreator file_creator(filename, filecontent);
 
     EXPECT_NO_THROW(run_write_file(filename));
 }

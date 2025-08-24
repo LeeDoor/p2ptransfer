@@ -15,7 +15,7 @@ namespace p2ptransfer {
 */
 template<typename InternetProtocol>
 class SocketManagerImpl : public SocketManager {
-public:
+    public:
     using ContextPtr = std::shared_ptr<net::io_context>;
     using SocketType = net::basic_stream_socket<InternetProtocol>;
     using SocketDeleter = std::function<void(SocketType*)>;
@@ -89,12 +89,13 @@ public:
         co_return bytes_read;
     }
 
-    net::awaitable<size_t> write_part_from(BufferType& buffer, size_t& bytes_remaining) override {
+    net::awaitable<size_t> write_part_from(WriteBufferType& buffer, size_t& bytes_remaining) override {
         size_t bytes_written = co_await net::async_write(
             *socket_, 
-            net::buffer(buffer, std::min(BUFFER_SIZE, bytes_remaining)),
+            net::buffer(buffer.get_data(), buffer.get_data_size()),
             net::use_awaitable);
         bytes_remaining -= bytes_written;
+        buffer.grab(bytes_written);
         co_return bytes_written;
     }
 
@@ -125,7 +126,7 @@ protected:
         socket_ = SocketPtr(new SocketType(*context_, InternetProtocol::v4()), get_socket_deleter());
         co_await socket_->async_connect(ep, net::use_awaitable);
     }
-
+    
     ContextPtr context_;
     SocketPtr socket_;
     std::string reading_buffer_;

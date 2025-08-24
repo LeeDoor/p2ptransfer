@@ -14,7 +14,7 @@ struct SendRequest {
     Filename filename = "";
     Filesize filesize = 0;
 };
-struct SendResponse {
+struct SendPermission {
     Filename filename;
 };
 

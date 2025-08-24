@@ -8,6 +8,7 @@ namespace p2ptransfer {
 class RequestDeserializer {
 public:
     static SendRequest deserialize_send_request(const std::string request_str);
+    static SendPermission deserialize_send_permission(const std::string request_str);
 private:
     RequestDeserializer() = delete;
     template<DeserializableOrVoid ValueType>

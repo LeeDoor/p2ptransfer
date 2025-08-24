@@ -8,6 +8,9 @@ namespace test {
 class FileWriterMock : public FileWriter {
 public:
     MOCK_METHOD(net::awaitable<void>, write_file, (const Filename&), (override));
+    FileWriterMock() {
+        // EXPECT_CALL(this, write_file).WillRepeatedly(
+    }
 };
 
 }
