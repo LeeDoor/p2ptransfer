@@ -7,6 +7,8 @@ namespace view {
 /// \ref View implementation for Command Line Interface.
 class GeneralViewCLI : public GeneralView {
 public:
+    GeneralViewCLI(int argc, char** argv);
+
     int run() override;
     void show_address(const Address& address) override;
     void show_connected(const Address& address, Port port) override;
@@ -26,6 +28,7 @@ private:
     std::list<std::function<void()>> transfer_subs_;
 
     bool is_running_ = true;
+    CLIRunArgs args_;
 };
 
 }

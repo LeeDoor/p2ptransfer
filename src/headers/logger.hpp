@@ -12,11 +12,13 @@ public:
 #endif
     }
     static void log_stacktrace(const std::string& err_header) {
+#ifndef NDEBUG
         log() 
             << ERROR_COLOR << err_header << CLEAR_COLOR << std::endl
             << boost::stacktrace::stacktrace() << std::endl;
 #ifdef TESTING
         std::terminate();
+#endif
 #endif
     }
     static void progressbar_init() {

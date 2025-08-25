@@ -19,6 +19,7 @@ find_package(Boost REQUIRED COMPONENTS
     stacktrace_backtrace
     stacktrace_addr2line
     stacktrace_noop
+    program_options
 )
 set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} ${Boost_INCLUDE_DIRS})
 set(LINK_LIBRARIES 
@@ -26,6 +27,7 @@ set(LINK_LIBRARIES
     ${Boost_STACKTRACE_BACKTRACE_LIBRARY}
     ${Boost_STACKTRACE_ADDR2LINE_LIBRARY}
     ${Boost_STACKTRACE_NOOP_LIBRARY}
+    ${Boost_PROGRAM_OPTIONS}
 pthread dl backtrace)
 
 if(${GRAPHICS})

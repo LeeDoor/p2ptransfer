@@ -3,8 +3,11 @@
 namespace p2ptransfer {
 namespace view {
 
+GeneralViewCLI::GeneralViewCLI(int argc, char** argv) {
+    
+}
+
 int GeneralViewCLI::run() {
-    notify_transfer();
     while(is_running_);
     std::raise(SIGINT);
     return 0;

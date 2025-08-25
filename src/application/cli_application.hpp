@@ -8,8 +8,8 @@ namespace p2ptransfer {
 
 class CLIApplication {
 public:
-    CLIApplication() :
-        application_{[] { return view::GeneralViewCLI{}; }}
+    CLIApplication(int argc, char** argv) :
+        application_{[=] { return view::GeneralViewCLI{argc, argv}; }}
     {}
 
     int run() { return application_.run(); }
