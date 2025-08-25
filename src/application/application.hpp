@@ -3,7 +3,6 @@
 #include "model_builder.hpp"
 #include "signal_handler.hpp"
 #include "general_presenter.hpp"
-#include "transferer_impl.hpp"
 #include "transferer_presenter.hpp"
 #include "transferer_view.hpp"
 
@@ -15,7 +14,7 @@ public:
     Application(GeneralViewGenerator&& gvg, SignalFunc&& signal_func) :
         context_{std::make_shared<net::io_context>()},
         model_builder_{context_},
-        general_view_{std::make_shared<GeneralViewType>(gvg())},
+        general_view_{gvg()},
         general_presenter_{std::make_shared<presenter::GeneralPresenter>(
             model_builder_.create_address_gatherer(),
             general_view_

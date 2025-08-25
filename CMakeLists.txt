@@ -9,26 +9,17 @@ option(TESTING "Build tests" ON)
 option(GRAPHICS "Build with Qt" ON) # graphics executable
 
 set(LINK_LIBRARIES ) # libraries to link
+set(INCLUDE_DIRECTORIES ) 
 set(CMAKE_CXX_FLAGS "-frtti -Wall -Wextra -Wpedantic")
 if(WIN32) 
     set(LINK_LIBRARIES ws2_32 -lmswsock) 
 endif()
 
 find_package(Boost REQUIRED COMPONENTS 
-    stacktrace_basic
-    stacktrace_backtrace
-    stacktrace_addr2line
-    stacktrace_noop
     program_options
 )
 set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} ${Boost_INCLUDE_DIRS})
-set(LINK_LIBRARIES 
-    ${Boost_STACKTRACE_BASIC_LIBRARY}
-    ${Boost_STACKTRACE_BACKTRACE_LIBRARY}
-    ${Boost_STACKTRACE_ADDR2LINE_LIBRARY}
-    ${Boost_STACKTRACE_NOOP_LIBRARY}
-    ${Boost_PROGRAM_OPTIONS}
-pthread dl backtrace)
+set(LINK_LIBRARIES Boost::program_options)
 
 if(${GRAPHICS})
     find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets Core)

@@ -9,12 +9,17 @@ namespace p2ptransfer {
 class CLIApplication {
 public:
     CLIApplication(int argc, char** argv) :
-        application_{[=] { return view::GeneralViewCLI{argc, argv}; }}
+        cli_application_{std::make_shared<view::GeneralViewCLI>(argc, argv)},
+        application_{
+            [this] { return cli_application_; },
+            [this] { cli_application_->stop(); }
+        }
     {}
 
     int run() { return application_.run(); }
 
 private:
+    std::shared_ptr<view::GeneralViewCLI> cli_application_;
     Application<view::GeneralViewCLI, view::ListenerViewCLI, view::TransfererViewCLI> application_;
 };
 

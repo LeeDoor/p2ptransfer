@@ -1,5 +1,6 @@
 #pragma once
 #include "general_view.hpp"
+#include "cli_args_parser.hpp"
 
 namespace p2ptransfer {
 namespace view {
@@ -10,6 +11,7 @@ public:
     GeneralViewCLI(int argc, char** argv);
 
     int run() override;
+    void stop();
     void show_address(const Address& address) override;
     void show_connected(const Address& address, Port port) override;
     void show_socket_error() override;
@@ -21,6 +23,7 @@ public:
     void subscribe_transfer(std::function<void()> func);
 
 private:
+    void close_program();
     void notify_listen();
     void notify_transfer();
 
@@ -28,7 +31,7 @@ private:
     std::list<std::function<void()>> transfer_subs_;
 
     bool is_running_ = true;
-    CLIRunArgs args_;
+    CLIArgsParser::CLIRunArgs args_;
 };
 
 }

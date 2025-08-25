@@ -4,13 +4,18 @@ namespace p2ptransfer {
 namespace view {
 
 GeneralViewCLI::GeneralViewCLI(int argc, char** argv) {
-    
+    CLIArgsParser parser(argc, argv);
+    args_ = parser.parse_cli_args();
+    if(!args_.valid) 
+        close_program();
 }
 
 int GeneralViewCLI::run() {
     while(is_running_);
-    std::raise(SIGINT);
-    return 0;
+    return !args_.valid;
+}
+void GeneralViewCLI::stop() {
+    is_running_ = false;
 }
 
 void GeneralViewCLI::notify_listen() {
@@ -32,18 +37,21 @@ void GeneralViewCLI::show_connected(const Address& address, Port port) {
 }
 void GeneralViewCLI::show_socket_error() {
     std::cout << "Cant open socket" << std::endl;
-    is_running_ = false;
+    close_program();
 }
 void GeneralViewCLI::update_progressbar_status(double persent) {
     std::cout << "progress: " << persent << std::endl;
 }
 void GeneralViewCLI::show_file_success() {
     std::cout << "File successfully downloaded" << std::endl;
-    is_running_ = false;
+    close_program();
 }
 void GeneralViewCLI::show_connection_aborted(const Address& address, Port port) {
     std::cout << "FATAL: Connection aborted with remote endpoint " << address << ":" << port << std::endl;
-    is_running_ = false;
+    close_program();
+}
+void GeneralViewCLI::close_program() {
+    std::raise(SIGINT);
 }
 void GeneralViewCLI::subscribe_listen(std::function<void()> func) {
     listen_subs_.push_back(std::move(func));

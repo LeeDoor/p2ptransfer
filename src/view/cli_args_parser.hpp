@@ -10,20 +10,17 @@ class CLIArgsParser {
 public:
     enum Action { None, Listen, Transfer };
     struct CLIRunArgs {
-        bool success = false;
-        Action action;
-        Address address;
-        Port port;
-        Filename filename;
+        bool valid = true;
+        Action action = None;
+        Address address = "";
+        Port port = 0;
+        Filename filename = "";
     };
 
     CLIArgsParser(int argc, char** argv);
 
     CLIRunArgs parse_cli_args();
 private:
-    void iterate_args();
-    char* peek_next_for(int i);
-
     int argc;
     char** argv;
 };

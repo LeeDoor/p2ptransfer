@@ -12,6 +12,7 @@ if(${GRAPHICS})
     target_link_libraries(server_view INTERFACE server_view_gui)
 else()
     add_library(server_view_cli
+        cli_args_parser.cpp
         general_view_cli.cpp
         listener_view_cli.cpp
         transferer_view_cli.cpp

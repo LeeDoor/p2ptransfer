@@ -5,7 +5,3 @@
 #include <functional>
 #include <boost/asio.hpp>
 #include <boost/system.hpp>
-#ifdef NDEBUG
-#define BOOST_STACKTRACE_USE_BACKTRACE
-#endif
-#include <boost/stacktrace.hpp>
