@@ -5,6 +5,8 @@ then
     exit 0
 fi
 
+./check_requirements.py
+
 # Reading view mode parameter
 graphics=${1:-2}
 shift
@@ -40,4 +42,4 @@ fi
 printf "${clearcolor}"
 
 # Executing CMake
-cmake $src -DTESTING=ON -DGRAPHICS=$graphics $@ && cmake --build . -j$(nproc)
+sudo cmake $src -DTESTING=OFF -DGRAPHICS=$graphics $@ && cmake --build . -j$(nproc)
