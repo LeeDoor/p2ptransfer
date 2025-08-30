@@ -18,13 +18,13 @@ void ListenerViewCLI::listen(Port port) {
 }
 
 bool ListenerViewCLI::ask_file_verification(const Filename& filename, Filesize filesize) {
-    std::cout << "Do you want to download file \"" << filename 
-        << "\" (" << FilesizeFormatter::to_string(filesize) << ")? [y/n]: " << std::endl;
-    char input = '\0';
-    do {
-        std::cin >> input;
-    } while (input != 'y' || input != 'n' || input != 'Y' || input != 'N');
-    return input == 'y' || input == 'Y';;
+    std::cout << "Do you want to download file \"" << filename << "\" "
+        "(" << FilesizeFormatter::to_string(filesize) << ")? [y/n]: " << std::endl;
+    std::string input;
+    std::cin >> input;
+    return 
+        std::strncmp(input.c_str(), "y", 1) == 0 ||
+        std::strncmp(input.c_str(), "Y", 1) == 0;
 }
 
 }
