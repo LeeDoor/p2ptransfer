@@ -15,19 +15,35 @@ if(WIN32)
     set(LINK_LIBRARIES ws2_32 -lmswsock) 
 endif()
 
-find_package(Boost REQUIRED COMPONENTS 
+find_package(Boost COMPONENTS 
     program_options
 )
+if(NOT ${Boost_FOUND})
+    message(FATAL_ERROR "Boost cannot be found. Try to install it with:\nsudo apt-get install libboost-all-dev")
+endif()
 set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} ${Boost_INCLUDE_DIRS})
 set(LINK_LIBRARIES Boost::program_options)
 
 if(${GRAPHICS})
-    find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets Core)
+    find_package(QT NAMES Qt6 REQUIRED Widgets Core)
     find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Core)
+    if(NOT ${Qt6_FOUND})
+        message(FATAL_ERROR "Qt6 cannot be found. Try to install it with:\nsudo apt install qt6-base-dev qt6-declarative-dev qt6-tools-dev qt6-tools-dev-tools")
+    endif()
 endif()
 
 if(${TESTING})
-    find_package(GTest REQUIRED)
+    find_package(GTest)
+    if(NOT ${GTest_FOUND})
+        include(FetchContent)
+        FetchContent_Declare(
+          googletest
+          GIT_REPOSITORY https://github.com/google/googletest.git
+          GIT_TAG        v1.17.0
+          FIND_PACKAGE_ARGS NAMES GTest
+        )
+        FetchContent_MakeAvailable(googletest)
+    endif()
     enable_testing()
 endif()
 
