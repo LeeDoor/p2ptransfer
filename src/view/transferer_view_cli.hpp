@@ -11,7 +11,7 @@ public:
 
     void setup() override;
 private:
-    void read_data_and_transfer();
+    void transfer(const Address& address, Port port, const Filename& filename);
 
     std::shared_ptr<GeneralViewCLI> general_view_;
 };

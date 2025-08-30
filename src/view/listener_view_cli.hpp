@@ -13,7 +13,7 @@ public:
     bool ask_file_verification(const Filename& filename, Filesize filesize) override;
 
 private:
-    void read_port_and_listen();
+    void listen(Port port);
 
     std::shared_ptr<GeneralViewCLI> general_view_;
 };

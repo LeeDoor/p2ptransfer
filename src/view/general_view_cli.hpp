@@ -19,16 +19,19 @@ public:
     void show_file_success() override;
     void show_connection_aborted(const Address& address, Port port) override;
 
-    void subscribe_listen(std::function<void()> func);
-    void subscribe_transfer(std::function<void()> func);
+    using ListenNotification = std::function<void(Port)>;
+    using TransferNotification = std::function<void(const Address&, Port, const Filename&)>;
+    void subscribe_listen(ListenNotification func);
+    void subscribe_transfer(TransferNotification func);
 
 private:
+    void run_action();
     void close_program();
     void notify_listen();
     void notify_transfer();
 
-    std::list<std::function<void()>> listen_subs_;
-    std::list<std::function<void()>> transfer_subs_;
+    std::list<ListenNotification> listen_subs_;
+    std::list<TransferNotification> transfer_subs_;
 
     bool is_running_ = true;
     CLIArgsParser::CLIRunArgs args_;

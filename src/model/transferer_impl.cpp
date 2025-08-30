@@ -14,6 +14,25 @@ TransfererImpl::TransfererImpl(
     , file_writer_builder_{file_writer_builder}
 {}
 
+void TransfererImpl::transfer_file(const Address& address, Port port, const Filename& filename) {
+    if(!thread_wrapper_->is_running()) {
+        net::co_spawn(*context_, connect_and_send(address, port, filename), net::detached);
+        thread_wrapper_->execute([this]{
+            context_->run();
+            context_->restart();
+        });
+    }
+}
+
+net::awaitable<void> TransfererImpl::connect_and_send(Address address, Port port, Filename filename) {
+    try {
+        auto socket = co_await connect(address, port);
+        co_await send_file(socket, filename);
+    } catch (const std::exception& ex) {
+        Logger::log() << ex.what() << std::endl;
+    }
+}
+
 net::awaitable<std::shared_ptr<SocketManager>> TransfererImpl::connect(const Address& address, Port port) {
     try {
         auto socket = co_await socket_builder_->tcp_connecting_to(address, port);
@@ -40,24 +59,7 @@ net::awaitable<void> TransfererImpl::send_file(std::shared_ptr<SocketManager> so
     co_return;
 }
 
-net::awaitable<void> TransfererImpl::connect_and_send(Address address, Port port, Filename filename) {
-    try {
-        auto socket = co_await connect(address, port);
-        co_await send_file(socket, filename);
-    } catch (const std::exception& ex) {
-        Logger::log() << ex.what() << std::endl;
-    }
-}
 
-void TransfererImpl::transfer_file(const Address& address, Port port, const Filename& filename) {
-    if(!thread_wrapper_->is_running()) {
-        net::co_spawn(*context_, connect_and_send(address, port, filename), net::detached);
-        thread_wrapper_->execute([this]{
-            context_->run();
-            context_->restart();
-        });
-    }
-}
 
 }
 }

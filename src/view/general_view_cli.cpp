@@ -5,27 +5,40 @@ namespace view {
 
 GeneralViewCLI::GeneralViewCLI(int argc, char** argv) {
     CLIArgsParser parser(argc, argv);
-    args_ = parser.parse_cli_args();
+    args_ = parser.handle_cli_args();
     if(!args_.valid) 
         close_program();
 }
 
 int GeneralViewCLI::run() {
+    run_action();
     while(is_running_);
     return !args_.valid;
 }
+
+void GeneralViewCLI::run_action() {
+    switch(args_.action) {
+        case CLIArgsParser::Listen:
+            notify_listen();
+            break;
+        case CLIArgsParser::Transfer:
+            notify_transfer();
+            break;
+    }
+}
+
 void GeneralViewCLI::stop() {
     is_running_ = false;
 }
 
 void GeneralViewCLI::notify_listen() {
     for(auto iter = listen_subs_.begin(); iter != listen_subs_.end(); ++iter) {
-        (*iter)();
+        (*iter)(args_.port);
     }   
 }
 void GeneralViewCLI::notify_transfer() {
     for(auto iter = transfer_subs_.begin(); iter != transfer_subs_.end(); ++iter) {
-        (*iter)();
+        (*iter)(args_.address, args_.port, args_.filename);
     }   
 }
 
@@ -53,10 +66,10 @@ void GeneralViewCLI::show_connection_aborted(const Address& address, Port port) 
 void GeneralViewCLI::close_program() {
     std::raise(SIGINT);
 }
-void GeneralViewCLI::subscribe_listen(std::function<void()> func) {
+void GeneralViewCLI::subscribe_listen(ListenNotification func) {
     listen_subs_.push_back(std::move(func));
 }
-void GeneralViewCLI::subscribe_transfer(std::function<void()> func) {
+void GeneralViewCLI::subscribe_transfer(TransferNotification func) {
     transfer_subs_.push_back(std::move(func));
 }
 

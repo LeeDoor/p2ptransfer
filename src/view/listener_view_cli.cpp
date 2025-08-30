@@ -9,16 +9,11 @@ ListenerViewCLI::ListenerViewCLI(std::shared_ptr<GeneralViewCLI> view) :
 {}
 
 void ListenerViewCLI::setup() {
-    general_view_->subscribe_listen([self = shared_from_this()]{ self->read_port_and_listen(); });
+    general_view_->subscribe_listen(
+        [self = shared_from_this()](Port port){ self->listen(port); });
 }
-void ListenerViewCLI::read_port_and_listen() {
-    std::cout << 
-        "Ready to listen for connections\n"
-        "Enter your port: ";
-    Port port;
-    std::cin >> port;
-    if(!std::cin.good() || port > 65535) 
-        return;
+void ListenerViewCLI::listen(Port port) {
+    Logger::log() << "Listening at port " << port << std::endl;
     callback()->listen(port);
 }
 

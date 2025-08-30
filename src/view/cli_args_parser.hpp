@@ -21,12 +21,20 @@ public:
 
     CLIArgsParser(int argc, char** argv);
 
-    CLIRunArgs parse_cli_args();
+    CLIRunArgs handle_cli_args() noexcept;
+
 private:
+    /*! \throws std::runtime_error in failure case. */
+    void parse_cli_args();
+    void add_options();
+    Action get_action();
     /*! Should have args.action set before using. */
-    std::string validate();
-    std::string validate_transfer();
-    std::string validate_listen();
+    void validate();
+    void validate_transfer();
+    void validate_listen();
+    void validate_port();
+    void validate_address();
+    void validate_filename();
 
     int argc;
     char** argv;
