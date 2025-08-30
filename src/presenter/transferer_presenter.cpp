@@ -1,4 +1,7 @@
 #include "transferer_presenter.hpp"
+#include "transferer.hpp"
+#include "transferer_view.hpp"
+#include "network_status_callback.hpp"
 
 namespace p2ptransfer {
 namespace presenter {

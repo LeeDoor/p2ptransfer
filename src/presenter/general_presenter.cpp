@@ -1,4 +1,6 @@
 #include "general_presenter.hpp"
+#include "address_gatherer.hpp"
+#include "general_view.hpp"
 
 namespace p2ptransfer {
 namespace presenter {

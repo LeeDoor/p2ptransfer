@@ -1,11 +1,13 @@
 #pragma once
-#include "listener.hpp"
-#include "listener_view.hpp"
 #include "listener_view_callback.hpp"
 #include "listener_callback.hpp"
 
 namespace p2ptransfer {
+namespace view { class ListenerView; }
+namespace model { class Listener; }
 namespace presenter {
+
+class NetworkStatusCallback;
 
 class ListenerPresenter final :
     public view::ListenerViewCallback,

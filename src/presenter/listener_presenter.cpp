@@ -1,4 +1,6 @@
 #include "listener_presenter.hpp"
+#include "listener.hpp"
+#include "listener_view.hpp"
 
 namespace p2ptransfer {
 namespace presenter {

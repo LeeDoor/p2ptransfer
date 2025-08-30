@@ -1,10 +1,13 @@
 #pragma once
-#include "address_gatherer.hpp"
 #include "address_gatherer_callback.hpp"
 #include "network_status_callback.hpp"
-#include "general_view.hpp"
 
 namespace p2ptransfer {
+
+class AddressGatherer;
+
+namespace view { class GeneralView; }
+
 namespace presenter {
 
 /*!

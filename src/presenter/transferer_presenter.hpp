@@ -1,12 +1,13 @@
 #pragma once
-#include "network_status_callback.hpp"
 #include "request_structures.hpp"
-#include "transferer.hpp"
-#include "transferer_view.hpp"
 #include "transferer_view_callback.hpp"
 
 namespace p2ptransfer {
+namespace view { class TransfererView; }
+namespace model { class Transferer; }
 namespace presenter {
+
+class NetworkStatusCallback;
 
 class TransfererPresenter : 
     public view::TransfererViewCallback, 
