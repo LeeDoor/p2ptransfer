@@ -1,5 +1,4 @@
 #pragma once
-#include "callback.hpp"
 #include "listener_callback.hpp"
 #include "network_status_callback.hpp"
 

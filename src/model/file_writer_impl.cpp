@@ -1,6 +1,7 @@
 #include "file_writer_impl.hpp"
 #include "request_deserializer.hpp"
 #include "request_serializer.hpp"
+#include "socket_manager.hpp"
 
 namespace p2ptransfer {
 namespace model {

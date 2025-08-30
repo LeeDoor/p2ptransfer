@@ -1,11 +1,15 @@
 #pragma once
-#include "file_reader_builder.hpp"
 #include "listener.hpp"
-#include "socket_manager_builder.hpp"
-#include "thread_wrapper.hpp"
 
 namespace p2ptransfer {
+
+class ThreadWrapper;
+class SocketManagerBuilder;
+class SocketManager;
+
 namespace model {
+
+class FileReaderBuilder;
 
 /*!
 * \brief Socket implementation for \ref Listener .

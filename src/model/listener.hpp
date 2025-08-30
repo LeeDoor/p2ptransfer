@@ -1,6 +1,7 @@
 #pragma once
-#include "file_reader.hpp"
 #include "port.hpp"
+#include "network_status_callback.hpp"
+#include "listener_callback.hpp"
 
 namespace p2ptransfer {
 namespace model {

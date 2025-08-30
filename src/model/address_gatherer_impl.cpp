@@ -1,4 +1,7 @@
 #include "address_gatherer_impl.hpp"
+#include "thread_wrapper.hpp"
+#include "socket_manager_builder.hpp"
+#include "socket_manager.hpp"
 
 namespace p2ptransfer {
 

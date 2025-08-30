@@ -2,7 +2,6 @@
 #include "address.hpp"
 #include "port.hpp"
 #include "request_structures.hpp"
-#include <boost/program_options.hpp>
 
 namespace p2ptransfer {
 namespace view {

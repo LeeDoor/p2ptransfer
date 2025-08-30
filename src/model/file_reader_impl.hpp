@@ -1,9 +1,11 @@
 #pragma once
 #include "file_reader.hpp"
 #include "request_structures.hpp"
-#include "socket_manager.hpp"
 
 namespace p2ptransfer {
+
+class SocketManager;
+
 namespace model {
 
 /// Implementation for \ref FileReader using \ref SocketManager .

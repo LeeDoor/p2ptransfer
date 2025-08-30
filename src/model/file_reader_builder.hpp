@@ -1,9 +1,14 @@
 #pragma once
-#include "file_reader.hpp"
-#include "socket_manager.hpp"
+#include "network_status_callback.hpp"
+#include "listener_callback.hpp"
 
 namespace p2ptransfer {
+
+class SocketManager;
+
 namespace model {
+
+class FileReader;
 
 /*!
 * \brief Builder for \ref FileReader .

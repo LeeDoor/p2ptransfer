@@ -1,9 +1,12 @@
 #pragma once
 #include "address_gatherer.hpp"
-#include "thread_wrapper.hpp"
-#include "socket_manager_builder.hpp"
+#include "port.hpp"
 
 namespace p2ptransfer {
+
+class SocketManager;
+class SocketManagerBuilder;
+class ThreadWrapper;
 
 /*!
 * \brief Implements \ref AddressGatherer interface.

@@ -1,9 +1,13 @@
 #pragma once
-#include "file_writer.hpp"
-#include "socket_manager.hpp"
+#include "network_status_callback.hpp"
 
 namespace p2ptransfer {
+
+class SocketManager;
+
 namespace model {
+
+class FileWriter;
 
 class FileWriterBuilder {
 public:

@@ -1,5 +1,10 @@
 #include "listener_impl.hpp"
 #include "logger.hpp"
+#include "thread_wrapper.hpp"
+#include "file_reader_builder.hpp"
+#include "file_reader.hpp"
+#include "socket_manager_builder.hpp"
+#include "socket_manager.hpp"
 
 namespace p2ptransfer {
 namespace model {

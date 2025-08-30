@@ -1,4 +1,9 @@
 #include "transferer_impl.hpp"
+#include "thread_wrapper.hpp"
+#include "socket_manager_builder.hpp"
+#include "socket_manager.hpp"
+#include "file_writer_builder.hpp"
+#include "file_writer.hpp"
 
 namespace p2ptransfer {
 namespace model {

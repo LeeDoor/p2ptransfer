@@ -1,5 +1,4 @@
 #pragma once
-
 #include "callback.hpp"
 #include "address_gatherer_callback.hpp"
 

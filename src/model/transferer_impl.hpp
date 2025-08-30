@@ -1,11 +1,15 @@
 #pragma once
-#include "file_writer_builder.hpp"
-#include "socket_manager_builder.hpp"
-#include "thread_wrapper.hpp"
 #include "transferer.hpp"
 
 namespace p2ptransfer {
+
+class ThreadWrapper;
+class SocketManagerBuilder;
+class SocketManager;
+
 namespace model {
+
+class FileWriterBuilder;
 
 class TransfererImpl : public Transferer {
 public:

@@ -1,7 +1,10 @@
 #pragma once
-#include "socket_manager.hpp"
+#include "address.hpp"
+#include "port.hpp"
 
 namespace p2ptransfer {
+
+class SocketManager;
 
 /*!
 * \brief socket builder for immediate connection
