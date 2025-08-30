@@ -1,5 +1,6 @@
 #include "listener_view_cli.hpp"
 #include "filesize_formatter.hpp"
+#include "general_view_cli.hpp"
 
 namespace p2ptransfer {
 namespace view {

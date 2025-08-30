@@ -1,8 +1,8 @@
 #pragma once
-
 #include "address.hpp"
 #include "port.hpp"
 #include "request_structures.hpp"
+
 namespace p2ptransfer {
 namespace view {
 

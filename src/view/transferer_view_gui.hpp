@@ -1,9 +1,10 @@
 #pragma once
-#include "general_view_gui.hpp"
 #include "transferer_view.hpp"
 
 namespace p2ptransfer {
 namespace view {
+
+class GeneralViewGUI;
 
 class TransfererViewGUI : public QObject, public TransfererView {
     Q_OBJECT

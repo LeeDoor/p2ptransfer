@@ -1,9 +1,10 @@
 #pragma once
-#include "general_view_gui.hpp"
 #include "listener_view.hpp"
 
 namespace p2ptransfer {
 namespace view {
+
+class GeneralViewGUI;
 
 class ListenerViewGUI : public QObject, public ListenerView {
     Q_OBJECT

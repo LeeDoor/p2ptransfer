@@ -1,7 +1,7 @@
 #pragma once
-
 #include "callback.hpp"
 #include "transferer_view_callback.hpp"
+
 namespace p2ptransfer {
 namespace view {
 

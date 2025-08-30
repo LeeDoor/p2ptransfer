@@ -1,9 +1,10 @@
 #pragma once
-#include "general_view_cli.hpp"
 #include "listener_view.hpp"
 
 namespace p2ptransfer {
 namespace view {
+
+class GeneralViewCLI;
 
 class ListenerViewCLI : public ListenerView, public std::enable_shared_from_this<ListenerViewCLI> {
 public:

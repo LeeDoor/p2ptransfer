@@ -1,4 +1,5 @@
 #include "transferer_view_cli.hpp"
+#include "general_view_cli.hpp"
 
 namespace p2ptransfer {
 namespace view {
