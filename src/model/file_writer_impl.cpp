@@ -17,7 +17,7 @@ net::awaitable<void> FileWriterImpl::write_file(const Filename& filename) {
     co_await send_file(filename, filesize);
 }
 net::awaitable<void> FileWriterImpl::get_permission(const Filename& filename, Filesize filesize) {
-    auto request = RequestSerializer::serialize_send_request(filename, filesize);
+    auto request = RequestSerializer::serialize_send_request(std::filesystem::path(filename).filename(), filesize);
     co_await socket_->write(request);
     std::string permission_str = co_await socket_->read_request();
     validate_permission(filename, permission_str);
@@ -41,6 +41,7 @@ net::awaitable<void> FileWriterImpl::send_file(const Filename& filename, Filesiz
             calculate_notify_progressbar(bytes_remaining, filesize);
         }
     } while(bytes_remaining);
+    calculate_notify_progressbar(bytes_remaining, filesize);
 }
 
 void FileWriterImpl::calculate_notify_progressbar(size_t bytes_remaining, Filesize filesize) {

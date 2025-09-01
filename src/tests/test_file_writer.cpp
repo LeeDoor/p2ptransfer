@@ -27,8 +27,9 @@ protected:
         check_file_transfered();
     }
     void verify_and_allow_request(const Filename& filename, size_t filesize) {
+        auto path = std::filesystem::path(filename);
         EXPECT_CALL(*socket_, write(
-            RequestSerializer::serialize_send_request(filename, filesize)
+            RequestSerializer::serialize_send_request(path.filename(), filesize)
         )).WillOnce(Return(return_immediately()));
         EXPECT_CALL(*socket_, read_request())
             .WillOnce(Return(return_immediately(
@@ -71,6 +72,10 @@ class FileCreator {
 public:
     FileCreator(const Filename& filename, const std::string& filecontent) 
         : filename_{filename} {
+        auto parent = filename_.parent_path();
+        if(!parent.empty() && !std::filesystem::exists(parent)) {
+            std::filesystem::create_directory(parent);
+        }
         std::ofstream ofs{filename, std::ios::binary};
         ofs << filecontent;
     }
@@ -83,58 +88,63 @@ public:
         std::filesystem::remove(filename_);
     }
 private:
-    std::string filename_;
+    std::filesystem::path filename_;
 };
 
 TEST_F(FileWriterFixture, averageData_successFileProcessing) {
     const std::string filename = "file.txt";
     const std::string filecontent = "short content";
-    check_file_writing(filename, filecontent); 
     FileCreator file_creator(filename, filecontent);
+    check_file_writing(filename, filecontent); 
 
     EXPECT_NO_THROW(run_write_file(filename));
 }
-/*
+
 TEST_F(FileWriterFixture, LFinContent_successFileProcessing) {
     const std::string filename = "file.txt";
     const std::string filecontent = "too many spaces\n\n and LFs\n\n\n\n\n aboba\n";
-    immitate_file_writing(filename, filecontent); 
+    FileCreator file_creator(filename, filecontent);
+    check_file_writing(filename, filecontent); 
 
     EXPECT_NO_THROW(run_write_file(filename));
-
-    verify_file_content(filename, filecontent);
 }
 
 TEST_F(FileWriterFixture, spacedFilename_successFileProcessing) {
     const std::string filename = "file name with spaces.txt";
     const std::string filecontent = "Text with\r\n\r\nCRLFS aboba\n";
-    immitate_file_writing(filename, filecontent); 
+    FileCreator file_creator(filename, filecontent);
+    check_file_writing(filename, filecontent); 
 
     EXPECT_NO_THROW(run_write_file(filename));
-
-    verify_file_content(filename, filecontent);
 }
 
 TEST_F(FileWriterFixture, dottedFilename_successFileProcessing) {
     const std::string filename = "...";
     const std::string filecontent = "Text with\r\n\r\nCRLFS aboba\n";
-    immitate_file_writing(filename, filecontent); 
+    FileCreator file_creator(filename, filecontent);
+    check_file_writing(filename, filecontent); 
 
     EXPECT_NO_THROW(run_write_file(filename));
-
-    verify_file_content(filename, filecontent);
 }
 
 TEST_F(FileWriterFixture, emptyContent_successFileProcessing) {
     const std::string filename = "filename.txt";
     const std::string filecontent = "";
-    immitate_file_writing(filename, filecontent); 
+    FileCreator file_creator(filename, filecontent);
+    check_file_writing(filename, filecontent); 
 
     EXPECT_NO_THROW(run_write_file(filename));
-
-    verify_file_content(filename, filecontent);
 }
-*/
+
+TEST_F(FileWriterFixture, hardDirectory_successFileProcessing) {
+    const std::string filename = "directory/filename.txt";
+    const std::string filecontent = "some con@tent.\n";
+    FileCreator file_creator(filename, filecontent);
+    check_file_writing(filename, filecontent); 
+
+    EXPECT_NO_THROW(run_write_file(filename));
+}
+
 }
 }
 }
