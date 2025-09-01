@@ -33,7 +33,7 @@ protected:
         )).WillOnce(Return(return_immediately()));
         EXPECT_CALL(*socket_, read_request())
             .WillOnce(Return(return_immediately(
-                RequestSerializer::serialize_send_permission(filename)))
+                RequestSerializer::serialize_send_permission(path.filename())))
             );
     }
     /// \note Verifies only small files fitting in BufferType::size. 

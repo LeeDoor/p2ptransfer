@@ -10,10 +10,11 @@ FileWriterImpl::FileWriterImpl(std::shared_ptr<SocketManager> socket)
     : socket_{socket}
 {}
 net::awaitable<void> FileWriterImpl::write_file(const Filename& filepath) {
+    filepath_ = filepath;
     if(!std::filesystem::exists(filepath_) || std::filesystem::is_directory(filepath_))
         throw std::runtime_error("No such file: " + filepath_);
-    filepath_ = filepath;
     filename_ = std::filesystem::path(filepath_).filename();
+    filesize_ = std::filesystem::file_size(filepath_);
     co_await get_permission();
     co_await send_file();
 }
