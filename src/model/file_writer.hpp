@@ -9,7 +9,7 @@ class FileWriter : public WithNetworkCallback {
 public:
     virtual ~FileWriter() = default;
 
-    virtual net::awaitable<void> write_file(const Filename& filename) = 0;
+    virtual net::awaitable<void> write_file(const Filename& filepath) = 0;
 };
 
 }
