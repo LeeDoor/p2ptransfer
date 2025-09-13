@@ -28,10 +28,12 @@ target_compile_definitions(${TEST_NAME} PUBLIC TESTING)
 
 if(UNIX)
     gtest_discover_tests(${TEST_NAME})
-    file(GLOB INTEGRATION_TESTS "integration_tests/*.sh")
-    foreach(TEST_NAME ${INTEGRATION_TESTS})
-        add_test(
-        NAME integration${TEST_NAME} 
-        COMMAND bash -c "${TEST_NAME} $<TARGET_FILE:p2ptransfer_cli>")
-    endforeach()
+    if(NOT ${GRAPHICS})
+        file(GLOB INTEGRATION_TESTS "integration_tests/*.sh")
+        foreach(TEST_NAME ${INTEGRATION_TESTS})
+            add_test(
+            NAME integration${TEST_NAME} 
+            COMMAND bash -c "${TEST_NAME} $<TARGET_FILE:p2ptransfer_cli>")
+        endforeach()
+    endif()
 endif()

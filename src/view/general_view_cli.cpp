@@ -56,7 +56,7 @@ void GeneralViewCLI::update_progressbar_status(double persent) {
     std::cout << "progress: " << persent << std::endl;
 }
 void GeneralViewCLI::show_file_success() {
-    std::cout << "File successfully downloaded" << std::endl;
+    std::cout << "File successfully transfered" << std::endl;
     close_program();
 }
 void GeneralViewCLI::show_connection_aborted(const Address& address, Port port) {
