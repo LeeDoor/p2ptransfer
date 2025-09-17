@@ -16,7 +16,7 @@ protected:
         callback_(std::make_shared<AddressGathererCallbackMock>())
     {
         address_gatherer_ = std::make_shared<AddressGathererImpl>(
-            std::make_shared<net::io_context>(),
+            ContextWrapper{},
             thread_wrapper_,
             socket_builder_
         );

@@ -28,7 +28,7 @@ template<typename Ret, typename Func>
 class SocketManagerTest : public SocketManagerTcp {
 public:
     SocketManagerTest() :
-        SocketManagerTest{std::make_shared<net::io_context>()}{}
+        SocketManagerTest{ContextWrapper{}}{}
 
     void make_server() {
         spawn_yourself(listen_connection_at(TEST_PORT));
@@ -77,13 +77,13 @@ public:
     }
 
 private:
-    SocketManagerTest(std::shared_ptr<net::io_context> context) :
+    SocketManagerTest(ContextWrapper context) :
         SocketManagerTcp{context},
         context_{context},
         thread_{}
     {}
 
-    std::shared_ptr<net::io_context> context_;
+    ContextWrapper context_;
     ThreadWrapperImpl thread_;
 };
 
@@ -112,10 +112,10 @@ protected:
 class SocketManagerBuilderFixture : public ::testing::Test {
 protected:
     SocketManagerBuilderFixture() :
-        context{std::make_shared<net::io_context>()},
+        context{},
         builder{context}
     {}
-    std::shared_ptr<net::io_context> context;
+    ContextWrapper context;
     SocketManagerImplBuilder builder;
 };
 

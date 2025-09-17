@@ -1,4 +1,5 @@
 #pragma once
+#include "context_wrapper.hpp"
 #include "listener.hpp"
 
 namespace p2ptransfer {
@@ -23,7 +24,7 @@ public:
     using SocketManagerBuilderPtr = std::shared_ptr<SocketManagerBuilder>;
     using SocketManagerPtr = std::shared_ptr<SocketManager>;
     using FileReaderBuilderPtr = std::shared_ptr<FileReaderBuilder>;
-    using ContextPtr = std::shared_ptr<net::io_context>;
+    using ContextPtr = ContextWrapper;
 
     /*!
     * \param context Shared pointer to boost::asio::io_context.

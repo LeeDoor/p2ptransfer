@@ -1,4 +1,5 @@
 #pragma once
+#include "context_wrapper.hpp"
 #include "socket_manager.hpp"
 
 namespace p2ptransfer {
@@ -16,7 +17,7 @@ namespace p2ptransfer {
 template<typename InternetProtocol>
 class SocketManagerImpl : public SocketManager {
     public:
-    using ContextPtr = std::shared_ptr<net::io_context>;
+    using ContextPtr = ContextWrapper;
     using SocketType = net::basic_stream_socket<InternetProtocol>;
     using SocketDeleter = std::function<void(SocketType*)>;
     using SocketPtr = std::unique_ptr<SocketType, SocketDeleter>;

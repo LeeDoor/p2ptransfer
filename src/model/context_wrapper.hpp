@@ -12,7 +12,8 @@ public:
     ContextWrapper& operator=(const ContextWrapper& other) = default;
     ContextWrapper& operator=(ContextWrapper&& other) = default;
     ~ContextWrapper() {
-        context_->stop();
+        if(context_)
+            context_->stop();
     }
 
     net::io_context* operator->() {
@@ -20,6 +21,11 @@ public:
     }
     net::io_context& operator*() {
         return *context_;
+    }
+    const net::io_context& operator*() const {
+        auto& a = *context_;
+        std::cout << "*context_: " << &a << std::endl;
+        return a; 
     }
 private:
     std::shared_ptr<net::io_context> context_;

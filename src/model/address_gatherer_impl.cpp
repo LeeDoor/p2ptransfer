@@ -18,15 +18,16 @@ AddressGathererImpl::AddressGathererImpl(
 void AddressGathererImpl::gather_local_address() {
     if(thread_wrapper_->is_running()) 
         throw std::logic_error("gathering local address twice");
-    thread_wrapper_->execute([this] {
-        run_gathering();
-    });
+    run_gathering();
 }
 
 void AddressGathererImpl::run_gathering() {
+    Logger::log() << &(*context_) << " == \n";
     net::co_spawn(*context_, gather_async(), net::detached);
-    context_->run();
-    context_->restart();
+    thread_wrapper_->execute([this] {
+        context_->run();
+        context_->restart();
+    });
 }
 
 net::awaitable<void> AddressGathererImpl::gather_async() {

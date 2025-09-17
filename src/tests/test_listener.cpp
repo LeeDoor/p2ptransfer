@@ -24,7 +24,7 @@ protected:
         listener_callback_(std::make_shared<presenter::test::ListenerCallbackMock>())
     {
         listener_ = std::make_shared<ListenerImpl>(
-            std::make_shared<net::io_context>(),
+            ContextWrapper{},
             thread_wrapper_,
             socket_builder_,
             std::make_shared<FileReaderMockBuilder>(file_builder_)

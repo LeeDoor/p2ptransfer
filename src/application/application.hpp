@@ -12,8 +12,7 @@ class Application {
 public:
     template<typename GeneralViewGenerator, typename SignalFunc>
     Application(GeneralViewGenerator&& gvg, SignalFunc&& signal_func) :
-        context_{std::make_shared<net::io_context>()},
-        model_builder_{context_},
+        model_builder_{},
         general_view_{gvg()},
         general_presenter_{std::make_shared<presenter::GeneralPresenter>(
             model_builder_.create_address_gatherer(),
@@ -31,7 +30,6 @@ public:
         SignalHandler::handle_SIGINT(
             [this, func = std::move(signal_func)] {
                 func();
-                context_->stop();
             });
     }
     template<typename GeneralViewGenerator>
@@ -47,7 +45,6 @@ public:
     }
 
 private:
-    std::shared_ptr<net::io_context> context_;
     model::ModelBuilder model_builder_;
 
     std::shared_ptr<GeneralViewType> general_view_;
