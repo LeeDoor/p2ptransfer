@@ -72,7 +72,7 @@ class SocketManagerImpl : public SocketManager {
                                            net::use_awaitable);
         std::string result = reading_buffer_.substr(0, bytes);
         reading_buffer_.erase(0, bytes);
-        co_return result;
+           co_return result;
     }
 
     net::awaitable<void> write(std::string response) override {

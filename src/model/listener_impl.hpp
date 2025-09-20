@@ -41,6 +41,7 @@ public:
                  ThreadWrapperPtr thread_wrapper,
                  SocketManagerBuilderPtr socket_manager_builder,
                  FileReaderBuilderPtr file_reader_builder);
+    ~ListenerImpl();
     void listen_if_not_already(Port port) override;
 
 private:
@@ -50,8 +51,8 @@ private:
     net::awaitable<SocketManagerPtr> connect_and_listen(Port port);
     net::awaitable<SocketManagerPtr> build_socket_manager(Port port);
 
-    ContextPtr context_;
     ThreadWrapperPtr thread_wrapper_;
+    ContextPtr context_;
     SocketManagerBuilderPtr socket_manager_builder_;
     FileReaderBuilderPtr file_reader_builder_;
 };

@@ -21,7 +21,7 @@ public:
 private:
     struct ContextWrapperDeleter {
         void operator()(net::io_context* context) const {
-            context->stop();
+            // context->stop();
             delete context;
         }
     };

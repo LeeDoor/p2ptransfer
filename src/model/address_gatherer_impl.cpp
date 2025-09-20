@@ -14,6 +14,9 @@ AddressGathererImpl::AddressGathererImpl(
     thread_wrapper_{thread_wrapper},
     context_{context}
 {}
+AddressGathererImpl::~AddressGathererImpl() {
+    context_->stop();
+}
 
 void AddressGathererImpl::gather_local_address() {
     if(thread_wrapper_->is_running()) 

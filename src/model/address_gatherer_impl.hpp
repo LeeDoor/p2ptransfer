@@ -27,6 +27,7 @@ public:
         ContextPtr context,
         ThreadWrapperPtr thread_wrapper,
         SocketManagerBuilderPtr socket_manager_builder);
+    ~AddressGathererImpl();
 
     void gather_local_address() override;
 

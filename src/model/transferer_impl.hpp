@@ -25,6 +25,7 @@ public:
         ThreadWrapperPtr thread_wrapper,
         SocketManagerBuilderPtr socket_builder,
         FileWriterBuilderPtr file_writer_builder);
+    ~TransfererImpl();
 
     void transfer_file(const Address& address, Port port, const Filename& filename) override;
 

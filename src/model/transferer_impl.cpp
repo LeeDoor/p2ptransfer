@@ -18,6 +18,9 @@ TransfererImpl::TransfererImpl(
     , socket_builder_{socket_builder}
     , file_writer_builder_{file_writer_builder}
 {}
+TransfererImpl::~TransfererImpl() {
+    context_->stop();
+}
 
 void TransfererImpl::transfer_file(const Address& address, Port port, const Filename& filename) {
     if(!thread_wrapper_->is_running()) {
