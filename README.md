@@ -1,4 +1,4 @@
-![хаха инет хреновый](img/p2ptransfer.jpg)
+![placeholder](img/p2ptransfer.jpg)
 # Resume
 P2PTransfer is an application to share files with LAN. It allows to use the full power of your router and Ethernet cable.
 # Achievements
@@ -96,7 +96,7 @@ If you are **listening**, you have to provide `--get` flag with the `--port` val
 If you are **transfering**, provide `--host`, `--port` and `--filename` arguments to connect to `<host>:<port>` endpoint and send it the `filename`.
 ## GUI Mode
 In GUI Mode, you will face a window with some buttons. Take a look at the scheme:
-![img](img/Transfer Mode.png)
+![placeholder](img/transfer_mode.png)
 Useful Tips:
 * To select the mode, switch tabs **listen** and **transfer**.
 * You can select the file to send using the explorer by pressing **Select file...** button.
