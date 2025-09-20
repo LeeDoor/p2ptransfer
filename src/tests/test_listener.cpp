@@ -24,7 +24,7 @@ protected:
         listener_callback_(std::make_shared<presenter::test::ListenerCallbackMock>())
     {
         listener_ = std::make_shared<ListenerImpl>(
-            ContextWrapper{},
+            ContextPtr{},
             thread_wrapper_,
             socket_builder_,
             std::make_shared<FileReaderMockBuilder>(file_builder_)
@@ -70,21 +70,6 @@ protected:
     std::shared_ptr<ListenerImpl> listener_;
 
 };
-
-net::awaitable<void> task(bool& flag) {
-    Logger::log() << "Detached task executed\n";
-    flag = true;
-    co_return;
-}
-
-TEST_F(ListenerFixture, testing_context_Wrapper) {
-    ContextWrapper a;
-    auto b = a;
-    bool flag = false;
-    net::co_spawn(*a, task(flag), net::detached);
-    b->run();
-    EXPECT_TRUE(flag);
-}
 
 TEST_F(ListenerFixture, ifListeningAlready_doNothing) {
     EXPECT_CALL(*thread_wrapper_, is_running())

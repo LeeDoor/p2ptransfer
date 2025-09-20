@@ -22,7 +22,7 @@ protected:
         file_writer_{std::make_shared<FileWriterMock>()},
         file_writer_builder_{std::make_shared<FileWriterMockBuilder>(file_writer_)},
         transferer_{std::make_shared<TransfererImpl>(
-            ContextWrapper{},
+            ContextPtr{},
             thread_wrapper_,
             socket_builder_,
             file_writer_builder_

@@ -1,5 +1,4 @@
 #pragma once
-#include "context_wrapper.hpp"
 #include "transferer.hpp"
 
 namespace p2ptransfer {
@@ -14,8 +13,7 @@ class FileWriterBuilder;
 
 class TransfererImpl : public Transferer {
 public:
-    using ContextPtr = ContextWrapper;
-    using ThreadWrapperPtr = std::shared_ptr<ThreadWrapper>;
+        using ThreadWrapperPtr = std::shared_ptr<ThreadWrapper>;
     using SocketManagerBuilderPtr = std::shared_ptr<SocketManagerBuilder>;
     using SocketManagerPtr = std::shared_ptr<SocketManager>;
     using FileWriterBuilderPtr = std::shared_ptr<FileWriterBuilder>;

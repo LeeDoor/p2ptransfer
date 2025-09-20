@@ -1,6 +1,5 @@
 #pragma once
 #include "address_gatherer_impl.hpp"
-#include "context_wrapper.hpp"
 #include "file_reader_impl_builder.hpp"
 #include "file_writer_impl_builder.hpp"
 #include "listener_impl.hpp"
@@ -15,7 +14,7 @@ namespace model {
 class ModelBuilder {
 public:
     std::shared_ptr<ListenerImpl> create_listener() {
-        ContextWrapper context;
+        ContextPtr context;
         return std::make_shared<ListenerImpl>(
             context,
             std::make_shared<ThreadWrapperImpl>(),
@@ -25,7 +24,7 @@ public:
     }
 
     std::shared_ptr<TransfererImpl> create_transferer() {
-        ContextWrapper context;
+        ContextPtr context;
         return std::make_shared<TransfererImpl>(
             context,
             std::make_shared<ThreadWrapperImpl>(),
@@ -35,7 +34,7 @@ public:
     }
 
     std::shared_ptr<AddressGatherer> create_address_gatherer() {
-        ContextWrapper context;
+        ContextPtr context;
         return std::make_shared<AddressGathererImpl>(
             context,
             std::make_shared<ThreadWrapperImpl>(),

@@ -1,6 +1,5 @@
 #pragma once
 #include "address_gatherer.hpp"
-#include "context_wrapper.hpp"
 #include "port.hpp"
 
 namespace p2ptransfer {
@@ -18,8 +17,7 @@ class ThreadWrapper;
 */
 class AddressGathererImpl : public AddressGatherer {
 public:
-    using ContextPtr = ContextWrapper;
-    using ThreadWrapperPtr = std::shared_ptr<ThreadWrapper>;
+        using ThreadWrapperPtr = std::shared_ptr<ThreadWrapper>;
     using SocketManagerBuilderPtr = std::shared_ptr<SocketManagerBuilder>;
     using SocketManagerPtr = std::shared_ptr<SocketManager>;
 

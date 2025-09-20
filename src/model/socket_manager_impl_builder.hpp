@@ -1,5 +1,4 @@
 #pragma once
-#include "context_wrapper.hpp"
 #include "socket_manager_builder.hpp"
 #include "socket_manager_impl.hpp"
 
@@ -10,7 +9,7 @@ namespace p2ptransfer {
 */
 class SocketManagerImplBuilder : public SocketManagerBuilder {
 public:
-    SocketManagerImplBuilder(ContextWrapper context) :
+    SocketManagerImplBuilder(ContextPtr context) :
         context_(context) {}
     net::awaitable<std::shared_ptr<SocketManager>> tcp_listening_at(Port port) override {
         co_return co_await SocketManagerTcp::open_for_listening(context_, port);
@@ -26,7 +25,7 @@ public:
     }
 
 private:
-    ContextWrapper context_;
+    ContextPtr context_;
 };
 
 }

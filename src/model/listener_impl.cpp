@@ -9,7 +9,7 @@
 namespace p2ptransfer {
 namespace model {
 
-ListenerImpl::ListenerImpl(ContextWrapper context,
+ListenerImpl::ListenerImpl(ContextPtr context,
                            ThreadWrapperPtr thread_wrapper,
                            SocketManagerBuilderPtr socket_manager_builder,
                            FileReaderBuilderPtr file_reader_builder) :

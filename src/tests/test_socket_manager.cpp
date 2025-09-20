@@ -28,7 +28,7 @@ template<typename Ret, typename Func>
 class SocketManagerTest : public SocketManagerTcp {
 public:
     SocketManagerTest() :
-        SocketManagerTest{ContextWrapper{}}{}
+        SocketManagerTest{ContextPtr{}}{}
 
     void make_server() {
         spawn_yourself(listen_connection_at(TEST_PORT));
@@ -77,13 +77,13 @@ public:
     }
 
 private:
-    SocketManagerTest(ContextWrapper context) :
+    SocketManagerTest(ContextPtr context) :
         SocketManagerTcp{context},
         context_{context},
         thread_{}
     {}
 
-    ContextWrapper context_;
+    ContextPtr context_;
     ThreadWrapperImpl thread_;
 };
 
@@ -115,7 +115,7 @@ protected:
         context{},
         builder{context}
     {}
-    ContextWrapper context;
+    ContextPtr context;
     SocketManagerImplBuilder builder;
 };
 
