@@ -66,3 +66,40 @@ You can avoid using `build.sh` script. It was created to simplify different buil
 If you want to build both the CLI and Qt version, run `./build.sh` without any args.
 If you want to build with CLI only (doesn't require Qt to build), use `./build.sh 0`.
 If you want to build with Qt only, use `./build.sh 1`.
+### Running Application
+After Proceeding previous steps to build the application manually, there are some scripts to run the resulting executable:
+```bash
+./run_cli.sh # Runs application in CLI mode.
+./run_graphics.sh # Runs application in Graphics mode.
+```
+# How To use
+Application has two modes: 
+1. **Listener**. In this mode application will listen for incoming connections in LAN.
+2. **Transferer**. In this mode application will try to connect to some remote endpoint, who is *already listening* for connections.
+## CLI Mode
+All required instructions are provided with the `--help` flag. Here is an abstract from it:
+
+
+1. `p2ptransfer <-h|--host address> <-p|--port port> <-f|--filename filename>`
+Sends given <filename> to the remote user using <address>:<port> endpoint.
+2. `p2ptransfer --get <-p|--port port>`
+Starts to receive any incoming files at <port>. Should start listening before trying to send.
+
+Flags:
+  * `--help`                produce help message
+  * `-h [ --host ] arg`     Address to connect to. Combined with -p <port>
+  * `-p [ --port ] arg`     Port to connect to OR port to listen at
+  * `-f [ --filename ] arg` Directory to a file being sent to remote user
+  * `--get`                 Indicates the file receiving action
+
+If you are **listening**, you have to provide `--get` flag with the `--port` value of listening port. To get the file from other user, tell him your LAN Address presented in the Terminal and Port you have passed to it.
+If you are **transfering**, provide `--host`, `--port` and `--filename` arguments to connect to `<host>:<port>` endpoint and send it the `filename`.
+## GUI Mode
+In GUI Mode, you will face a window with some buttons. Take a look at the scheme:
+![img](img/Transfer Mode.png)
+Useful Tips:
+* To select the mode, switch tabs **listen** and **transfer**.
+* You can select the file to send using the explorer by pressing **Select file...** button.
+* Also you can select the file by dropping it on the window.
+* When you are ready, press the big button at the bottom. If something goes wrong, You will get an error Popup.
+* If Application argues on a Port, try to insert some random value in range [8000; 65000]. 
