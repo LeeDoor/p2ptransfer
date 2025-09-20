@@ -36,8 +36,6 @@ public:
 
     std::shared_ptr<AddressGatherer> create_address_gatherer() {
         ContextWrapper context;
-        auto a = context;
-        auto b = context;
         return std::make_shared<AddressGathererImpl>(
             context,
             std::make_shared<ThreadWrapperImpl>(),

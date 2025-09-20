@@ -5,16 +5,8 @@ namespace p2ptransfer {
 class ContextWrapper {
 public:
     ContextWrapper() 
-        : context_{std::make_shared<net::io_context>()}
+        : context_{new net::io_context(), ContextWrapperDeleter{}}
     {}
-    ContextWrapper(const ContextWrapper& other) = default;
-    ContextWrapper(ContextWrapper&& other) = default;
-    ContextWrapper& operator=(const ContextWrapper& other) = default;
-    ContextWrapper& operator=(ContextWrapper&& other) = default;
-    ~ContextWrapper() {
-        if(context_)
-            context_->stop();
-    }
 
     net::io_context* operator->() {
         return context_.get();
@@ -23,11 +15,17 @@ public:
         return *context_;
     }
     const net::io_context& operator*() const {
-        auto& a = *context_;
-        std::cout << "*context_: " << &a << std::endl;
-        return a; 
+        return *context_; 
     }
+
 private:
+    struct ContextWrapperDeleter {
+        void operator()(net::io_context* context) const {
+            context->stop();
+            delete context;
+        }
+    };
+
     std::shared_ptr<net::io_context> context_;
 };
 

@@ -50,10 +50,10 @@ private:
     net::awaitable<SocketManagerPtr> connect_and_listen(Port port);
     net::awaitable<SocketManagerPtr> build_socket_manager(Port port);
 
+    ContextPtr context_;
     ThreadWrapperPtr thread_wrapper_;
     SocketManagerBuilderPtr socket_manager_builder_;
     FileReaderBuilderPtr file_reader_builder_;
-    ContextPtr context_;
 };
 
 }

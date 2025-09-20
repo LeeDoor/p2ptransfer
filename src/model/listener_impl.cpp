@@ -13,10 +13,10 @@ ListenerImpl::ListenerImpl(ContextWrapper context,
                            ThreadWrapperPtr thread_wrapper,
                            SocketManagerBuilderPtr socket_manager_builder,
                            FileReaderBuilderPtr file_reader_builder) :
+    context_(context),
     thread_wrapper_(thread_wrapper),
     socket_manager_builder_(socket_manager_builder),
-    file_reader_builder_(file_reader_builder),
-    context_(context)
+    file_reader_builder_(file_reader_builder)
 {}
 
 void ListenerImpl::listen_if_not_already(Port port) {
