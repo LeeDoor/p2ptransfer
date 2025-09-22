@@ -1,4 +1,4 @@
-![placeholder](img/p2ptransfer.jpg)
+![placeholder](img/p2ptransfer.png)
 # Resume
 P2PTransfer is an application to share files with LAN. It allows to use the full power of your router and Ethernet cable.
 # Achievements
