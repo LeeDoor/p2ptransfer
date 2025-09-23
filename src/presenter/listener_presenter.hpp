@@ -8,7 +8,11 @@ namespace model { class Listener; }
 namespace presenter {
 
 class NetworkStatusCallback;
-
+/*! \brief Special Presenter class for \ref Listener module.
+ *  
+ *  Manages the listnening logic and provides the \ref ListenerCallback
+ *  interface for such notifications.
+ */
 class ListenerPresenter final :
     public view::ListenerViewCallback,
     public ListenerCallback,
@@ -20,14 +24,20 @@ public:
 
     ListenerPresenter(NetworkStatusCallbackPtr network_callback, ListenerPtr listener, ViewPtr view);
 
+    /// Should be called before usage. Setups callbacks and the View
     void setup();
+    /// Starts listening for connections at given port
     void listen(Port port) override;
+    /// Asks user for a file confirmation using \ref ListenerView
     bool verify_file(const Filename& filename, Filesize filesize) override;
 
 private:
     NetworkStatusCallbackPtr network_callback_;
     ListenerPtr listener_;
     ViewPtr view_;
+
+    /// setup verification Flag
+    bool setupped_ = false;
 };
 
 }

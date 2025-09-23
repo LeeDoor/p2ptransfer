@@ -7,6 +7,7 @@ namespace p2ptransfer {
 namespace view {
 
 namespace po = boost::program_options;
+/// Parses CLI arguments using boost::program_options.
 class CLIArgsParser {
 public:
     enum Action { Listen, Transfer };

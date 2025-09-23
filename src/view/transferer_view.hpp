@@ -5,6 +5,7 @@
 namespace p2ptransfer {
 namespace view {
 
+/// brief Transferer View part of MVP
 class TransfererView : public WithCallback<TransfererViewCallback> {
 public:
     virtual ~TransfererView() = default;

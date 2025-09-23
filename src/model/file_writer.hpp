@@ -5,6 +5,11 @@
 namespace p2ptransfer {
 namespace model {
 
+/*!
+* \brief Class for writing file to remote user.
+*
+* Asks remote user to confirm file sharing and sends file to him.
+*/
 class FileWriter : public WithNetworkCallback {
 public:
     virtual ~FileWriter() = default;

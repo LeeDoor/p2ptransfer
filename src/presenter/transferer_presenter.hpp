@@ -9,6 +9,7 @@ namespace presenter {
 
 class NetworkStatusCallback;
 
+/// Special Presenter class for Transferer module.
 class TransfererPresenter : 
     public view::TransfererViewCallback, 
     public std::enable_shared_from_this<TransfererPresenter> {
@@ -20,13 +21,18 @@ public:
     TransfererPresenter(ViewPtr view, TransfererPtr transferer,
                         NetworkStatusCallbackPtr network_callback);
 
+    /// Need to be called before class usage.
     void setup();
+    /// Starts the process of transfering file to remote user.
     void transfer(const Address& address, Port port, const Filename& filename) override;
 
 private:
     ViewPtr view_;
     TransfererPtr transferer_;
     NetworkStatusCallbackPtr network_callback_;
+
+    /// Flag to prevent the class usage unsetupped. 
+    bool setupped_ = false;
 };
 
 }

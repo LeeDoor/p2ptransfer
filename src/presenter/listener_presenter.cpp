@@ -14,8 +14,10 @@ void ListenerPresenter::setup() {
     view_->setup();
     listener_->set_callback(shared_from_this());
     listener_->set_callback(network_callback_);
+    setupped_ = true;
 }
 void ListenerPresenter::listen(Port port) {
+    if(!setupped_) throw std::logic_error("ListenerPresenter exception: call setup() before usage");
     listener_->listen_if_not_already(port);
 }
 bool ListenerPresenter::verify_file(const Filename& filename, Filesize filesize) {

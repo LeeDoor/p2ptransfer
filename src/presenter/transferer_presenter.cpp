@@ -19,8 +19,10 @@ void TransfererPresenter::setup() {
     view_->setup();
     view_->set_callback(shared_from_this());
     transferer_->set_callback(network_callback_);   
+    setupped_ = true;
 }
 void TransfererPresenter::transfer(const Address& address, Port port, const Filename& filename) {
+    if(!setupped_) throw std::logic_error("TransfererPresenter: call setup() before usage");
     transferer_->transfer_file(address, port, filename);   
 }
 

@@ -2,6 +2,7 @@
 
 namespace p2ptransfer {
 
+/// SIGINT handler for proper socket destruction.
 class SignalHandler {
 public:
     static void handle_SIGINT(std::function<void()>&& stop_func);
