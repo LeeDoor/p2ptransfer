@@ -29,11 +29,11 @@ protected:
     void verify_and_allow_request(const Filename& filename, size_t filesize) {
         auto path = std::filesystem::path(filename);
         EXPECT_CALL(*socket_, write(
-            RequestSerializer::serialize_send_request(path.filename(), filesize)
+            RequestSerializer::serialize_send_request(path.filename().string(), filesize)
         )).WillOnce(Return(return_immediately()));
         EXPECT_CALL(*socket_, read_request())
             .WillOnce(Return(return_immediately(
-                RequestSerializer::serialize_send_permission(path.filename())))
+                RequestSerializer::serialize_send_permission(path.filename().string())))
             );
     }
     /// \note Verifies only small files fitting in BufferType::size. 

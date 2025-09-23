@@ -13,7 +13,7 @@ net::awaitable<void> FileWriterImpl::write_file(const Filename& filepath) {
     filepath_ = filepath;
     if(!std::filesystem::exists(filepath_) || std::filesystem::is_directory(filepath_))
         throw std::runtime_error("No such file: " + filepath_);
-    filename_ = std::filesystem::path(filepath_).filename();
+    filename_ = std::filesystem::path(filepath_).filename().string();
     filesize_ = std::filesystem::file_size(filepath_);
     co_await get_permission();
     co_await send_file();

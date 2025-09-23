@@ -33,7 +33,7 @@ private:
     std::list<ListenNotification> listen_subs_;
     std::list<TransferNotification> transfer_subs_;
 
-    bool is_running_ = true;
+    std::atomic<bool> is_running_ = true;
     CLIArgsParser::CLIRunArgs args_;
 };
 

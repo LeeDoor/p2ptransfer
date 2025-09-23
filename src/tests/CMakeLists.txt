@@ -14,12 +14,14 @@ set(SOURCES
 )
 set(TEST_NAME generic_tests)
 add_executable(${TEST_NAME} ${SOURCES})
-target_link_libraries(${TEST_NAME} PUBLIC ${LINK_LIBRARIES} 
+target_link_libraries(${TEST_NAME} PUBLIC
     server_model 
     server_presenter 
     pch_tests 
     GTest::gtest_main 
-    GTest::gmock)
+    GTest::gmock
+    ${LINK_LIBRARIES}
+)
 target_include_directories(${TEST_NAME} PUBLIC 
     ${INCLUDE_DIRECTORIES}
     ${CMAKE_CURRENT_SOURCE_DIR}/mocks

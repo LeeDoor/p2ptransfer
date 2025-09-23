@@ -3,7 +3,7 @@ project(p2ptransfer)
 set(CMAKE_CXX_STANDARD 20) # use c++20
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # require C++ version
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # exporting compile_commands.json for clangd 
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release)
 
 option(TESTING "Build tests" ON)
 option(GRAPHICS "Build with Qt" ON) # graphics executable
@@ -11,8 +11,9 @@ option(GRAPHICS "Build with Qt" ON) # graphics executable
 set(LINK_LIBRARIES ) # libraries to link
 set(INCLUDE_DIRECTORIES ) 
 set(CMAKE_CXX_FLAGS "-frtti -Wall -Wextra -Wpedantic")
-if(WIN32) 
-    set(LINK_LIBRARIES ws2_32 -lmswsock) 
+
+if(WIN32)
+    set(LINK_LIBRARIES ws2_32 wsock32) 
 endif()
 
 find_package(Boost COMPONENTS 
@@ -22,7 +23,7 @@ if(NOT ${Boost_FOUND})
     message(FATAL_ERROR "Boost cannot be found. Try to install it with:\nsudo apt-get install libboost-all-dev")
 endif()
 set(INCLUDE_DIRECTORIES ${INCLUDE_DIRECTORIES} ${Boost_INCLUDE_DIRS})
-set(LINK_LIBRARIES Boost::program_options)
+set(LINK_LIBRARIES ${LINK_LIBRARIES} Boost::program_options)
 
 if(${GRAPHICS})
     find_package(QT NAMES Qt6 REQUIRED Widgets Core)
@@ -47,4 +48,5 @@ if(${TESTING})
     enable_testing()
 endif()
 
-add_subdirectory(src)
+add_subdirectory(
+src)
