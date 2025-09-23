@@ -44,7 +44,7 @@ net::awaitable<void> ListenerImpl::listen_async(Port port) {
     try {
         auto socket_manager = co_await connect_and_listen(port);
         auto file_reader = file_reader_builder_->create_file_reader(
-            WithNetworkCallback::callback(), ListenerCallback::callback(), socket_manager);
+            WithNetworkCallback::callback(), WithListenerCallback::callback(), socket_manager);
         co_await file_reader->try_read_file();
     } catch(const std::exception& ex) {
         Logger::log() << ex.what() << std::endl;

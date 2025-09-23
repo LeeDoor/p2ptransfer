@@ -13,7 +13,7 @@ public:
         return WithNetworkCallback::callback_;
     }
     std::weak_ptr<presenter::ListenerCallback> get_callback_listener() {
-        return ListenerCallback::callback_;
+        return WithListenerCallback::callback_;
     }
 };
 

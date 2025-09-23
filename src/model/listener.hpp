@@ -15,10 +15,10 @@ namespace model {
 * \ref RemoteInteractionCallback used for notifying 
 * about connection progress and status.
 */
-class Listener : public WithNetworkCallback, public ListenerCallback {
+class Listener : public WithNetworkCallback, public WithListenerCallback {
 public:
     using WithNetworkCallback::set_callback;
-    using ListenerCallback::set_callback;
+    using WithListenerCallback::set_callback;
     virtual ~Listener() = default;
  
     /*! Listens for user connection and starts communication.

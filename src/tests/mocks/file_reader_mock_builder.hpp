@@ -12,10 +12,10 @@ public:
         ptr_(ptr) {}
     std::shared_ptr<FileReader> create_file_reader(
         WithNetworkCallback::Callback nsc,
-        ListenerCallback::Callback lcc,
+        WithListenerCallback::Callback lcc,
         SocketManagerPtr) override {
         ptr_->WithNetworkCallback::set_callback(nsc);
-        ptr_->ListenerCallback::set_callback(lcc);
+        ptr_->WithListenerCallback::set_callback(lcc);
         return ptr_;
     }
 private:

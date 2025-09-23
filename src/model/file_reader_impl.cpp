@@ -47,7 +47,7 @@ void FileReaderImpl::validate_filename(const Filename& filename) {
 }
 
 bool FileReaderImpl::ask_file_confirmation(const SendRequest& send_request) {
-    return ListenerCallback::callback()->verify_file(send_request.filename, send_request.filesize);
+    return WithListenerCallback::callback()->verify_file(send_request.filename, send_request.filesize);
 }
 
 net::awaitable<void> FileReaderImpl::send_permission(const SendRequest& send_request) {

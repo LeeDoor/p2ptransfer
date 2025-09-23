@@ -12,7 +12,7 @@ namespace model {
 class FileReaderImpl : public FileReader {
 public:
     using WithNetworkCallback::set_callback;
-    using ListenerCallback::set_callback;
+    using WithListenerCallback::set_callback;
     using SocketManagerPtr = std::shared_ptr<SocketManager>;
     /*
     * \param socket_manager provided \ref SocketManager pointer 

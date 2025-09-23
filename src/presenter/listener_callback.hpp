@@ -15,5 +15,5 @@ public:
 };
 
 }
-using ListenerCallback = WithCallback<presenter::ListenerCallback>;
+using WithListenerCallback = WithCallback<presenter::ListenerCallback>;
 }

@@ -25,7 +25,6 @@ void AddressGathererImpl::gather_local_address() {
 }
 
 void AddressGathererImpl::run_gathering() {
-    Logger::log() << &(*context_) << " == \n";
     net::co_spawn(*context_, gather_async(), net::detached);
     thread_wrapper_->execute([this] {
         context_->run();

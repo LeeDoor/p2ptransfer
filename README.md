@@ -97,6 +97,7 @@ If you are **transfering**, provide `--host`, `--port` and `--filename` argument
 ## GUI Mode
 In GUI Mode, you will face a window with some buttons. Take a look at the scheme:
 ![placeholder](img/transfer_mode.png)
+---
 Useful Tips:
 * To select the mode, switch tabs **listen** and **transfer**.
 * You can select the file to send using the explorer by pressing **Select file...** button.

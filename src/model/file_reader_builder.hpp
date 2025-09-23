@@ -23,7 +23,7 @@ public:
 
     virtual std::shared_ptr<FileReader> create_file_reader(
         WithNetworkCallback::Callback network_callback,
-        ListenerCallback::Callback file_callback,
+        WithListenerCallback::Callback file_callback,
         SocketManagerPtr socket) = 0;
 };
 

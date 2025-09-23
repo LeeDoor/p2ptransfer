@@ -41,11 +41,10 @@ public:
     void connected(const Address& address, Port port) override;
     void file_transfered() override;
 
-protected:
+private:
     AddressGathererPtr address_gatherer_;
     ViewPtr view_;
 
-private:
     /// Safety bool flag to ensure \ref setup() is called.
     bool is_initialized_ = false;
 };
