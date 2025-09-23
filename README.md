@@ -96,6 +96,7 @@ If you are **listening**, you have to provide `--get` flag with the `--port` val
 If you are **transfering**, provide `--host`, `--port` and `--filename` arguments to connect to `<host>:<port>` endpoint and send it the `filename`.
 ## GUI Mode
 In GUI Mode, you will face a window with some buttons. Take a look at the scheme:
+
 ![placeholder](img/transfer_mode.png)
 ---
 Useful Tips:
