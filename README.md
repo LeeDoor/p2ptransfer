@@ -10,7 +10,7 @@ P2PTransfer is an application to share files with LAN. It allows to use the full
 
 # I want to run it!
 If you want to use my application, you have two ways to do so:
-1. **(easier):** Go to Releases #TODO and download the latest version for your OS.
+1. **(easier):** Go to [Latest Release](https://github.com/LeeDoor/p2ptransfer/releases/) and download the latest version for your OS.
 2. **(for 🤓s):** Proceed with the guide below to build the application yourself.
 
 ## Build Yourself
