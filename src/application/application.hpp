@@ -38,6 +38,7 @@ public:
     {}
 
     int run() {
+        srand(time(NULL));
         general_presenter_->setup();
         listener_presenter_->setup();
         transferer_presenter_->setup();

@@ -32,11 +32,10 @@ private:
     /// Reads and verifies send request.
     net::awaitable<SendRequest> handle_send_request();
     void validate_send_request(const SendRequest& send_request);
-    /// Checks if filename contains directories or forbiddden filename.
-    void validate_filename(const Filename& filename);
     bool ask_file_confirmation(const SendRequest& send_request);
     net::awaitable<void> send_permission(const SendRequest& send_request);
     net::awaitable<void> read_file(const SendRequest& send_request);
+    std::string generate_temporary_filename(const std::string& initial_filename);
     std::ofstream open_file_for_writing(const std::string& initial_filename);
     net::awaitable<void> handle_file(std::ofstream& os, size_t filesize);
     /// Calculates the progress of file downloading and calls the callback.
