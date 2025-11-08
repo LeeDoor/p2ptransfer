@@ -53,9 +53,16 @@ net::awaitable<void> FileReaderImpl::send_permission(const SendRequest& send_req
 
 net::awaitable<void> FileReaderImpl::read_file(const SendRequest& send_request) {
     std::string temp_filename = generate_temporary_filename(send_request.filename);
-    {
+    try {
         std::ofstream output_file = open_file_for_writing(temp_filename);
         co_await handle_file(output_file, send_request.filesize);
+    }
+    catch(const std::runtime_error& ex) {
+        std::error_code ec; 
+        // try to remove. Even if failed, 
+        // keep handling previous error
+        std::filesystem::remove(temp_filename, ec);
+        throw;
     }
     std::filesystem::rename(temp_filename, send_request.filename);
 }
