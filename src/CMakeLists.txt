@@ -24,6 +24,11 @@ target_include_directories(server INTERFACE ${INCLUDE_DIRECTORIES})
 if(${GRAPHICS})
     qt_add_executable(p2ptransfer_gui main_graphics.cpp)
     target_link_libraries(p2ptransfer_gui PRIVATE server ${LINK_LIBRARIES})
+    if(WIN32)
+        set_target_properties(p2ptransfer_gui PROPERTIES
+            LINK_FLAGS "-Wl,-subsystem,windows"
+        )
+    endif()
 else()
     add_executable(p2ptransfer_cli main_cli.cpp)
     target_link_libraries(p2ptransfer_cli PRIVATE server ${LINK_LIBRARIES})
