@@ -2,6 +2,8 @@
 #include "application.hpp"
 #include "general_view_gui.hpp"
 #include "listener_view_gui.hpp"
+#include "model_builder.hpp"
+#include "thread_wrapper_impl.hpp"
 #include "transferer_view_gui.hpp"
 
 namespace p2ptransfer {
@@ -20,7 +22,11 @@ public:
 private:
     std::shared_ptr<QApplication> qt_application_;
     std::shared_ptr<view::GeneralViewGUI> gui_application_;
-    Application<view::GeneralViewGUI, view::ListenerViewGUI, view::TransfererViewGUI> application_;
+    Application<
+        model::ModelBuilder<ThreadWrapperImpl>, 
+        view::GeneralViewGUI, 
+        view::ListenerViewGUI, 
+        view::TransfererViewGUI> application_;
 };
 
 }

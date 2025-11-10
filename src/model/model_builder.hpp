@@ -4,20 +4,23 @@
 #include "file_writer_impl_builder.hpp"
 #include "listener_impl.hpp"
 #include "socket_manager_impl_builder.hpp"
-#include "thread_wrapper_impl.hpp"
 #include "transferer_impl.hpp"
 
 namespace p2ptransfer {
 namespace model {
 
+template<typename T>
+concept ThreadWrapperT = std::is_base_of_v<ThreadWrapper, T>;
+
 /// Creates main Model objects and hides DI overwhelming.
+template<ThreadWrapperT ThreadWrapperType>
 class ModelBuilder {
 public:
     std::shared_ptr<ListenerImpl> create_listener() {
         ContextPtr context;
         return std::make_shared<ListenerImpl>(
             context,
-            std::make_shared<ThreadWrapperImpl>(),
+            std::make_shared<ThreadWrapperType>(),
             std::make_shared<SocketManagerImplBuilder>(context),
             std::make_shared<FileReaderImplBuilder>()
         );
@@ -27,7 +30,7 @@ public:
         ContextPtr context;
         return std::make_shared<TransfererImpl>(
             context,
-            std::make_shared<ThreadWrapperImpl>(),
+            std::make_shared<ThreadWrapperType>(),
             std::make_shared<SocketManagerImplBuilder>(context),
             std::make_shared<FileWriterImplBuilder>()
         );
@@ -37,7 +40,7 @@ public:
         ContextPtr context;
         return std::make_shared<AddressGathererImpl>(
             context,
-            std::make_shared<ThreadWrapperImpl>(),
+            std::make_shared<ThreadWrapperType>(),
             std::make_shared<SocketManagerImplBuilder>(context)
         );
     }
