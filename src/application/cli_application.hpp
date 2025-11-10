@@ -3,7 +3,7 @@
 #include "general_view_cli.hpp"
 #include "listener_view_cli.hpp"
 #include "model_builder.hpp"
-#include "thread_wrapper_impl.hpp"
+#include "single_thread_wrapper.hpp"
 #include "transferer_view_cli.hpp"
 
 namespace p2ptransfer {
@@ -23,7 +23,7 @@ public:
 private:
     std::shared_ptr<view::GeneralViewCLI> cli_application_;
     Application<
-        model::ModelBuilder<ThreadWrapperImpl>, 
+        model::ModelBuilder<SingleThreadWrapper>, 
         view::GeneralViewCLI, 
         view::ListenerViewCLI, 
         view::TransfererViewCLI> application_;
