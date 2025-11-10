@@ -9,6 +9,7 @@ namespace test {
 class ListenerMock : public Listener {
 public:
     MOCK_METHOD(void, listen_if_not_already, (Port port), (override));
+    MOCK_METHOD(void, stop, (), (override));
     std::weak_ptr<presenter::NetworkStatusCallback> get_callback_network() {
         return WithNetworkCallback::callback_;
     }

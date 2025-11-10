@@ -25,6 +25,9 @@ void TransfererPresenter::transfer(const Address& address, Port port, const File
     if(!setupped_) throw std::logic_error("TransfererPresenter: call setup() before usage");
     transferer_->transfer_file(address, port, filename);   
 }
+void TransfererPresenter::stop() {
+    transferer_->stop();
+}
 
 }
 }

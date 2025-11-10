@@ -28,6 +28,8 @@ public:
     void setup();
     /// Starts listening for connections at given port
     void listen(Port port) override;
+    /// Stops listening or file gathering process if initiated already.
+    void stop();
     /// Asks user for a file confirmation using \ref ListenerView
     bool verify_file(const Filename& filename, Filesize filesize) override;
 

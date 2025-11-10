@@ -14,7 +14,7 @@ public:
         cli_application_{std::make_shared<view::GeneralViewCLI>(argc, argv)},
         application_{
             [this] { return cli_application_; },
-            [this] { cli_application_->stop(); }
+            [this] { application_.stop(); }
         }
     {}
 

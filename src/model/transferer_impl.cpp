@@ -43,10 +43,11 @@ net::awaitable<void> TransfererImpl::connect_and_send(Address address, Port port
 
 net::awaitable<std::shared_ptr<SocketManager>> TransfererImpl::connect(const Address& address, Port port) {
     try {
-        auto socket = co_await socket_builder_->tcp_connecting_to(address, port);
-        auto rem_endpoint = socket->get_remote_endpoint();
+        auto socket_manager = co_await socket_builder_->tcp_connecting_to(address, port);
+        socket_manager_ = socket_manager;
+        auto rem_endpoint = socket_manager->get_remote_endpoint();
         callback()->connected(rem_endpoint.address, rem_endpoint.port);
-        co_return socket;
+        co_return socket_manager;
     } catch (const std::exception& ex) {
         callback()->cant_open_socket();
         throw;
@@ -65,6 +66,12 @@ net::awaitable<void> TransfererImpl::send_file(std::shared_ptr<SocketManager> so
         throw;
     }
     co_return;
+}
+
+void TransfererImpl::stop() {
+    if(auto sm = socket_manager_.lock()) {
+        sm->stop();
+    }
 }
 
 

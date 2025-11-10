@@ -57,6 +57,8 @@ public:
     virtual Endpoint get_remote_endpoint() const = 0;
 /*! \throws std::logic_error if forgot to establish connection before use. */
     virtual Endpoint get_local_endpoint() const = 0;
+    /// Stops current execution of network process.
+    virtual void stop() = 0;
 /// Reads request from network connection. Request is "\n\n"-terminated string.
 /*! \throws std::runtime_error if connection aborted. */
     virtual net::awaitable<std::string> read_request() = 0;

@@ -43,6 +43,11 @@ public:
         transferer_presenter_->setup();
         return general_presenter_->run();
     }
+    void stop() {
+        general_presenter_->stop();
+        listener_presenter_->stop();
+        transferer_presenter_->stop();
+    }
 
 private:
     ModelBuilderType model_builder_;

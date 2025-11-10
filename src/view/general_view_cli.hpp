@@ -11,7 +11,7 @@ public:
     GeneralViewCLI(int argc, char** argv);
 
     int run() override;
-    void stop();
+    void stop() override;
     void show_address(const Address& address) override;
     void show_connected(const Address& address, Port port) override;
     void show_socket_error() override;
@@ -33,7 +33,6 @@ private:
     std::list<ListenNotification> listen_subs_;
     std::list<TransferNotification> transfer_subs_;
 
-    std::atomic<bool> is_running_ = true;
     CLIArgsParser::CLIRunArgs args_;
 };
 

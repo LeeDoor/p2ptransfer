@@ -15,8 +15,8 @@ namespace p2ptransfer {
 */
 template<typename InternetProtocol>
 class SocketManagerImpl : public SocketManager {
-    public:
-        using SocketType = net::basic_stream_socket<InternetProtocol>;
+public:
+    using SocketType = net::basic_stream_socket<InternetProtocol>;
     using SocketDeleter = std::function<void(SocketType*)>;
     using SocketPtr = std::unique_ptr<SocketType, SocketDeleter>;
     using EndpointType = net::ip::basic_endpoint<InternetProtocol>;
@@ -26,6 +26,8 @@ class SocketManagerImpl : public SocketManager {
     /*! \throws std::runtime_error if connection failed. */
     static net::awaitable<std::shared_ptr<SocketManagerImpl>> open_for_listening(ContextPtr context, Port port) {
         auto sm = std::shared_ptr<SocketManagerImpl>(new SocketManagerImpl(context));
+        /// TODO: Create SocketBuilder INSIDE Socketmanagerimpl. it allows to
+        /// expose private constructor to it, like friends but better.
         co_await sm->listen_connection_at(port);
         co_return sm;
     }
@@ -50,7 +52,7 @@ class SocketManagerImpl : public SocketManager {
             socket_->remote_endpoint().port()
         };
     }
-    
+
     Endpoint get_local_endpoint() const override {
         if(!connected()) 
             throw std::logic_error("get_local_endpoint called while socket is nullptr. "
@@ -59,6 +61,10 @@ class SocketManagerImpl : public SocketManager {
             socket_->local_endpoint().address().to_string(), 
             socket_->local_endpoint().port()
         };
+    }
+    void stop() override {
+        socket_->shutdown(SocketType::shutdown_both);
+        socket_->close();
     }
 
     net::awaitable<std::string> read_request() override {
@@ -70,7 +76,7 @@ class SocketManagerImpl : public SocketManager {
                                            net::use_awaitable);
         std::string result = reading_buffer_.substr(0, bytes);
         reading_buffer_.erase(0, bytes);
-           co_return result;
+        co_return result;
     }
 
     net::awaitable<void> write(std::string response) override {
@@ -125,7 +131,7 @@ protected:
         socket_ = SocketPtr(new SocketType(*context_, InternetProtocol::v4()), get_socket_deleter());
         co_await socket_->async_connect(ep, net::use_awaitable);
     }
-    
+
     ContextPtr context_;
     SocketPtr socket_;
     std::string reading_buffer_;

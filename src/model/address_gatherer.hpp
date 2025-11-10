@@ -17,6 +17,8 @@ public:
     /// Initializes address gathering on separated thread. 
     /*! \throws std::logic_error if gather_local_address called before previous run is finished. */
     virtual void gather_local_address() = 0;
+    /// Stops from gathering address.
+    virtual void stop() = 0;
 };
 
 }

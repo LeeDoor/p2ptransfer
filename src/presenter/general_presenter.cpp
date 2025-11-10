@@ -18,6 +18,10 @@ int GeneralPresenter::run() {
     address_gatherer_->gather_local_address();
     return view_->run();
 }
+void GeneralPresenter::stop() {
+    address_gatherer_->stop();
+    view_->stop();
+}
 void GeneralPresenter::set_progressbar(double persent) {
     view_->update_progressbar_status(persent);
 }
