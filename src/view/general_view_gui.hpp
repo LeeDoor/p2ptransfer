@@ -28,6 +28,7 @@ public:
     void dropEvent(QDropEvent* event) override;
 
     int run() override;
+    void stop();
 
     void show_address(const Address& ipaddress) override;
     void update_progressbar_status(double persent) override;
@@ -49,6 +50,10 @@ public:
             std::terminate();
         }
 #endif
+        if(!running_) 
+            throw std::runtime_error(
+                "Could not perform an action: "
+                "Main thread is stopped or never ran");
         QMetaObject::invokeMethod(this, std::move(function), Qt::BlockingQueuedConnection);
     }
 
@@ -94,6 +99,7 @@ private:
     std::weak_ptr<QApplication> application_;
     Action action_;
     QString selected_file_;
+    bool running_ = false;
 #ifndef NDEBUG
     std::thread::id main_thread_id_;
 #endif

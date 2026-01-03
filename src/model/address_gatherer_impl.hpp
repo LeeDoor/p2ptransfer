@@ -35,6 +35,7 @@ private:
     net::awaitable<SocketManagerPtr> build_socket_manager(const Address& address, Port port);
 
     SocketManagerBuilderPtr socket_builder_;
+    SocketManagerPtr socket_manager_;
     ThreadWrapperPtr thread_wrapper_;
     ContextPtr context_;
 };

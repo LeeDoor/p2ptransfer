@@ -3,14 +3,14 @@ project(p2ptransfer)
 set(CMAKE_CXX_STANDARD 20) # use c++20
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # require C++ version
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # exporting compile_commands.json for clangd 
-set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_BUILD_TYPE Debug)
 
 option(TESTING "Build tests" ON)
 option(GRAPHICS "Build with Qt" ON) # graphics executable
 
 set(LINK_LIBRARIES ) # libraries to link
 set(INCLUDE_DIRECTORIES ) 
-set(CMAKE_CXX_FLAGS "-frtti -Wall -Wextra -Wpedantic")
+set(CMAKE_CXX_FLAGS "-g -frtti -Wall -Wextra -Wpedantic")
 
 if(WIN32)
     set(LINK_LIBRARIES ws2_32 wsock32) 

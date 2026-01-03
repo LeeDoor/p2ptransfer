@@ -20,6 +20,8 @@ TransfererImpl::TransfererImpl(
 {}
 TransfererImpl::~TransfererImpl() {
     context_->stop();
+    if(socket_manager_) 
+        std::ignore = socket_manager_->stop_socket();
 }
 
 void TransfererImpl::transfer_file(const Address& address, Port port, const Filename& filename) {
@@ -39,14 +41,15 @@ net::awaitable<void> TransfererImpl::connect_and_send(Address address, Port port
     } catch (const std::exception& ex) {
         Logger::log() << ex.what() << std::endl;
     }
+    socket_manager_ = nullptr;
 }
 
 net::awaitable<std::shared_ptr<SocketManager>> TransfererImpl::connect(const Address& address, Port port) {
     try {
-        auto socket = co_await socket_builder_->tcp_connecting_to(address, port);
-        auto rem_endpoint = socket->get_remote_endpoint();
+        socket_manager_ = co_await socket_builder_->tcp_connecting_to(address, port);
+        auto rem_endpoint = socket_manager_->get_remote_endpoint();
         callback()->connected(rem_endpoint.address, rem_endpoint.port);
-        co_return socket;
+        co_return socket_manager_;
     } catch (const std::exception& ex) {
         callback()->cant_open_socket();
         throw;
@@ -66,8 +69,6 @@ net::awaitable<void> TransfererImpl::send_file(std::shared_ptr<SocketManager> so
     }
     co_return;
 }
-
-
 
 }
 }

@@ -16,10 +16,13 @@ ListenerImpl::ListenerImpl(ContextPtr context,
     thread_wrapper_(thread_wrapper),
     context_(context),
     socket_manager_builder_(socket_manager_builder),
+    socket_manager_{},
     file_reader_builder_(file_reader_builder)
 {}
 ListenerImpl::~ListenerImpl() {
     context_->stop();
+    if(socket_manager_)
+        std::ignore = socket_manager_->stop_socket();
 }
 
 void ListenerImpl::listen_if_not_already(Port port) {
@@ -49,14 +52,15 @@ net::awaitable<void> ListenerImpl::listen_async(Port port) {
     } catch(const std::exception& ex) {
         Logger::log() << ex.what() << std::endl;
     }
+    socket_manager_ = nullptr;
 }
 
 net::awaitable<ListenerImpl::SocketManagerPtr> ListenerImpl::connect_and_listen(Port port) {
     try {
-        auto socket_manager = co_await socket_manager_builder_->tcp_listening_at(port);
-        auto endpoint = socket_manager->get_remote_endpoint();
+        socket_manager_ = co_await socket_manager_builder_->tcp_listening_at(port);
+        auto endpoint = socket_manager_->get_remote_endpoint();
         WithNetworkCallback::callback()->connected(endpoint.address, endpoint.port);
-        co_return socket_manager;
+        co_return socket_manager_;
     } catch(const std::exception& ex) {
         WithNetworkCallback::callback()->cant_open_socket();
         throw;

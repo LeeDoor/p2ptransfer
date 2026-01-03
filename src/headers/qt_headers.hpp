@@ -1,5 +1,7 @@
 #pragma once
 #include <QApplication>
+#include <QCoreApplication>
+#include <QThread>
 #include <QWidget>
 #include <QMainWindow>
 #include <QMessageBox>

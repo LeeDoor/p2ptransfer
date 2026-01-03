@@ -1,5 +1,6 @@
 #include "general_view_gui.hpp"
 #include "ui_view_gui.h"
+#include "logger.hpp"
 
 namespace p2ptransfer {
 namespace view {
@@ -34,9 +35,16 @@ void GeneralViewGUI::dropEvent(QDropEvent* event) {
 int GeneralViewGUI::run() {
     QMainWindow::show();
     if(auto application = application_.lock()) {
+        running_ = true;
         return application->exec();
     } else {
         throw std::logic_error("application removed before ViewGUI::run");
+    }
+}
+void GeneralViewGUI::stop() {
+    if(auto app = application_.lock()) {
+        running_ = false;
+        app->quit();
     }
 }
 
