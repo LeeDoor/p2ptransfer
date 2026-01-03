@@ -17,7 +17,7 @@ AddressGathererImpl::AddressGathererImpl(
 AddressGathererImpl::~AddressGathererImpl() {
     context_->stop();
     if(socket_manager_)
-        std::ignore = socket_manager_->stop_socket();
+        socket_manager_->stop();
 }
 
 void AddressGathererImpl::gather_local_address() {
@@ -36,9 +36,8 @@ void AddressGathererImpl::run_gathering() {
 
 net::awaitable<void> AddressGathererImpl::gather_async() {
     try {
-        auto socket_manager = co_await build_socket_manager("192.168.0.1", 8080);
-        socket_manager_ = socket_manager;
-        callback()->set_address(socket_manager->get_local_endpoint().address);
+        socket_manager_ = co_await build_socket_manager("192.168.0.1", 8080);
+        callback()->set_address(socket_manager_->get_local_endpoint().address);
     } catch (const std::exception& ex) {
         callback()->set_address(ex.what());
     }
@@ -51,8 +50,8 @@ AddressGathererImpl::build_socket_manager(const Address& address, Port port) {
 }
 
 void AddressGathererImpl::stop() {
-    if(auto sm = socket_manager_.lock()) {
-        sm->stop();
+    if(socket_manager_) {
+        socket_manager_->stop();
     }
 }
 

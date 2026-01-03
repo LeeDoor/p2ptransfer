@@ -53,7 +53,7 @@ private:
     ThreadWrapperPtr thread_wrapper_;
     ContextPtr context_;
     SocketManagerBuilderPtr socket_manager_builder_;
-    std::weak_ptr<SocketManager> socket_manager_;
+    SocketManagerPtr socket_manager_;
     FileReaderBuilderPtr file_reader_builder_;
 };
 

@@ -27,8 +27,6 @@ public:
     /*! \throws std::runtime_error if connection failed. */
     static net::awaitable<std::shared_ptr<SocketManagerImpl>> open_for_listening(ContextPtr context, Port port) {
         auto sm = std::shared_ptr<SocketManagerImpl>(new SocketManagerImpl(context));
-        /// TODO: Create SocketBuilder INSIDE Socketmanagerimpl. it allows to
-        /// expose private constructor to it, like friends but better.
         co_await sm->listen_connection_at(port);
         co_return sm;
     }
@@ -64,8 +62,9 @@ public:
         };
     }
     void stop() override {
-        socket_->shutdown(SocketType::shutdown_both);
-        socket_->close();
+        ErrorCode ec;
+        socket_->shutdown(SocketType::shutdown_both, ec);
+        socket_->close(ec);
     }
 
     net::awaitable<std::string> read_request() override {

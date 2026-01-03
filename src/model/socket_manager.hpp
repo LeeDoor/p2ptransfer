@@ -51,8 +51,6 @@ public:
 
     virtual ~SocketManager() = default;
 
-    /// Makes this socket stop reading and writing loop and shutdown.
-    virtual ErrorCode stop_socket() = 0;
 /// Defines if socket is connected already. Shouldn't ping for connection.
     virtual bool connected() const noexcept = 0;
 /*! \throws std::logic_error if forgot to establish connection before use. */

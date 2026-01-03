@@ -37,7 +37,7 @@ private:
     ContextPtr context_;
     ThreadWrapperPtr thread_wrapper_;
     SocketManagerBuilderPtr socket_builder_;
-    std::weak_ptr<SocketManager> socket_manager_;
+    SocketManagerPtr socket_manager_;
     FileWriterBuilderPtr file_writer_builder_;
 };
 

@@ -22,7 +22,7 @@ ListenerImpl::ListenerImpl(ContextPtr context,
 ListenerImpl::~ListenerImpl() {
     context_->stop();
     if(socket_manager_)
-        std::ignore = socket_manager_->stop_socket();
+        socket_manager_->stop();
 }
 
 void ListenerImpl::listen_if_not_already(Port port) {
@@ -45,10 +45,9 @@ void ListenerImpl::spawn_listen_coroutine(Port port) {
 
 net::awaitable<void> ListenerImpl::listen_async(Port port) {
     try {
-        auto socket_manager = co_await connect_and_listen(port);
-        socket_manager_ = socket_manager;
+        socket_manager_ = co_await connect_and_listen(port);
         auto file_reader = file_reader_builder_->create_file_reader(
-            WithNetworkCallback::callback(), WithListenerCallback::callback(), socket_manager);
+            WithNetworkCallback::callback(), WithListenerCallback::callback(), socket_manager_);
         co_await file_reader->try_read_file();
     } catch(const std::exception& ex) {
         Logger::log() << ex.what() << std::endl;
@@ -69,8 +68,8 @@ net::awaitable<ListenerImpl::SocketManagerPtr> ListenerImpl::connect_and_listen(
 }
 
 void ListenerImpl::stop() {
-    if(auto sm = socket_manager_.lock()) {
-        sm->stop();
+    if(socket_manager_) {
+        socket_manager_->stop();
     }
 }
 

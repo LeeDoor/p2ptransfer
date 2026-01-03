@@ -7,7 +7,6 @@ namespace test {
 /// Mocks the interface of \ref SocketManager.
 class SocketManagerMock : public SocketManager {
 public:
-    MOCK_METHOD(ErrorCode, stop_socket, (), (override));
     MOCK_METHOD(bool, connected, (), (const, noexcept, override));
     MOCK_METHOD(Endpoint, get_remote_endpoint, (), (const, override));
     MOCK_METHOD(Endpoint, get_local_endpoint, (), (const, override));
