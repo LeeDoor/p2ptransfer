@@ -1,6 +1,5 @@
 #include "general_view_gui.hpp"
 #include "ui_view_gui.h"
-#include "logger.hpp"
 
 namespace p2ptransfer {
 namespace view {
@@ -144,7 +143,7 @@ void GeneralViewGUI::select_file_button_clicked() {
     if(filepath.isEmpty())
         return;
     set_file_if_accessible(filepath);
-}
+}   
 
 void GeneralViewGUI::set_file_if_accessible(QString filepath) {
     if(QFileInfo{filepath}.isDir()) return;
@@ -164,6 +163,23 @@ void GeneralViewGUI::action_changed(int index) {
             break;
     }
     prepare_ui();
+}
+
+void GeneralViewGUI::copy_lan_clicked() {
+    auto clipboard = QGuiApplication::clipboard();
+    clipboard->setText(ui_->addressLabel->text());
+    QString button_text = "Copy"; int timeout_ms = 500;
+    if(ui_->addressLabel->text() == clipboard->text()) {
+        button_text = "Copied";
+        timeout_ms = 500;
+    } else {
+        button_text = "Can't copy";
+        timeout_ms = 2000;
+    }
+    ui_->copyAddressButton->setText(button_text);
+    QTimer::singleShot(timeout_ms, this, [&] {
+        ui_->copyAddressButton->setText("Copy");
+    });
 }
 
 void GeneralViewGUI::disable_ui() {

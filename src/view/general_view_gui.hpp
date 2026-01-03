@@ -64,6 +64,8 @@ public slots:
     void select_file_button_clicked();
     /// Slot for changing tabs to detect current action
     void action_changed(int index);
+    /// Slot for copying the LAN address to clipboard
+    void copy_lan_clicked();
 
     signals:
     void listening(Port port);

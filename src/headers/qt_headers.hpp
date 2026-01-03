@@ -11,3 +11,5 @@
 #include <QFileDialog>
 #include <QRegularExpression>
 #include <QRegularExpressionValidator>
+#include <QClipboard>
+#include <QTimer>
