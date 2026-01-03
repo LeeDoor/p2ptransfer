@@ -1,6 +1,6 @@
 #include "address_gatherer_impl.hpp"
-#include "thread_wrapper.hpp"
 #include "socket_manager_builder.hpp"
+#include "thread_wrapper.hpp"
 #include "socket_manager.hpp"
 
 namespace p2ptransfer {
@@ -36,8 +36,9 @@ void AddressGathererImpl::run_gathering() {
 
 net::awaitable<void> AddressGathererImpl::gather_async() {
     try {
-        socket_manager_ = co_await build_socket_manager("192.168.0.1", 8080);
-        callback()->set_address(socket_manager_->get_local_endpoint().address);
+        auto socket_manager = co_await build_socket_manager("192.168.0.1", 8080);
+        socket_manager_ = socket_manager;
+        callback()->set_address(socket_manager->get_local_endpoint().address);
     } catch (const std::exception& ex) {
         callback()->set_address(ex.what());
     }
@@ -47,6 +48,12 @@ net::awaitable<void> AddressGathererImpl::gather_async() {
 net::awaitable<AddressGathererImpl::SocketManagerPtr> 
 AddressGathererImpl::build_socket_manager(const Address& address, Port port) {
     co_return co_await socket_builder_->udp_connecting_to(address, port);
+}
+
+void AddressGathererImpl::stop() {
+    if(auto sm = socket_manager_.lock()) {
+        sm->stop();
+    }
 }
 
 }

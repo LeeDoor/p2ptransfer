@@ -2,6 +2,8 @@
 #include "application.hpp"
 #include "general_view_cli.hpp"
 #include "listener_view_cli.hpp"
+#include "model_builder.hpp"
+#include "single_thread_wrapper.hpp"
 #include "transferer_view_cli.hpp"
 
 namespace p2ptransfer {
@@ -12,7 +14,7 @@ public:
         cli_application_{std::make_shared<view::GeneralViewCLI>(argc, argv)},
         application_{
             [this] { return cli_application_; },
-            [this] { cli_application_->stop(); }
+            [this] { application_.stop(); }
         }
     {}
 
@@ -20,7 +22,11 @@ public:
 
 private:
     std::shared_ptr<view::GeneralViewCLI> cli_application_;
-    Application<view::GeneralViewCLI, view::ListenerViewCLI, view::TransfererViewCLI> application_;
+    Application<
+        model::ModelBuilder<SingleThreadWrapper>, 
+        view::GeneralViewCLI, 
+        view::ListenerViewCLI, 
+        view::TransfererViewCLI> application_;
 };
 
 }

@@ -1,13 +1,12 @@
 #pragma once
 #include "listener_presenter.hpp"
-#include "model_builder.hpp"
 #include "signal_handler.hpp"
 #include "general_presenter.hpp"
 #include "transferer_presenter.hpp"
 #include "transferer_view.hpp"
 
 namespace p2ptransfer {
-template<typename GeneralViewType, typename ListenerViewType, typename TransfererViewType>
+template<typename ModelBuilderType, typename GeneralViewType, typename ListenerViewType, typename TransfererViewType>
 class Application {
 public:
     template<typename GeneralViewGenerator, typename SignalFunc>
@@ -38,14 +37,20 @@ public:
     {}
 
     int run() {
+        srand(time(NULL));
         general_presenter_->setup();
         listener_presenter_->setup();
         transferer_presenter_->setup();
         return general_presenter_->run();
     }
+    void stop() {
+        general_presenter_->stop();
+        listener_presenter_->stop();
+        transferer_presenter_->stop();
+    }
 
 private:
-    model::ModelBuilder model_builder_;
+    ModelBuilderType model_builder_;
 
     std::shared_ptr<GeneralViewType> general_view_;
     std::shared_ptr<presenter::GeneralPresenter> general_presenter_;

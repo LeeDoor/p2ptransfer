@@ -25,6 +25,8 @@ public:
     void setup();
     /// Starts the process of transfering file to remote user.
     void transfer(const Address& address, Port port, const Filename& filename) override;
+    /// Stops transfering process.
+    void stop();
 
 private:
     ViewPtr view_;

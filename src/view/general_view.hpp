@@ -16,6 +16,8 @@ class GeneralView {
 public:
     /// Runs application cycle. Should be called from \ref presenter::Presenter
     virtual int run() = 0;
+    /// Prevents UI from awaiting for user input.
+    virtual void stop() = 0;
 
     /// Shows LAN address from \ref AddressGatherer.
     virtual void show_address(const Address& address) = 0;

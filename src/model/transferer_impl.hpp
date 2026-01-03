@@ -26,6 +26,7 @@ public:
     ~TransfererImpl();
 
     void transfer_file(const Address& address, Port port, const Filename& filename) override;
+    void stop() override;
 
 private:
     net::awaitable<std::shared_ptr<SocketManager>> connect(const Address& address, Port port);
@@ -36,7 +37,7 @@ private:
     ContextPtr context_;
     ThreadWrapperPtr thread_wrapper_;
     SocketManagerBuilderPtr socket_builder_;
-    SocketManagerPtr socket_manager_;
+    std::weak_ptr<SocketManager> socket_manager_;
     FileWriterBuilderPtr file_writer_builder_;
 };
 

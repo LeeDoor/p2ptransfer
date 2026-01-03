@@ -28,7 +28,7 @@ public:
     void dropEvent(QDropEvent* event) override;
 
     int run() override;
-    void stop();
+    void stop() override;
 
     void show_address(const Address& ipaddress) override;
     void update_progressbar_status(double persent) override;

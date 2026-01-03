@@ -28,10 +28,12 @@ public:
     GeneralPresenter(AddressGathererPtr address_gatherer, ViewPtr view);
 
     /// Should be called after initialization before run.
-    virtual void setup();
+    void setup();
     /// Starts infinite execution loop, which can be stoppped with \ref stop() method. 
     /// Should be called after \ref setup(). 
-    virtual int run();
+    int run();
+    /// stops address gatherer execution and general view loop
+    void stop();
 
     void set_progressbar(double persent) override;
     void set_address(const Address& address) override;

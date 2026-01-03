@@ -12,9 +12,10 @@ GeneralViewCLI::GeneralViewCLI(int argc, char** argv) {
 
 int GeneralViewCLI::run() {
     run_action();
-    while(is_running_);
     return !args_.valid;
 }
+
+void GeneralViewCLI::stop() {}
 
 void GeneralViewCLI::run_action() {
     switch(args_.action) {
@@ -27,9 +28,6 @@ void GeneralViewCLI::run_action() {
     }
 }
 
-void GeneralViewCLI::stop() {
-    is_running_ = false;
-}
 
 void GeneralViewCLI::notify_listen() {
     for(auto iter = listen_subs_.begin(); iter != listen_subs_.end(); ++iter) {

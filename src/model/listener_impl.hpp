@@ -41,6 +41,7 @@ public:
                  FileReaderBuilderPtr file_reader_builder);
     ~ListenerImpl();
     void listen_if_not_already(Port port) override;
+    void stop() override;
 
 private:
     void spawn_listen_coroutine(Port port);
@@ -52,7 +53,7 @@ private:
     ThreadWrapperPtr thread_wrapper_;
     ContextPtr context_;
     SocketManagerBuilderPtr socket_manager_builder_;
-    SocketManagerPtr socket_manager_;
+    std::weak_ptr<SocketManager> socket_manager_;
     FileReaderBuilderPtr file_reader_builder_;
 };
 

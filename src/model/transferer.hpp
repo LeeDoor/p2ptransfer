@@ -19,6 +19,8 @@ public:
     * \throws std::runtime_error if file was not gathered due to network problems or remote user cancellation.
     */
     virtual void transfer_file(const Address& address, Port port, const Filename& filename) = 0;
+    /// Stops transferring process.
+    virtual void stop() = 0;
 };
 
 }

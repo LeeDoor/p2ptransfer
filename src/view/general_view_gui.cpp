@@ -47,6 +47,12 @@ void GeneralViewGUI::stop() {
     }
 }
 
+void GeneralViewGUI::stop() {
+    if(auto application = application_.lock()){
+        application->quit();
+    }
+}
+
 void GeneralViewGUI::show_address(const Address& address) {
     QString qaddress = address.c_str();
     run_sync([=, this] {

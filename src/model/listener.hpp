@@ -26,6 +26,7 @@ public:
     * problems or user cancellation.
     */
     virtual void listen_if_not_already(Port port) = 0;
+    virtual void stop() = 0;
 };
 
 }

@@ -37,13 +37,9 @@ net::awaitable<SendRequest> FileReaderImpl::handle_send_request() {
 }
 
 void FileReaderImpl::validate_send_request(const SendRequest& send_request) {
-    validate_filename(send_request.filename);
-}
-
-void FileReaderImpl::validate_filename(const Filename& filename) {
-    std::filesystem::path path_filename(filename);
+    std::filesystem::path path_filename(send_request.filename);
     if (path_filename.has_parent_path())
-        throw std::runtime_error("filename should not contain directories: " + filename);
+        throw std::runtime_error("filename should not contain directories: " + send_request.filename);
 }
 
 bool FileReaderImpl::ask_file_confirmation(const SendRequest& send_request) {
@@ -56,12 +52,27 @@ net::awaitable<void> FileReaderImpl::send_permission(const SendRequest& send_req
 }
 
 net::awaitable<void> FileReaderImpl::read_file(const SendRequest& send_request) {
-    std::ofstream output_file = open_file_for_writing(send_request.filename);
-    co_await handle_file(output_file, send_request.filesize);
+    std::string temp_filename = generate_temporary_filename(send_request.filename);
+    try {
+        std::ofstream output_file = open_file_for_writing(temp_filename);
+        co_await handle_file(output_file, send_request.filesize);
+    }
+    catch(const std::runtime_error& ex) {
+        std::error_code ec; 
+        // try to remove. Even if failed, 
+        // keep handling previous error
+        std::filesystem::remove(temp_filename, ec);
+        throw;
+    }
+    std::filesystem::rename(temp_filename, send_request.filename);
 }
 
-std::ofstream FileReaderImpl::open_file_for_writing(const std::string& initial_filename) {
-    std::ofstream ofs("READED_" + initial_filename, std::ofstream::binary);
+std::string FileReaderImpl::generate_temporary_filename(const std::string& initial_filename) {
+    return initial_filename + std::to_string(rand()) + ".download";
+}
+
+std::ofstream FileReaderImpl::open_file_for_writing(const std::string& new_filename) {
+    std::ofstream ofs(new_filename, std::ofstream::binary);
     if(!ofs.is_open()) {
         throw std::runtime_error("failed to open file for writing");
     }

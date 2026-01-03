@@ -28,6 +28,7 @@ public:
     ~AddressGathererImpl();
 
     void gather_local_address() override;
+    void stop() override;
 
 private:
     void run_gathering();
@@ -35,7 +36,7 @@ private:
     net::awaitable<SocketManagerPtr> build_socket_manager(const Address& address, Port port);
 
     SocketManagerBuilderPtr socket_builder_;
-    SocketManagerPtr socket_manager_;
+    std::weak_ptr<SocketManager> socket_manager_;
     ThreadWrapperPtr thread_wrapper_;
     ContextPtr context_;
 };
