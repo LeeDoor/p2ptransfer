@@ -19,9 +19,7 @@ TransfererImpl::TransfererImpl(
     , file_writer_builder_{file_writer_builder}
 {}
 TransfererImpl::~TransfererImpl() {
-    context_->stop();
-    if(socket_manager_) 
-        socket_manager_->stop();
+    stop();
 }
 
 void TransfererImpl::transfer_file(const Address& address, Port port, const Filename& filename) {
@@ -71,6 +69,7 @@ net::awaitable<void> TransfererImpl::send_file(std::shared_ptr<SocketManager> so
 }
 
 void TransfererImpl::stop() {
+    context_->stop();
     if(socket_manager_) {
         socket_manager_->stop();
     }

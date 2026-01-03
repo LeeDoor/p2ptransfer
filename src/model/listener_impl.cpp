@@ -20,9 +20,7 @@ ListenerImpl::ListenerImpl(ContextPtr context,
     file_reader_builder_(file_reader_builder)
 {}
 ListenerImpl::~ListenerImpl() {
-    context_->stop();
-    if(socket_manager_)
-        socket_manager_->stop();
+    stop();
 }
 
 void ListenerImpl::listen_if_not_already(Port port) {
@@ -68,6 +66,7 @@ net::awaitable<ListenerImpl::SocketManagerPtr> ListenerImpl::connect_and_listen(
 }
 
 void ListenerImpl::stop() {
+    context_->stop();
     if(socket_manager_) {
         socket_manager_->stop();
     }

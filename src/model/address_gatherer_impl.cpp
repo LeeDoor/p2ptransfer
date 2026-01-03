@@ -15,9 +15,7 @@ AddressGathererImpl::AddressGathererImpl(
     context_{context}
 {}
 AddressGathererImpl::~AddressGathererImpl() {
-    context_->stop();
-    if(socket_manager_)
-        socket_manager_->stop();
+    stop();
 }
 
 void AddressGathererImpl::gather_local_address() {
@@ -50,6 +48,7 @@ AddressGathererImpl::build_socket_manager(const Address& address, Port port) {
 }
 
 void AddressGathererImpl::stop() {
+    context_->stop();
     if(socket_manager_) {
         socket_manager_->stop();
     }

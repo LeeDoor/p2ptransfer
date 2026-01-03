@@ -50,11 +50,22 @@ void GeneralViewCLI::show_socket_error() {
     std::cout << "Cant open socket" << std::endl;
     close_program();
 }
-void GeneralViewCLI::update_progressbar_status(double persent) {
-    std::cout << "progress: " << persent << std::endl;
+void GeneralViewCLI::update_progressbar_status(double percent) {
+    int barWidth = 50;
+    std::cout << "\r[";
+    int pos = barWidth * percent / 100.0;
+    
+    for (int i = 0; i < barWidth; ++i) {
+        if (i < pos) std::cout << "=";
+        else if (i == pos) std::cout << ">";
+        else std::cout << " ";
+    }
+    
+    std::cout << "] " << std::setw(3) << static_cast<int>(percent) << " %";
+    std::cout.flush();  
 }
 void GeneralViewCLI::show_file_success() {
-    std::cout << "File successfully transfered" << std::endl;
+    std::cout << "\nFile successfully transfered" << std::endl;
     close_program();
 }
 void GeneralViewCLI::show_connection_aborted(const Address& address, Port port) {
