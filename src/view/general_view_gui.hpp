@@ -40,7 +40,7 @@ public:
     std::shared_ptr<Ui::GeneralViewGUI> get_ui();
     /// Attach \ref function execution to the \ref run() 's thread. Qt requirement.
     template<typename Func>
-    void run_sync(Func&& function) {
+    void run_sync(Func&& function, bool blocking = false) {
 #ifndef NDEBUG
         auto calling_thread_id = std::this_thread::get_id();
         if(main_thread_id_ == calling_thread_id) {
@@ -50,11 +50,11 @@ public:
             std::terminate();
         }
 #endif
-        if(!running_) 
+        if(!running_ && blocking) 
             throw std::runtime_error(
                 "Could not perform an action: "
                 "Main thread is stopped or never ran");
-        QMetaObject::invokeMethod(this, std::move(function), Qt::BlockingQueuedConnection);
+        QMetaObject::invokeMethod(this, std::move(function), blocking ? Qt::BlockingQueuedConnection : Qt::QueuedConnection);
     }
 
 public slots:

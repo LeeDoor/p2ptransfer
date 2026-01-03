@@ -20,7 +20,7 @@ bool ListenerViewGUI::ask_file_verification(const Filename& filename, Filesize f
         auto result = QMessageBox::question(general_view_.get(), "File request", 
                                             "Do you want to get a file: " + qfilename + " (" + qfilesize + ")?");
         confirmed = result == QMessageBox::Yes;
-    });
+    }, true);
     return confirmed;
 }
 void ListenerViewGUI::listening(Port port) {
