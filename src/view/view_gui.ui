@@ -23,11 +23,22 @@
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="addressLabel">
-      <property name="text">
-       <string>Loading Address...</string>
-      </property>
-     </widget>
+     <layout class="QHBoxLayout" name="addressLayout">
+      <item>
+       <widget class="QLabel" name="addressLabel">
+        <property name="text">
+         <string>Loading Address...</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="copyAddressButton">
+        <property name="text">
+         <string>copy</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
     <item>
      <widget class="QTabWidget" name="tabWidget">
@@ -241,10 +252,17 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>copyAddressButton</sender>
+   <signal>clicked()</signal>
+   <receiver>GeneralViewGUI</receiver>
+   <slot>copy_lan_clicked()</slot>
+  </connection>
  </connections>
  <slots>
   <slot>action_button_clicked()</slot>
   <slot>action_changed(int)</slot>
   <slot>select_file_button_clicked()</slot>
+  <slot>copy_lan_clicked()</slot>
  </slots>
 </ui>

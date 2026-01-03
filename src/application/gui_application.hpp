@@ -15,7 +15,7 @@ public:
         gui_application_{std::make_shared<view::GeneralViewGUI>(qt_application_)},
         application_{
             [this] { return gui_application_; },
-            [this] { qt_application_->quit(); }
+            [this] { gui_application_->stop(); }
         }
     {}
     int run() { return application_.run(); }

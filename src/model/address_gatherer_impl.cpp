@@ -16,6 +16,8 @@ AddressGathererImpl::AddressGathererImpl(
 {}
 AddressGathererImpl::~AddressGathererImpl() {
     context_->stop();
+    if(socket_manager_)
+        std::ignore = socket_manager_->stop_socket();
 }
 
 void AddressGathererImpl::gather_local_address() {
@@ -40,6 +42,7 @@ net::awaitable<void> AddressGathererImpl::gather_async() {
     } catch (const std::exception& ex) {
         callback()->set_address(ex.what());
     }
+    socket_manager_ = nullptr;
 }
 
 net::awaitable<AddressGathererImpl::SocketManagerPtr> 

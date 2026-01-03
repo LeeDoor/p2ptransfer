@@ -1,5 +1,7 @@
 #pragma once
 #include <QApplication>
+#include <QCoreApplication>
+#include <QThread>
 #include <QWidget>
 #include <QMainWindow>
 #include <QMessageBox>
@@ -9,3 +11,5 @@
 #include <QFileDialog>
 #include <QRegularExpression>
 #include <QRegularExpressionValidator>
+#include <QClipboard>
+#include <QTimer>

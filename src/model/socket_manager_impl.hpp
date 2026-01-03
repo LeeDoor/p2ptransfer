@@ -1,18 +1,19 @@
 #pragma once
+#include "logger.hpp"
 #include "socket_manager.hpp"
 
 namespace p2ptransfer {
 
 /*!
-* \brief Implementation class for \ref SocketManager
-*
-* Implements \ref SocketManager interface for network communication.
-* Constructor is hidden to force class users firstly establish connection with
-* special static member functions open_for_listening or open_for_connecting.
-* Has two prepared implementations for boost::asio::ip::tcp and boost::asio::ip::udp:
-* SocketManagerTcp and SocketManagerUdp.
-* \tparam InternetProtocol means either TCP or UDP connection is used.
-*/
+ * \brief Implementation class for \ref SocketManager
+ *
+ * Implements \ref SocketManager interface for network communication.
+ * Constructor is hidden to force class users firstly establish connection with
+ * special static member functions open_for_listening or open_for_connecting.
+ * Has two prepared implementations for boost::asio::ip::tcp and boost::asio::ip::udp:
+ * SocketManagerTcp and SocketManagerUdp.
+ * \tparam InternetProtocol means either TCP or UDP connection is used.
+ */
 template<typename InternetProtocol>
 class SocketManagerImpl : public SocketManager {
 public:

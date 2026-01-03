@@ -40,7 +40,7 @@ public:
     std::shared_ptr<Ui::GeneralViewGUI> get_ui();
     /// Attach \ref function execution to the \ref run() 's thread. Qt requirement.
     template<typename Func>
-    void run_sync(Func&& function) {
+    void run_sync(Func&& function, bool blocking = false) {
 #ifndef NDEBUG
         auto calling_thread_id = std::this_thread::get_id();
         if(main_thread_id_ == calling_thread_id) {
@@ -50,7 +50,11 @@ public:
             std::terminate();
         }
 #endif
-        QMetaObject::invokeMethod(this, std::move(function), Qt::BlockingQueuedConnection);
+        if(!running_ && blocking) 
+            throw std::runtime_error(
+                "Could not perform an action: "
+                "Main thread is stopped or never ran");
+        QMetaObject::invokeMethod(this, std::move(function), blocking ? Qt::BlockingQueuedConnection : Qt::QueuedConnection);
     }
 
 public slots:
@@ -60,6 +64,8 @@ public slots:
     void select_file_button_clicked();
     /// Slot for changing tabs to detect current action
     void action_changed(int index);
+    /// Slot for copying the LAN address to clipboard
+    void copy_lan_clicked();
 
     signals:
     void listening(Port port);
@@ -95,6 +101,7 @@ private:
     std::weak_ptr<QApplication> application_;
     Action action_;
     QString selected_file_;
+    bool running_ = false;
 #ifndef NDEBUG
     std::thread::id main_thread_id_;
 #endif
