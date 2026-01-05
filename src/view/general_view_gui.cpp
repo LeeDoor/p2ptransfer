@@ -73,27 +73,43 @@ void GeneralViewGUI::show_connection_aborted(const Address& address, Port port) 
     QString qport = QString::number(port);
     run_sync([=, this] {
         QMessageBox::warning(this, "Aborted", "connection to " + qaddress + ":" + qport + " is aborted.");
-        enable_ui();
+        input_waiting_stage();
     });
 }
 
 void GeneralViewGUI::show_file_success() {
     run_sync([=, this] {
-        enable_ui();
         QMessageBox::information(this, "Success", "File transferred successfully.");
+        input_waiting_stage();
     });
 }
 void GeneralViewGUI::show_socket_error() {
     run_sync([=, this] {
         QMessageBox::warning(this, "Socket failure", "Unable to open socket. Please change port and try again.");
-        enable_ui();
+        input_waiting_stage();
     });
 }
 std::shared_ptr<Ui::GeneralViewGUI> GeneralViewGUI::get_ui() {
     return ui_;
 }
 void GeneralViewGUI::action_button_clicked() {
-    disable_ui();
+    if(transferring_) {
+        cancel_action();   
+    } else {
+        perform_action();
+    }
+}
+
+void GeneralViewGUI::cancel_action() {
+    if(is_listen()) {
+        cancel_listening();
+    } else if (is_transfer()) {
+        cancel_transferring();
+    }
+}
+
+void GeneralViewGUI::perform_action() {
+    acting_stage();
     try {
         if(is_listen()) {
             listening(get_port());
@@ -101,15 +117,15 @@ void GeneralViewGUI::action_button_clicked() {
         else if (is_transfer()) {
             if(selected_file_.isEmpty()) 
                 throw std::runtime_error(
-                    "No file selected. Please drag your file to "
-                    "this window or press the \"select file\" button");
-            transfering(get_address(), get_port(), selected_file_.toStdString());
+                        "No file selected. Please drag your file to "
+                        "this window or press the \"select file\" button");
+            transferring(get_address(), get_port(), selected_file_.toStdString());
         }
     } catch (const std::runtime_error& ex) {
         QMessageBox::warning(this, "Action error", ex.what());
-        enable_ui();
     }   
 }
+
 Port GeneralViewGUI::get_port() const {
     QString text;
     if(is_listen()) {
@@ -150,7 +166,7 @@ void GeneralViewGUI::set_file_if_accessible(QString filepath) {
     std::ifstream ofs(filepath.toStdString(), std::ios::binary);
     if(!ofs.is_open()) return;
     selected_file_ = filepath;
-    prepare_ui();
+    rename_action_button();
 }
 
 void GeneralViewGUI::action_changed(int index) {
@@ -162,7 +178,7 @@ void GeneralViewGUI::action_changed(int index) {
             action_ = Transfer;
             break;
     }
-    prepare_ui();
+    rename_action_button();
 }
 
 void GeneralViewGUI::copy_lan_clicked() {
@@ -178,23 +194,28 @@ void GeneralViewGUI::copy_lan_clicked() {
     }
     ui_->copyAddressButton->setText(button_text);
     QTimer::singleShot(timeout_ms, this, [&] {
-        ui_->copyAddressButton->setText("Copy");
-    });
+            ui_->copyAddressButton->setText("Copy");
+            });
 }
 
-void GeneralViewGUI::disable_ui() {
-    ui_->actionButton->setEnabled(false);
+void GeneralViewGUI::acting_stage() {
+    transferring_ = true;
     ui_->tabWidget->setEnabled(false);
+    rename_action_button();
 }
 
-void GeneralViewGUI::enable_ui() {
-    ui_->actionButton->setEnabled(true);
+void GeneralViewGUI::input_waiting_stage() {
+    transferring_ = false;
     ui_->tabWidget->setEnabled(true);
     ui_->progressBar->setValue(0);
-    prepare_ui();
+    rename_action_button();
 }
 
-void GeneralViewGUI::prepare_ui() {
+void GeneralViewGUI::rename_action_button() {
+    if(transferring_) {
+        ui_->actionButton->setText("Cancel");
+        return;
+    }
     switch(action()) {
         case Listen:
             ui_->actionButton->setText("Listen");

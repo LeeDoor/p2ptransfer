@@ -11,6 +11,7 @@ ListenerViewGUI::ListenerViewGUI(std::shared_ptr<GeneralViewGUI> view) :
 
 void ListenerViewGUI::setup() {
     QObject::connect(general_view_.get(), &GeneralViewGUI::listening, this, &ListenerViewGUI::listening);
+    QObject::connect(general_view_.get(), &GeneralViewGUI::cancel_listening, this, &ListenerViewGUI::cancel_listening);
 }
 bool ListenerViewGUI::ask_file_verification(const Filename& filename, Filesize filesize) {
     QString qfilename = filename.c_str();
@@ -26,6 +27,10 @@ bool ListenerViewGUI::ask_file_verification(const Filename& filename, Filesize f
 void ListenerViewGUI::listening(Port port) {
     callback()->listen(port);
 }   
+void ListenerViewGUI::cancel_listening() {
+    callback()->cancel_listening();
+}
 
 }
 }
+

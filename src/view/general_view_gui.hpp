@@ -67,15 +67,20 @@ public slots:
     /// Slot for copying the LAN address to clipboard
     void copy_lan_clicked();
 
-    signals:
+signals:
     void listening(Port port);
-    void transfering(const Address& address, Port port, const Filename& filename);
+    void cancel_listening();
+    void transferring(const Address& address, Port port, const Filename& filename);
+    void cancel_transferring();
 private:
     enum Action { Listen, Transfer };
     Action action() const;
     bool is_listen() const;
     bool is_transfer() const;
-    void prepare_ui();
+    void rename_action_button();
+
+    void cancel_action();
+    void perform_action();
 
     /// Reads port from user input.
     /*! \throws std::runtime_error if port from label is not an integer or too big */
@@ -90,18 +95,15 @@ private:
     /// Event for closing window.
     void closeEvent(QCloseEvent* e) override;
 
-    /// disables the button and port input.
-    /// Enable with \ref enable_ui()
-    void disable_ui();
-    /// Enables the button and port input.
-    /// Disable with \ref disable_ui()
-    void enable_ui();
+    void acting_stage();
+    void input_waiting_stage();
 
     std::shared_ptr<Ui::GeneralViewGUI> ui_;
     std::weak_ptr<QApplication> application_;
     Action action_;
     QString selected_file_;
-    bool running_ = false;
+    bool running_ = false; // true if main cycle is running atm
+    bool transferring_ = false; // true if some file is being shared atm
 #ifndef NDEBUG
     std::thread::id main_thread_id_;
 #endif

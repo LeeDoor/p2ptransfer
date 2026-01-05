@@ -15,6 +15,7 @@ public:
     bool ask_file_verification(const Filename& filename, Filesize filesize) override;
 public slots:
     void listening(Port port);
+    void cancel_listening();
 
 private:
     std::shared_ptr<GeneralViewGUI> general_view_;

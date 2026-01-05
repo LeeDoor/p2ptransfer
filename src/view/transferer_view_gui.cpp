@@ -9,7 +9,7 @@ TransfererViewGUI::TransfererViewGUI(std::shared_ptr<GeneralViewGUI> view) :
 {}
 
 void TransfererViewGUI::setup() {
-    QObject::connect(general_view_.get(), &GeneralViewGUI::transfering, this, &TransfererViewGUI::transfer);
+    QObject::connect(general_view_.get(), &GeneralViewGUI::transferring, this, &TransfererViewGUI::transfer);
 }
 void TransfererViewGUI::transfer(const Address& address, Port port, const Filename& filename) {
     callback()->transfer(address, port, filename);

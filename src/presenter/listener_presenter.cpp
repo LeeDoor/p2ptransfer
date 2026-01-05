@@ -20,7 +20,7 @@ void ListenerPresenter::listen(Port port) {
     if(!setupped_) throw std::logic_error("ListenerPresenter exception: call setup() before usage");
     listener_->listen_if_not_already(port);
 }
-void ListenerPresenter::stop() {
+void ListenerPresenter::cancel_listening() {
     listener_->stop();
 }
 bool ListenerPresenter::verify_file(const Filename& filename, Filesize filesize) {

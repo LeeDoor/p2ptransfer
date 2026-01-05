@@ -31,10 +31,13 @@ public:
         SocketManagerTest{ContextPtr{}}{}
 
     void make_server() {
-        spawn_yourself(listen_connection_at(TEST_PORT));
+        EndpointType endpoint(InternetProtocolType::v4(), TEST_PORT);
+        AcceptorType acceptor(*context_, endpoint);
+        spawn_yourself(listen_connection_at(acceptor));
     }
     void make_client() {
-        spawn_yourself(connect_to(TEST_LOCADDR, TEST_PORT));
+        EndpointType endpoint(net::ip::make_address(TEST_LOCADDR), TEST_PORT);
+        spawn_yourself(connect_to(endpoint));
     }
 
     void detach() {

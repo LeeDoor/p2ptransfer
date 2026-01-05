@@ -1,5 +1,4 @@
 #pragma once
-#include "logger.hpp"
 #include "socket_manager.hpp"
 
 namespace p2ptransfer {
@@ -17,25 +16,26 @@ namespace p2ptransfer {
 template<typename InternetProtocol>
 class SocketManagerImpl : public SocketManager {
 public:
-    using SocketType = net::basic_stream_socket<InternetProtocol>;
+    using InternetProtocolType = InternetProtocol;
+    using SocketType = net::basic_stream_socket<InternetProtocolType>;
     using SocketDeleter = std::function<void(SocketType*)>;
     using SocketPtr = std::unique_ptr<SocketType, SocketDeleter>;
-    using EndpointType = net::ip::basic_endpoint<InternetProtocol>;
-    using AcceptorType = net::basic_socket_acceptor<InternetProtocol>;
+    using EndpointType = net::ip::basic_endpoint<InternetProtocolType>;
+    using AcceptorType = net::basic_socket_acceptor<InternetProtocolType>;
 
     /// Object initialization with pre-established connection. Listens for incoming connection at port.
     /*! \throws std::runtime_error if connection failed. */
-    static net::awaitable<std::shared_ptr<SocketManagerImpl>> open_for_listening(ContextPtr context, Port port) {
+    static net::awaitable<std::shared_ptr<SocketManagerImpl>> open_for_listening(ContextPtr context, AcceptorType& acceptor) {
         auto sm = std::shared_ptr<SocketManagerImpl>(new SocketManagerImpl(context));
-        co_await sm->listen_connection_at(port);
+        co_await sm->listen_connection_at(acceptor);
         co_return sm;
     }
 
     /// Object initialization with pre-established connection. Connecting to Endpoint.
     /*! \throws std::runtime_error if connection failed. */
-    static net::awaitable<std::shared_ptr<SocketManagerImpl>> open_for_connecting(ContextPtr context, const Address& address, Port port) {
+    static net::awaitable<std::shared_ptr<SocketManagerImpl>> open_for_connecting(ContextPtr context, const EndpointType& endpoint) {
         auto sm = std::shared_ptr<SocketManagerImpl>(new SocketManagerImpl(context));
-        co_await sm->connect_to(address, port);
+        co_await sm->connect_to(endpoint);
         co_return sm;
     }
 
@@ -61,6 +61,8 @@ public:
             socket_->local_endpoint().port()
         };
     }
+    /// Stops running socket from any network operations.
+    /// To stop socket at the creation process use the builder instead.
     void stop() override {
         ErrorCode ec;
         socket_->shutdown(SocketType::shutdown_both, ec);
@@ -106,7 +108,7 @@ public:
 
 protected:
     SocketManagerImpl(ContextPtr context) :
-        context_(context){}
+        context_{context} {}
 
     SocketDeleter get_socket_deleter() {
         return [] (SocketType* socket) {
@@ -118,18 +120,15 @@ protected:
     }
 
     /*! \throws std::runtime_error if connection failed */
-    net::awaitable<void> listen_connection_at(Port port) {
-        EndpointType endpoint(InternetProtocol::v4(), port);
-        AcceptorType acceptor(*context_, endpoint);
+    net::awaitable<void> listen_connection_at(AcceptorType& acceptor) {
         socket_ = SocketPtr(new SocketType(*context_), get_socket_deleter());
         co_await acceptor.async_accept(*socket_, net::use_awaitable);
     }
 
     /*! \throws std::runtime_error if connection failed */
-    net::awaitable<void> connect_to(const Address& address, Port port) {
-        const EndpointType ep (net::ip::make_address(address), port);
-        socket_ = SocketPtr(new SocketType(*context_, InternetProtocol::v4()), get_socket_deleter());
-        co_await socket_->async_connect(ep, net::use_awaitable);
+    net::awaitable<void> connect_to(const EndpointType& endpoint) {
+        socket_ = SocketPtr(new SocketType(*context_, InternetProtocolType::v4()), get_socket_deleter());
+        co_await socket_->async_connect(endpoint, net::use_awaitable);
     }
 
     ContextPtr context_;
