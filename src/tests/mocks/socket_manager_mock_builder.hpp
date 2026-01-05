@@ -18,6 +18,7 @@ public:
     SocketManagerMockBuilder(std::shared_ptr<SocketManager> socket_manager) :
         socket_manager_(socket_manager){}
    
+    MOCK_METHOD(void, cancel, (), (override));
     MOCK_METHOD(void, mock_tcp_listening_at, (Port port), ());
     MOCK_METHOD(void, mock_udp_listening_at, (Port port), ());
     MOCK_METHOD(void, mock_tcp_connecting_to, (const Address& address, Port port), ());

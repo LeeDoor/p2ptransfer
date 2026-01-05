@@ -66,6 +66,7 @@ net::awaitable<ListenerImpl::SocketManagerPtr> ListenerImpl::connect_and_listen(
 }
 
 void ListenerImpl::stop() {
+    socket_manager_builder_->cancel();
     if(socket_manager_) {
         socket_manager_->stop();
     }

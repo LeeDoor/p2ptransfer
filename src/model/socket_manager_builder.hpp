@@ -18,6 +18,12 @@ public:
     virtual ~SocketManagerBuilder() = default;
 
     /*!
+     * \brief Cancels the operation of listening or connecting. 
+     * Can be used for cancel operation.
+     */
+    virtual void cancel() = 0;
+
+    /*!
     * \brief listening for connection via TCP protocol at given port.
     * \returns awaitable object with pointer to TCP socket manager.
     * \throws std::runtime_error's boost overloads on opening or connection failures.
