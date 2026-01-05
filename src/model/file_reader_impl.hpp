@@ -1,6 +1,7 @@
 #pragma once
 #include "file_reader.hpp"
 #include "request_structures.hpp"
+#include "socket_manager.hpp"
 
 namespace p2ptransfer {
 
@@ -42,6 +43,7 @@ private:
     void calculate_notify_progressbar(size_t bytes_remaining, size_t filesize);
 
     SocketManagerPtr socket_manager_;
+    SocketManager::Endpoint remote_endpoint_;
 };
 
 }
