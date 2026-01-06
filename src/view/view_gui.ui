@@ -190,6 +190,19 @@
      </widget>
     </item>
     <item>
+     <widget class="QLabel" name="remote_endpoint_label">
+      <property name="text">
+       <string>Here will be your firend's IP</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">font-size: 10px; color: #666;</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QProgressBar" name="progressBar">
       <property name="value">
        <number>0</number>

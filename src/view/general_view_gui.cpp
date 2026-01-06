@@ -64,7 +64,7 @@ void GeneralViewGUI::show_connected(const Address& address, Port port) {
     QString qaddress = address.c_str();
     QString qport = QString::number(port);
     run_sync([=, this] {
-        ui_->actionButton->setText("Connected to " + qaddress + ":" + qport);
+            ui_->remote_endpoint_label->setText(qaddress + ":" + qport);
     });
 }
 
@@ -208,6 +208,7 @@ void GeneralViewGUI::input_waiting_stage() {
     transferring_ = false;
     ui_->tabWidget->setEnabled(true);
     ui_->progressBar->setValue(0);
+    ui_->remote_endpoint_label->setText("Here will be your firend's IP");
     rename_action_button();
 }
 
