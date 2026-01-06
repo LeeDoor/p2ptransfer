@@ -26,7 +26,7 @@ public:
     /// Starts the process of transfering file to remote user.
     void transfer(const Address& address, Port port, const Filename& filename) override;
     /// Stops transfering process.
-    void stop();
+    void cancel_transferring() override;
 
 private:
     ViewPtr view_;

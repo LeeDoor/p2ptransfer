@@ -46,7 +46,7 @@ public:
     void stop() {
         general_presenter_->stop();
         listener_presenter_->cancel_listening();
-        transferer_presenter_->stop();
+        transferer_presenter_->cancel_transferring();
     }
 
 private:

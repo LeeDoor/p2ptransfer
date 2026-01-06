@@ -14,6 +14,7 @@ public:
     void setup() override;
 private:
     void transfer(const Address& address, Port port, const Filename& filename);
+    void cancel_transferring();
 
     std::shared_ptr<GeneralViewGUI> general_view_;
 };

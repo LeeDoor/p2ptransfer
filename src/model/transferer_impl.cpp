@@ -15,7 +15,7 @@ TransfererImpl::TransfererImpl(
     FileWriterBuilderPtr file_writer_builder)
     : context_{context}
     , thread_wrapper_{thread_wrapper}
-    , socket_builder_{socket_builder}
+    , socket_manager_builder_{socket_builder}
     , file_writer_builder_{file_writer_builder}
 {}
 TransfererImpl::~TransfererImpl() {
@@ -44,7 +44,7 @@ net::awaitable<void> TransfererImpl::connect_and_send(Address address, Port port
 
 net::awaitable<std::shared_ptr<SocketManager>> TransfererImpl::connect(const Address& address, Port port) {
     try {
-        socket_manager_ = co_await socket_builder_->tcp_connecting_to(address, port);
+        socket_manager_ = co_await socket_manager_builder_->tcp_connecting_to(address, port);
         auto rem_endpoint = socket_manager_->get_remote_endpoint();
         callback()->connected(rem_endpoint.address, rem_endpoint.port);
         co_return socket_manager_;
@@ -69,7 +69,7 @@ net::awaitable<void> TransfererImpl::send_file(std::shared_ptr<SocketManager> so
 }
 
 void TransfererImpl::stop() {
-    context_->stop();
+    socket_manager_builder_->cancel();
     if(socket_manager_) {
         socket_manager_->stop();
     }

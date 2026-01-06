@@ -11,6 +11,7 @@ public:
     virtual ~TransfererViewCallback() = default;
 
     virtual void transfer(const Address& address, Port port, const Filename& filename) = 0;
+    virtual void cancel_transferring() = 0;
 };
 
 }
