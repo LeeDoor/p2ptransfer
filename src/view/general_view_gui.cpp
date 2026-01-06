@@ -85,7 +85,12 @@ void GeneralViewGUI::show_file_success() {
 }
 void GeneralViewGUI::show_socket_error() {
     run_sync([=, this] {
-        QMessageBox::warning(this, "Socket failure", "Unable to open socket. Please change port and try again.");
+        QMessageBox::warning(this, "Socket failure", 
+                "Unable to open socket. "
+                "Please ask your friend to press \"Listen\" first. "
+                "If it doesn't help, try to change port.\n"
+                "Note that ports should be same on both sides."
+        );
         input_waiting_stage();
     });
 }
@@ -118,11 +123,12 @@ void GeneralViewGUI::perform_action() {
             if(selected_file_.isEmpty()) 
                 throw std::runtime_error(
                         "No file selected. Please drag your file to "
-                        "this window or press the \"select file\" button");
+                        "this window or press the \"select file\" button.");
             transferring(get_address(), get_port(), selected_file_.toStdString());
         }
     } catch (const std::runtime_error& ex) {
         QMessageBox::warning(this, "Action error", ex.what());
+        input_waiting_stage();
     }   
 }
 
