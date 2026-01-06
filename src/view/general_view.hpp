@@ -29,7 +29,7 @@ public:
 
     /// Shows progressbar on the screen.
     /*! \param persent floating point number in [0; 100] segment. */
-    virtual void update_progressbar_status(double persent) = 0;
+    virtual void update_progressbar_status(double persent, double kbps) = 0;
     /// Shows message about successfully finished file gathering.
     virtual void show_file_success() = 0;
     /// Shows error if an error occured while sharing file.

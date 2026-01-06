@@ -6,7 +6,12 @@ namespace p2ptransfer {
 namespace presenter {
 
 GeneralPresenter::GeneralPresenter(AddressGathererPtr address_gatherer, ViewPtr view) :
-    address_gatherer_{address_gatherer}, view_{view} {}
+    address_gatherer_{address_gatherer}, 
+    view_{view},
+    prev_bar_timestamp_{}, 
+    prev_bytes_downloaded_{0},
+    prev_kbps_{0}
+{}
 
 void GeneralPresenter::setup() {
     is_initialized_ = true;
@@ -22,8 +27,22 @@ void GeneralPresenter::stop() {
     address_gatherer_->stop();
     view_->stop();
 }
-void GeneralPresenter::set_progressbar(double persent) {
-    view_->update_progressbar_status(persent);
+void GeneralPresenter::set_progressbar(size_t bytes_remaining, size_t filesize) {
+    double percent = static_cast<double>(filesize - bytes_remaining) / filesize * 100;
+    double kbps = prev_kbps_;
+    auto time_shift = hclock::now() - prev_bar_timestamp_;
+    if(     (prev_bytes_downloaded_ != 0 || // previous value should be set before
+             prev_bytes_downloaded_ >= bytes_remaining) && // prevent sutiation if used multiple times
+             time_shift > std::chrono::milliseconds(1000)
+    ) {
+        double bytes = (bytes_remaining - prev_bytes_downloaded_);
+        auto bpmcs = bytes / std::chrono::duration_cast<std::chrono::microseconds>(time_shift).count();
+        kbps = bpmcs * 1000;
+        prev_bar_timestamp_ = hclock::now();
+    }
+    view_->update_progressbar_status(percent, kbps);
+    prev_bytes_downloaded_ = bytes_remaining;
+    prev_kbps_ = kbps;
 }
 void GeneralPresenter::set_address(const Address& address) {
     view_->show_address(address);

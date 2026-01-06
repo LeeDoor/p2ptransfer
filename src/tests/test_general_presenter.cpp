@@ -68,22 +68,22 @@ TEST_F(GeneralPresenterFixture, connectionAborted_showNotification) {
     presenter_->connection_aborted(TEST_LOCADDR, TEST_PORT);
 }
 TEST_F(GeneralPresenterFixture, setProgressbar_ProvidesStatus) {
-    EXPECT_CALL(*view_, update_progressbar_status(12.4));
+    EXPECT_CALL(*view_, update_progressbar_status(1, testing::_));
 
-    presenter_->set_progressbar(12.4);
+    presenter_->set_progressbar(1, 100);
 }
 
 TEST_F(GeneralPresenterFixture, multipleProgressbarUpdates_correctSequence) {
     std::vector<double> update_calls; 
     update_calls.reserve(20);
-    EXPECT_CALL(*view_, update_progressbar_status(testing::_))
+    EXPECT_CALL(*view_, update_progressbar_status(testing::_, testing::_))
         .Times(20)
-        .WillRepeatedly([&](double persent) {
+        .WillRepeatedly([&](double persent, [[maybe_unused]] double _) {
             update_calls.push_back(persent);
         });
 
     for(int i = 0; i < 20; ++i) {
-        presenter_->set_progressbar(i * 5);
+        presenter_->set_progressbar(i * 5, 100);
     }
 
     for(int i = 0; i < 20; ++i) {

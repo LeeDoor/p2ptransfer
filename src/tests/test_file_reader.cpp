@@ -60,7 +60,7 @@ protected:
             });
     }
     void check_progressbar_callbacks() {
-        EXPECT_CALL(*network_callback, set_progressbar(::testing::_))
+        EXPECT_CALL(*network_callback, set_progressbar(::testing::_, ::testing::_))
             .Times(::testing::AtLeast(1));
     }
     void check_file_transfered_callback() {

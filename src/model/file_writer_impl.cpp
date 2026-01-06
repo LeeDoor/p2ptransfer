@@ -40,15 +40,10 @@ net::awaitable<void> FileWriterImpl::send_file() {
         buffer.fill(ifs);
         while (!buffer.completed()) {
             co_await socket_->write_part_from(buffer, bytes_remaining);
-            calculate_notify_progressbar(bytes_remaining);
+            callback()->set_progressbar(bytes_remaining, filesize_);
         }
     } while(bytes_remaining);
-    calculate_notify_progressbar(bytes_remaining);
-}
-
-void FileWriterImpl::calculate_notify_progressbar(size_t bytes_remaining) {
-    double progress = 100.0 - (bytes_remaining * 100.0 / filesize_);
-    callback()->set_progressbar(progress);
+    callback()->set_progressbar(bytes_remaining, filesize_);
 }
 
 }

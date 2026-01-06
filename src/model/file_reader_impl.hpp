@@ -39,8 +39,6 @@ private:
     std::string generate_temporary_filename(const std::string& initial_filename);
     std::ofstream open_file_for_writing(const std::string& initial_filename);
     net::awaitable<void> handle_file(std::ofstream& os, size_t filesize);
-    /// Calculates the progress of file downloading and calls the callback.
-    void calculate_notify_progressbar(size_t bytes_remaining, size_t filesize);
 
     SocketManagerPtr socket_manager_;
     SocketManager::Endpoint remote_endpoint_;

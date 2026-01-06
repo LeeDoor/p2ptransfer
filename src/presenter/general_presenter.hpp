@@ -35,7 +35,7 @@ public:
     /// stops address gatherer execution and general view loop
     void stop();
 
-    void set_progressbar(double persent) override;
+    void set_progressbar(size_t bytes_remaining, size_t filesize) override;
     void set_address(const Address& address) override;
     void cant_open_socket() override;
 
@@ -49,6 +49,11 @@ private:
 
     /// Safety bool flag to ensure \ref setup() is called.
     bool is_initialized_ = false;
+
+    using hclock = std::chrono::high_resolution_clock;
+    decltype(hclock::now()) prev_bar_timestamp_;
+    size_t prev_bytes_downloaded_;
+    double prev_kbps_;
 };
 
 }

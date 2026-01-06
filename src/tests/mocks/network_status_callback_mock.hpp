@@ -13,7 +13,7 @@ public:
     MOCK_METHOD(void, file_transfered, (), (override));
     MOCK_METHOD(void, connection_aborted, (const Address& address, Port port), (override));
     MOCK_METHOD(void, cant_open_socket, (), (override));
-    MOCK_METHOD(void, set_progressbar, (double present), (override));
+    MOCK_METHOD(void, set_progressbar, (size_t bytes_remaining, size_t filesize), (override));
 };
 
 }

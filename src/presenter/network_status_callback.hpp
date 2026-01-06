@@ -24,7 +24,7 @@ public:
     /*! \brief While file sharing, notifying about sending progress.
      * \param persent the floating point number in [0;100] segment 
     */
-    virtual void set_progressbar(double persent) = 0;
+    virtual void set_progressbar(size_t bytes_remaining, size_t filesize) = 0;
 };
 
 }

@@ -1,4 +1,5 @@
 #include "general_view_cli.hpp"
+#include "speed_converter.hpp"
 
 namespace p2ptransfer {
 namespace view {
@@ -50,9 +51,9 @@ void GeneralViewCLI::show_socket_error() {
     std::cout << "Cant open socket" << std::endl;
     close_program();
 }
-void GeneralViewCLI::update_progressbar_status(double percent) {
+void GeneralViewCLI::update_progressbar_status(double percent, double kbps) {
     int barWidth = 50;
-    std::cout << "\r[";
+    std::cout << "\r" << SpeedConverter::from_kbps(kbps) << " [";
     int pos = barWidth * percent / 100.0;
     
     for (int i = 0; i < barWidth; ++i) {

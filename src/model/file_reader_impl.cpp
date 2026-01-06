@@ -85,14 +85,9 @@ net::awaitable<void> FileReaderImpl::handle_file(std::ofstream& os, size_t files
     while (bytes_remaining) {
         size_t bytes = co_await socket_manager_->read_part_to(buffer, bytes_remaining);
         os.write(buffer.data(), bytes);
-        calculate_notify_progressbar(bytes_remaining, filesize);
+        WithNetworkCallback::callback()->set_progressbar(bytes_remaining, filesize);
     }
 } 
-
-void FileReaderImpl::calculate_notify_progressbar(size_t bytes_remaining, size_t filesize) {
-    double progress = 100.0 - (bytes_remaining * 100.0 / filesize);
-    WithNetworkCallback::callback()->set_progressbar(progress);
-}
 
 }
 }

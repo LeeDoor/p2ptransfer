@@ -1,4 +1,5 @@
 #include "general_view_gui.hpp"
+#include "speed_converter.hpp"
 #include "ui_view_gui.h"
 
 namespace p2ptransfer {
@@ -54,9 +55,12 @@ void GeneralViewGUI::show_address(const Address& address) {
     });
 }
 
-void GeneralViewGUI::update_progressbar_status(double persent) {
+void GeneralViewGUI::update_progressbar_status(double persent, double kbps) {
     run_sync([=, this] {
         ui_->progressBar->setValue(persent);
+        QString persent_str = QString::number(persent, 'f', 2);
+        QString speed_str = QString::fromStdString(SpeedConverter::from_kbps(kbps));
+        ui_->progressBar->setFormat(persent_str + "%\t" + speed_str);
     });
 }
 
@@ -214,6 +218,7 @@ void GeneralViewGUI::input_waiting_stage() {
     transferring_ = false;
     ui_->tabWidget->setEnabled(true);
     ui_->progressBar->setValue(0);
+    ui_->progressBar->setFormat("...");
     ui_->remote_endpoint_label->setText("Here will be your firend's IP");
     rename_action_button();
 }
