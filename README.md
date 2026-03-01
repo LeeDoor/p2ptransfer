@@ -2,11 +2,11 @@
 # Resume
 P2PTransfer is an application to share files with LAN. It allows to use the full power of your router and Ethernet cable.
 # Achievements
-* 📊 **MVP** Architecture using **Qt Framework**. Application allows *Desktop* and *CLI interfaces*.
-* 🪟 **Crossplatform build**: Application has versions for *Linux* and *Windows* built using cmake toolchain.
-* 🌐 Internet Communication in LAN using **Boost.Asio** library.
-* 🧪 Unit and Integration tests using **Google Test (Mock)** framework and CTest.
-* 🤓 Documentation written with **Doxygen**.
+* **MVP** Architecture using **Qt Framework**. Application allows *Desktop* and *CLI interfaces*.
+* **Crossplatform build**: Application has versions for *Linux* and *Windows* built using cmake toolchain.
+* Internet Communication in LAN using **Boost.Asio** library.
+* Unit and Integration tests using **Google Test (Mock)** framework and CTest.
+* Documentation written with **Doxygen**.
   
 # How To use
 Application has two modes: 
