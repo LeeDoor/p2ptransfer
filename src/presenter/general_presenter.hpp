@@ -41,7 +41,7 @@ public:
 
     void connection_aborted(const Address& address, Port port) override;
     void connection_established(const Address& address, Port port) override;
-    void file_transfered() override;
+    void transfer_succeed() override;
 
 private:
     AddressGathererPtr address_gatherer_;

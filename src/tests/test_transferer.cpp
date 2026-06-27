@@ -64,7 +64,7 @@ protected:
     void check_file_create_and_transfer() {
         EXPECT_CALL(*file_writer_builder_, create_file_writer_mock());
         EXPECT_CALL(*file_writer_, write_file).WillOnce(Return(return_immediately()));
-        EXPECT_CALL(*network_callback_, file_transfered());
+        EXPECT_CALL(*network_callback_, transfer_succeed());
     }
     
     std::shared_ptr<ThreadWrapperMock> thread_wrapper_;

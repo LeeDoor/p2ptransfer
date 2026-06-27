@@ -34,7 +34,7 @@ protected:
             immitate_file_content_sending(file_content);
             check_progressbar_callbacks();
         }
-        check_file_transfered_callback();
+        check_transfer_succeed_callback();
     }
     void immitate_send_request(const std::string& filename, size_t filesize) {
         EXPECT_CALL(*socket_mock, read_request())
@@ -63,8 +63,8 @@ protected:
         EXPECT_CALL(*network_callback, set_progressbar(::testing::_, ::testing::_))
             .Times(::testing::AtLeast(1));
     }
-    void check_file_transfered_callback() {
-        EXPECT_CALL(*network_callback, file_transfered());
+    void check_transfer_succeed_callback() {
+        EXPECT_CALL(*network_callback, transfer_succeed());
     }
     void run_read_file() {
         net::io_context context;
@@ -170,7 +170,7 @@ TEST_F(FileReaderFixture, sentTooMuch_readOnlyGivenData) {
             return return_immediately(filesize);
         });
     check_progressbar_callbacks();
-    check_file_transfered_callback();
+    check_transfer_succeed_callback();
 
     EXPECT_NO_THROW(run_read_file());
 
@@ -200,7 +200,7 @@ TEST_F(FileReaderFixture, contentOutOfBufferSize_successFileProcessing) {
             return return_immediately(buffer.size());
         });
     check_progressbar_callbacks();
-    check_file_transfered_callback();
+    check_transfer_succeed_callback();
 
     EXPECT_NO_THROW(run_read_file());
 

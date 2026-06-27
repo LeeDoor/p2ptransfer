@@ -24,7 +24,7 @@ protected:
     void check_file_writing(const Filename& filename, const std::string& filecontent) {
         verify_and_allow_request(filename, filecontent.size());
         verify_incoming_file(filecontent);
-        check_file_transfered();
+        check_transfer_succeed();
     }
     void verify_and_allow_request(const Filename& filename, size_t filesize) {
         auto path = std::filesystem::path(filename);
@@ -51,7 +51,7 @@ protected:
     inline std::string_view sv_from_write_buffer(SocketManager::WriteBufferType& wb) {
         return std::string_view(wb.get_data(), wb.get_data_size());
     }
-    void check_file_transfered() {
+    void check_transfer_succeed() {
         EXPECT_CALL(*network_callback_, set_progressbar).Times(AtLeast(1));
     }
 

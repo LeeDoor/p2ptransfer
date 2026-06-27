@@ -59,7 +59,7 @@ TEST_F(GeneralPresenterFixture, connectionFailed_showNotification) {
 TEST_F(GeneralPresenterFixture, fileTransfered_showNotification) {
     EXPECT_CALL(*view_, show_file_success());
 
-    presenter_->file_transfered();
+    presenter_->transfer_succeed();
 }
 
 TEST_F(GeneralPresenterFixture, connectionAborted_showNotification) {

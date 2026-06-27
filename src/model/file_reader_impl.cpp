@@ -14,7 +14,7 @@ net::awaitable<void> FileReaderImpl::try_read_file() {
         remote_endpoint_ = socket_manager_->get_remote_endpoint();
         auto send_request = co_await header_handshake();
         co_await read_file(send_request);
-        WithNetworkCallback::callback()->file_transfered();
+        WithNetworkCallback::callback()->transfer_succeed();
     } catch (const std::exception& ex) {
         WithNetworkCallback::callback()->connection_aborted(remote_endpoint_.address, remote_endpoint_.port);
         throw;

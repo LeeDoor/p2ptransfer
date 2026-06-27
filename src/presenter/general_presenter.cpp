@@ -57,7 +57,7 @@ void GeneralPresenter::connection_aborted(const Address& address, Port port) {
 void GeneralPresenter::connection_established(const Address& address, Port port) {
     view_->show_connected(address, port);
 }
-void GeneralPresenter::file_transfered() {
+void GeneralPresenter::transfer_succeed() {
     view_->show_file_success();
 }
 
