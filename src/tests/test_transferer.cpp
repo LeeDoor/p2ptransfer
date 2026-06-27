@@ -116,7 +116,7 @@ TEST_F(TransfererFixture, FileWriterThrew_HandleWithoutRethrow) {
             throw std::runtime_error("immitating filing problem");
         });
     check_connection_success_callback();
-    EXPECT_CALL(*network_callback_, connection_aborted(TEST_LOCADDR, TEST_PORT));
+    EXPECT_CALL(*network_callback_, transfer_failed(TEST_LOCADDR, TEST_PORT));
 
     EXPECT_NO_THROW(transferer_->transfer_file(TEST_LOCADDR, TEST_PORT, TEST_FILENAME));
 }

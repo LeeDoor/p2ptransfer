@@ -63,23 +63,23 @@ TEST_F(GeneralPresenterFixture, fileTransfered_showNotification) {
 }
 
 TEST_F(GeneralPresenterFixture, connectionAborted_showNotification) {
-    EXPECT_CALL(*view_, show_connection_aborted(TEST_LOCADDR, TEST_PORT));
+    EXPECT_CALL(*view_, show_transfer_failed(TEST_LOCADDR, TEST_PORT));
 
-    presenter_->connection_aborted(TEST_LOCADDR, TEST_PORT);
+    presenter_->transfer_failed(TEST_LOCADDR, TEST_PORT);
 }
 TEST_F(GeneralPresenterFixture, setProgressbar_ProvidesStatus) {
-    EXPECT_CALL(*view_, update_progressbar_status(1, testing::_));
+    EXPECT_CALL(*view_, update_progressbar_status(100 - 1, testing::_));
 
     presenter_->set_progressbar(1, 100);
 }
 
 TEST_F(GeneralPresenterFixture, multipleProgressbarUpdates_correctSequence) {
-    std::vector<double> update_calls; 
+    std::vector<int> update_calls; 
     update_calls.reserve(20);
     EXPECT_CALL(*view_, update_progressbar_status(testing::_, testing::_))
         .Times(20)
         .WillRepeatedly([&](double persent, [[maybe_unused]] double _) {
-            update_calls.push_back(persent);
+            update_calls.push_back(std::round(persent));
         });
 
     for(int i = 0; i < 20; ++i) {
@@ -87,7 +87,7 @@ TEST_F(GeneralPresenterFixture, multipleProgressbarUpdates_correctSequence) {
     }
 
     for(int i = 0; i < 20; ++i) {
-        EXPECT_EQ(i * 5, update_calls[i]);
+        EXPECT_EQ(100 - i * 5, update_calls[i]);
     }
 }
 

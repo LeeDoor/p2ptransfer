@@ -69,7 +69,7 @@ void GeneralViewCLI::show_file_success() {
     std::cout << "\nFile successfully transfered" << std::endl;
     close_program();
 }
-void GeneralViewCLI::show_connection_aborted(const Address& address, Port port) {
+void GeneralViewCLI::show_transfer_failed(const Address& address, Port port) {
     std::cout << "FATAL: Connection aborted with remote endpoint " << address << ":" << port << std::endl;
     close_program();
 }

@@ -33,12 +33,16 @@ protected:
         listener_->set_callback(listener_callback_);
 
         expect_remote_endpoint_as_required();
+        expect_listener_to_destroy();
     }
 
     void expect_remote_endpoint_as_required() {
         EXPECT_CALL(*socket_manager_, get_remote_endpoint())
             .Times(::testing::AtLeast(0))
             .WillRepeatedly(Return(SocketManager::Endpoint{TEST_LOCADDR, TEST_PORT}));
+    }
+    void expect_listener_to_destroy() {
+        EXPECT_CALL(*socket_builder_, cancel());
     }
     void check_thread_wrapper_executing() {
         EXPECT_CALL(*thread_wrapper_, is_running())
@@ -74,7 +78,6 @@ protected:
 TEST_F(ListenerFixture, ifListeningAlready_doNothing) {
     EXPECT_CALL(*thread_wrapper_, is_running())
         .WillOnce(Return(true));
-
     listener_->listen_if_not_already(TEST_PORT);
 }
 

@@ -72,7 +72,7 @@ void GeneralViewGUI::show_connected(const Address& address, Port port) {
     });
 }
 
-void GeneralViewGUI::show_connection_aborted(const Address& address, Port port) {
+void GeneralViewGUI::show_transfer_failed(const Address& address, Port port) {
     QString qaddress = address.c_str();
     QString qport = QString::number(port);
     run_sync([=, this] {

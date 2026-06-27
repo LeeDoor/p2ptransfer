@@ -67,6 +67,8 @@ protected:
         EXPECT_CALL(*network_callback, transfer_succeed());
     }
     void run_read_file() {
+        EXPECT_CALL(*socket_mock, get_remote_endpoint())
+            .WillOnce(Return(SocketManager::Endpoint{TEST_LOCADDR, TEST_PORT}));
         net::io_context context;
         net::co_spawn(context, file_reader.try_read_file(), [](std::exception_ptr ptr) {
             if(ptr) std::rethrow_exception(ptr);
@@ -75,19 +77,17 @@ protected:
     }
     void verify_file_content(const std::string& filename, const std::string& expected_file_content) {
         size_t filesize = expected_file_content.size();
-        EXPECT_EQ(std::filesystem::file_size("READED_" + filename), filesize);
-        std::ifstream ifstream("READED_" + filename, std::ios::binary);
+        EXPECT_EQ(std::filesystem::file_size(filename), filesize);
+        std::ifstream ifstream(filename, std::ios::binary);
         ASSERT_TRUE(ifstream.is_open());
         std::stringstream ss;
         ss << ifstream.rdbuf();
         EXPECT_EQ(ss.str(), expected_file_content);
         ifstream.close();
-        std::filesystem::remove("READED_" + filename);
+        std::filesystem::remove(filename);
     }
-    void check_connection_aborted_callback() {
-        EXPECT_CALL(*socket_mock, get_remote_endpoint())
-            .WillOnce(Return(SocketManager::Endpoint{TEST_LOCADDR, TEST_PORT}));
-        EXPECT_CALL(*network_callback, connection_aborted(TEST_LOCADDR, TEST_PORT));
+    void check_transfer_failed_callback() {
+        EXPECT_CALL(*network_callback, transfer_failed(TEST_LOCADDR, TEST_PORT));
     }
 
     void assert_filesize(size_t filesize) {
@@ -215,7 +215,7 @@ TEST_F(FileReaderFixture, readSendRequestThrowsException_abortRethrow) {
     EXPECT_CALL(*socket_mock, read_request())
         .WillOnce([=]() -> net::awaitable<std::string> 
                   { throw std::runtime_error("immitating send_request reading error"); });
-    check_connection_aborted_callback();
+    check_transfer_failed_callback();
 
     EXPECT_THROW(run_read_file(), std::runtime_error);
 
@@ -226,7 +226,7 @@ TEST_F(FileReaderFixture, invalidRequestGiven_abortRethrow) {
     EXPECT_CALL(*socket_mock, read_request())
         .WillOnce([=]() -> net::awaitable<std::string> 
                   { using namespace std::literals; return return_immediately("INVALID_REQUEST\nFILEisbad\nSIZETOO\n\n"s); });
-    check_connection_aborted_callback();
+    check_transfer_failed_callback();
 
     EXPECT_THROW(run_read_file(), std::runtime_error);
 }
@@ -236,7 +236,7 @@ TEST_F(FileReaderFixture, requestFilenameIsDirectory_abortRethrow) {
     const std::string filecontent = "some content\n";
     size_t filesize = filecontent.size();
     immitate_send_request(filename, filesize);
-    check_connection_aborted_callback();
+    check_transfer_failed_callback();
 
     EXPECT_THROW(run_read_file(), std::runtime_error);
 
@@ -249,7 +249,7 @@ TEST_F(FileReaderFixture, userDeclined_exceptionWithoutFile) {
     size_t filesize = filecontent.size();
     immitate_send_request(filename, filesize);
     immitate_user_confirmation(filename, filesize, false); 
-    check_connection_aborted_callback();
+    check_transfer_failed_callback();
 
     EXPECT_THROW(run_read_file(), std::runtime_error);
 
@@ -266,7 +266,7 @@ TEST_F(FileReaderFixture, sendResponseException_abortRethrow) {
         .WillOnce([]() -> net::awaitable<void> { 
             throw std::runtime_error("imitating exception while sending permission"); 
         });
-    check_connection_aborted_callback();
+    check_transfer_failed_callback();
 
     EXPECT_THROW(run_read_file(), std::runtime_error);
 }
@@ -284,7 +284,7 @@ TEST_F(FileReaderFixture, exceptionWhileReadingFile_abortRethrow) {
                   -> net::awaitable<size_t> {
             throw std::runtime_error("immitating reading data exception");
         }));
-    check_connection_aborted_callback();
+    check_transfer_failed_callback();
 
     EXPECT_THROW(run_read_file(), std::runtime_error);
 }

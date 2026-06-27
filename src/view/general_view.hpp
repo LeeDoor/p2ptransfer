@@ -33,7 +33,7 @@ public:
     /// Shows message about successfully finished file gathering.
     virtual void show_file_success() = 0;
     /// Shows error if an error occured while sharing file.
-    virtual void show_connection_aborted(const Address& address, Port port) = 0;
+    virtual void show_transfer_failed(const Address& address, Port port) = 0;
 };
 
 }

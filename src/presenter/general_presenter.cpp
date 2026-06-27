@@ -51,8 +51,8 @@ void GeneralPresenter::cant_open_socket() {
     view_->show_socket_error();
 }
 
-void GeneralPresenter::connection_aborted(const Address& address, Port port) {
-    view_->show_connection_aborted(address, port);
+void GeneralPresenter::transfer_failed(const Address& address, Port port) {
+    view_->show_transfer_failed(address, port);
 }
 void GeneralPresenter::connection_established(const Address& address, Port port) {
     view_->show_connected(address, port);

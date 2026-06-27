@@ -39,7 +39,7 @@ public:
     void set_address(const Address& address) override;
     void cant_open_socket() override;
 
-    void connection_aborted(const Address& address, Port port) override;
+    void transfer_failed(const Address& address, Port port) override;
     void connection_established(const Address& address, Port port) override;
     void transfer_succeed() override;
 
