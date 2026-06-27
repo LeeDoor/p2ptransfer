@@ -64,7 +64,7 @@ net::awaitable<void> FileReaderImpl::read_file(const SendRequest& send_request) 
         std::filesystem::remove(temp_filename, ec);
         throw;
     }
-    std::filesystem::rename(temp_filename, send_request.filename);
+    rename_file(temp_filename, send_request.filename);
 }
 
 std::string FileReaderImpl::generate_temporary_filename(const std::string& initial_filename) {
@@ -88,6 +88,25 @@ net::awaitable<void> FileReaderImpl::handle_file(std::ofstream& os, size_t files
         WithNetworkCallback::callback()->set_progressbar(bytes_remaining, filesize);
     }
 } 
+
+void FileReaderImpl::rename_file(const std::string& prev_filename, const std::string& new_filename) {
+    std::string modified_filename = new_filename;
+    auto [new_actual_name, new_extention_with_dot] = split_filename_to_extention(new_filename);
+    for(unsigned i = 1; i < UINT_MAX && std::filesystem::exists(modified_filename); ++i) {
+        modified_filename = new_actual_name + "(" + std::to_string(i) + ")" + new_extention_with_dot;
+        if(i >= UINT_MAX) {
+            throw std::runtime_error("Can't imagine a unique name for file " + new_filename);
+        }
+    }
+    std::filesystem::rename(prev_filename, modified_filename);
+}
+
+std::tuple<std::string, std::string> FileReaderImpl::split_filename_to_extention(const std::string& new_filename) {
+    auto dot_position = new_filename.rfind('.');
+    auto file_name = new_filename.substr(0, dot_position);
+    auto file_extention = new_filename.substr(dot_position);
+    return { file_name, file_extention };
+}
 
 }
 }

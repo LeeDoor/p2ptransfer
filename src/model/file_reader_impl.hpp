@@ -39,6 +39,8 @@ private:
     std::string generate_temporary_filename(const std::string& initial_filename);
     std::ofstream open_file_for_writing(const std::string& initial_filename);
     net::awaitable<void> handle_file(std::ofstream& os, size_t filesize);
+    void rename_file(const std::string& prev_filename, const std::string& new_filename);
+    std::tuple<std::string, std::string> split_filename_to_extention(const std::string& new_filename);
 
     SocketManagerPtr socket_manager_;
     SocketManager::Endpoint remote_endpoint_;
