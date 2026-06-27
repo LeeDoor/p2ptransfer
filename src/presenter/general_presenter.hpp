@@ -40,7 +40,7 @@ public:
     void cant_open_socket() override;
 
     void connection_aborted(const Address& address, Port port) override;
-    void connected(const Address& address, Port port) override;
+    void connection_established(const Address& address, Port port) override;
     void file_transfered() override;
 
 private:

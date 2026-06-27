@@ -47,7 +47,7 @@ protected:
         EXPECT_CALL(*socket_builder_, mock_tcp_connecting_to(TEST_LOCADDR, TEST_PORT));
     }
     void check_connection_success_callback() {
-        EXPECT_CALL(*network_callback_, connected(TEST_LOCADDR, TEST_PORT));
+        EXPECT_CALL(*network_callback_, connection_established(TEST_LOCADDR, TEST_PORT));
     }
     void should_not_try_to_get_endpoint() {
         EXPECT_CALL(*socket_manager_, get_remote_endpoint())

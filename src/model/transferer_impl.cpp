@@ -46,7 +46,7 @@ net::awaitable<std::shared_ptr<SocketManager>> TransfererImpl::connect(const Add
     try {
         socket_manager_ = co_await socket_manager_builder_->tcp_connecting_to(address, port);
         auto rem_endpoint = socket_manager_->get_remote_endpoint();
-        callback()->connected(rem_endpoint.address, rem_endpoint.port);
+        callback()->connection_established(rem_endpoint.address, rem_endpoint.port);
         co_return socket_manager_;
     } catch (const std::exception& ex) {
         callback()->cant_open_socket();

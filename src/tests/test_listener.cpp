@@ -55,7 +55,7 @@ protected:
     }
 
     void check_connection_success_callback() {
-        EXPECT_CALL(*network_callback_, connected(TEST_LOCADDR, TEST_PORT));
+        EXPECT_CALL(*network_callback_, connection_established(TEST_LOCADDR, TEST_PORT));
     }
     void check_failure_callback() {
         EXPECT_CALL(*network_callback_, cant_open_socket());

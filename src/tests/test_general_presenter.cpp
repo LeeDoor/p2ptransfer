@@ -47,7 +47,7 @@ TEST_F(GeneralPresenterFixture, addressGathered_calledViewSetter) {
 TEST_F(GeneralPresenterFixture, connectionEstablished_showNotification) {
     EXPECT_CALL(*view_, show_connected(TEST_LOCADDR, TEST_PORT));
 
-    presenter_->connected(TEST_LOCADDR, TEST_PORT);
+    presenter_->connection_established(TEST_LOCADDR, TEST_PORT);
 }
 
 TEST_F(GeneralPresenterFixture, connectionFailed_showNotification) {

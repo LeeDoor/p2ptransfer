@@ -57,7 +57,7 @@ net::awaitable<ListenerImpl::SocketManagerPtr> ListenerImpl::connect_and_listen(
     try {
         socket_manager_ = co_await socket_manager_builder_->tcp_listening_at(port);
         auto endpoint = socket_manager_->get_remote_endpoint();
-        WithNetworkCallback::callback()->connected(endpoint.address, endpoint.port);
+        WithNetworkCallback::callback()->connection_established(endpoint.address, endpoint.port);
         co_return socket_manager_;
     } catch(const std::exception& ex) {
         WithNetworkCallback::callback()->cant_open_socket();

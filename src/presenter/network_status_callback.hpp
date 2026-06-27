@@ -13,7 +13,7 @@ public:
 
     /// Notification called if connection established successfully 
     /// with given address and port.
-    virtual void connected(const Address& address, Port port) = 0;
+    virtual void connection_established(const Address& address, Port port) = 0;
     /// Called when file successfully gathered.
     virtual void file_transfered() = 0;
     /// Called if something went wrong with gathering a file.

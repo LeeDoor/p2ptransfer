@@ -54,7 +54,7 @@ void GeneralPresenter::cant_open_socket() {
 void GeneralPresenter::connection_aborted(const Address& address, Port port) {
     view_->show_connection_aborted(address, port);
 }
-void GeneralPresenter::connected(const Address& address, Port port) {
+void GeneralPresenter::connection_established(const Address& address, Port port) {
     view_->show_connected(address, port);
 }
 void GeneralPresenter::file_transfered() {
