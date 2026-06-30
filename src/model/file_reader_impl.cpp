@@ -103,6 +103,8 @@ void FileReaderImpl::rename_file(const std::string& prev_filename, const std::st
 
 std::tuple<std::string, std::string> FileReaderImpl::split_filename_to_extention(const std::string& new_filename) {
     auto dot_position = new_filename.rfind('.');
+    if (dot_position == std::string::npos)
+        return { new_filename, "" };
     auto file_name = new_filename.substr(0, dot_position);
     auto file_extention = new_filename.substr(dot_position);
     return { file_name, file_extention };

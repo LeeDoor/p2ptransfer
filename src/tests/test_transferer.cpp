@@ -30,6 +30,8 @@ protected:
         network_callback_{std::make_shared<NetworkStatusCallbackMock>()}
     {
         transferer_->set_callback(network_callback_);
+
+        EXPECT_CALL(*socket_builder_, cancel());
     }
 
     void expect_remote_endpoint_as_required() {

@@ -9,7 +9,8 @@ namespace test {
 template<typename Func>
 void spawn_at(Func&& func, net::io_context& context) {
     net::co_spawn(context, std::move(func), [](auto exptr) {
-        if(exptr) std::rethrow_exception(exptr);
+        if(exptr) 
+            std::rethrow_exception(exptr);
     });
 }
 
@@ -31,13 +32,17 @@ public:
         SocketManagerTest{ContextPtr{}}{}
 
     void make_server() {
-        EndpointType endpoint(InternetProtocolType::v4(), TEST_PORT);
-        AcceptorType acceptor(*context_, endpoint);
-        spawn_yourself(listen_connection_at(acceptor));
+        spawn_yourself([this] () -> net::awaitable<void> {
+            EndpointType endpoint(InternetProtocolType::v4(), TEST_PORT);
+            AcceptorType acceptor(*context_, endpoint);
+            co_await listen_connection_at(acceptor);
+        });
     }
     void make_client() {
-        EndpointType endpoint(net::ip::make_address(TEST_LOCADDR), TEST_PORT);
-        spawn_yourself(connect_to(endpoint));
+        spawn_yourself([this]() -> net::awaitable<void> {
+            EndpointType endpoint(net::ip::make_address(TEST_LOCADDR), TEST_PORT);
+            co_await connect_to(endpoint);
+        });
     }
 
     void detach() {
