@@ -16,17 +16,16 @@ done
 echo 'test filling' > test_filename
 "$executable" --host 127.0.0.1 --port 45952 --filename test_filename
 wait $listener_pid
-last_pid=$?
+listener_res=$?
 
 rm test_filename
 
 if grep -q "File successfully transfered" output.txt; then
     rm output.txt
-    if [[ $last_pid -eq 0 ]]; then
-        exit 0
-    else
-        exit 1
-    fi
+    printf "listener returned with $listener_res"
+    exit $listener_res
 fi
-rm output.txt
+
+printf "\033[0;31m\"File successfully transfered\" line is not found in output.txt:\033[0m\n"
+cat output.txt
 exit 1
