@@ -28,27 +28,25 @@ void GeneralPresenter::stop() {
 }
 void GeneralPresenter::set_progressbar(size_t bytes_remaining, size_t filesize) {
     auto time_shift = hclock::now() - prev_bar_timestamp_;
-    if (time_shift > std::chrono::milliseconds(500)) {
-        double bytes = filesize - (bytes_remaining + prev_bytes_downloaded_);
-        double bpmcs = bytes / std::chrono::duration_cast<std::chrono::microseconds>(time_shift).count();
-        double kbps = bpmcs * 1000;
-        double percent = static_cast<double>(filesize - bytes_remaining) / filesize * 100;
+    double bytes = filesize - (bytes_remaining + prev_bytes_downloaded_);
+    double bpmcs = bytes / std::chrono::duration_cast<std::chrono::microseconds>(time_shift).count();
+    double kbps = bpmcs * 1000;
+    double percent = static_cast<double>(filesize - bytes_remaining) / filesize * 100;
 
-        view_->update_progressbar_status(percent, kbps);
+    view_->update_progressbar_status(percent, kbps);
 
-        prev_bytes_downloaded_ = filesize - bytes_remaining;
-        prev_bar_timestamp_ = hclock::now();
-    }
+    prev_bytes_downloaded_ = filesize - bytes_remaining;
+    prev_bar_timestamp_ = hclock::now();
 }
 void GeneralPresenter::set_address(const Address& address) {
     view_->show_address(address);
 }
-void GeneralPresenter::cant_open_socket() {
-    view_->show_socket_error();
+void GeneralPresenter::cant_open_socket(std::string reason) {
+    view_->show_socket_error(reason);
 }
 
-void GeneralPresenter::transfer_failed(const Address& address, Port port) {
-    view_->show_transfer_failed(address, port);
+void GeneralPresenter::transfer_failed(const Address& address, Port port, std::string reason) {
+    view_->show_transfer_failed(address, port, reason);
 }
 void GeneralPresenter::connection_established(const Address& address, Port port) {
     view_->show_connected(address, port);

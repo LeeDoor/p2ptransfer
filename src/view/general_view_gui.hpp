@@ -33,9 +33,9 @@ public:
     void show_address(const Address& ipaddress) override;
     void update_progressbar_status(double persent, double kbps) override;
     void show_connected(const Address& address, Port port) override;
-    void show_transfer_failed(const Address& address, Port port) override;
+    void show_transfer_failed(const Address& address, Port port, std::string reason) override;
     void show_file_success() override;
-    void show_socket_error() override;
+    void show_socket_error(std::string reason) override;
 
     std::shared_ptr<Ui::GeneralViewGUI> get_ui();
     /// Attach \ref function execution to the \ref run() 's thread. Qt requirement.

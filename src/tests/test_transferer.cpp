@@ -60,8 +60,8 @@ protected:
             .Times(::testing::AtLeast(0))
             .WillRepeatedly(Return(SocketManager::Endpoint{TEST_LOCADDR, TEST_PORT}));
     }
-    void check_failure_callback() {
-        EXPECT_CALL(*network_callback_, cant_open_socket());
+    void check_failure_callback(std::string reason = TEST_ERROR_TEXT) {
+        EXPECT_CALL(*network_callback_, cant_open_socket(reason));
     }
     void check_file_create_and_transfer() {
         EXPECT_CALL(*file_writer_builder_, create_file_writer_mock());
@@ -104,7 +104,7 @@ TEST_F(TransfererFixture, connectingAttemptThrewException_HandleWithoutRethrow) 
         .WillOnce([]() {
             throw std::runtime_error("immitating connection problem");
         });
-    check_failure_callback();
+    check_failure_callback("immitating connection problem");
 
     EXPECT_NO_THROW(transferer_->transfer_file(TEST_LOCADDR, TEST_PORT, TEST_FILENAME));
 }
@@ -118,10 +118,11 @@ TEST_F(TransfererFixture, FileWriterThrew_HandleWithoutRethrow) {
             throw std::runtime_error("immitating filing problem");
         });
     check_connection_success_callback();
-    EXPECT_CALL(*network_callback_, transfer_failed(TEST_LOCADDR, TEST_PORT));
+    EXPECT_CALL(*network_callback_, transfer_failed(TEST_LOCADDR, TEST_PORT, "immitating filing problem"));
 
     EXPECT_NO_THROW(transferer_->transfer_file(TEST_LOCADDR, TEST_PORT, TEST_FILENAME));
 }
+
 }
 }
 }

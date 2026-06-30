@@ -61,8 +61,8 @@ protected:
     void check_connection_success_callback() {
         EXPECT_CALL(*network_callback_, connection_established(TEST_LOCADDR, TEST_PORT));
     }
-    void check_failure_callback() {
-        EXPECT_CALL(*network_callback_, cant_open_socket());
+    void check_failure_callback(std::string reason = TEST_ERROR_TEXT) {
+        EXPECT_CALL(*network_callback_, cant_open_socket(reason));
     }
 
     std::shared_ptr<SocketManagerMock> socket_manager_;
@@ -96,7 +96,7 @@ TEST_F(ListenerFixture, connectingAttemptThrewException_HandleWithoutRethrow) {
         .WillOnce([]() {
             throw std::runtime_error("immitating connection problem");
         });
-    check_failure_callback();
+    check_failure_callback("immitating connection problem");
 
     EXPECT_NO_THROW(listener_->listen_if_not_already(TEST_PORT));
 }

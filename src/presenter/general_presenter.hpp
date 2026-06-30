@@ -37,9 +37,9 @@ public:
 
     void set_progressbar(size_t bytes_remaining, size_t filesize) override;
     void set_address(const Address& address) override;
-    void cant_open_socket() override;
+    void cant_open_socket(std::string reason) override;
 
-    void transfer_failed(const Address& address, Port port) override;
+    void transfer_failed(const Address& address, Port port, std::string reason) override;
     void connection_established(const Address& address, Port port) override;
     void transfer_succeed() override;
 

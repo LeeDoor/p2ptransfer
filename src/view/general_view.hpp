@@ -25,7 +25,7 @@ public:
     /// Shows successful connection status.
     virtual void show_connected(const Address& address, Port port) = 0;
     /// Shows failed connection status.
-    virtual void show_socket_error() = 0;
+    virtual void show_socket_error(std::string reason) = 0;
 
     /// Shows progressbar on the screen.
     /*! \param persent floating point number in [0; 100] segment. */
@@ -33,7 +33,7 @@ public:
     /// Shows message about successfully finished file gathering.
     virtual void show_file_success() = 0;
     /// Shows error if an error occured while sharing file.
-    virtual void show_transfer_failed(const Address& address, Port port) = 0;
+    virtual void show_transfer_failed(const Address& address, Port port, std::string reason) = 0;
 };
 
 }

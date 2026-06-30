@@ -72,11 +72,12 @@ void GeneralViewGUI::show_connected(const Address& address, Port port) {
     });
 }
 
-void GeneralViewGUI::show_transfer_failed(const Address& address, Port port) {
+void GeneralViewGUI::show_transfer_failed(const Address& address, Port port, std::string reason) {
     QString qaddress = address.c_str();
     QString qport = QString::number(port);
+    QString qreason = reason.c_str();
     run_sync([=, this] {
-        QMessageBox::warning(this, "Aborted", "connection to " + qaddress + ":" + qport + " is aborted.");
+        QMessageBox::warning(this, "Aborted", "connection to " + qaddress + ":" + qport + " is aborted.\n[" + qreason + "]");
         input_waiting_stage();
     });
 }
@@ -87,13 +88,14 @@ void GeneralViewGUI::show_file_success() {
         input_waiting_stage();
     });
 }
-void GeneralViewGUI::show_socket_error() {
+void GeneralViewGUI::show_socket_error(std::string reason) {
     run_sync([=, this] {
         QMessageBox::warning(this, "Socket failure", 
                 "Unable to open socket. "
                 "Please ask your friend to press \"Listen\" first. "
                 "If it doesn't help, try to change port.\n"
-                "Note that ports should be same on both sides."
+                "Note that ports should be same on both sides.\n\n["
+                + QString{ reason.c_str() } + "]"
         );
         input_waiting_stage();
     });

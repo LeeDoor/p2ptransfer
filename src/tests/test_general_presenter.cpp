@@ -51,21 +51,22 @@ TEST_F(GeneralPresenterFixture, connectionEstablished_showNotification) {
 }
 
 TEST_F(GeneralPresenterFixture, connectionFailed_showNotification) {
-    EXPECT_CALL(*view_, show_socket_error());
+    EXPECT_CALL(*view_, show_socket_error(TEST_ERROR_TEXT));
 
-    presenter_->cant_open_socket();
+    presenter_->cant_open_socket(TEST_ERROR_TEXT);
 }
 
 TEST_F(GeneralPresenterFixture, fileTransfered_showNotification) {
     EXPECT_CALL(*view_, show_file_success());
+    EXPECT_CALL(*view_, update_progressbar_status(100, 0));
 
     presenter_->transfer_succeed();
 }
 
 TEST_F(GeneralPresenterFixture, connectionAborted_showNotification) {
-    EXPECT_CALL(*view_, show_transfer_failed(TEST_LOCADDR, TEST_PORT));
+    EXPECT_CALL(*view_, show_transfer_failed(TEST_LOCADDR, TEST_PORT, TEST_ERROR_TEXT));
 
-    presenter_->transfer_failed(TEST_LOCADDR, TEST_PORT);
+    presenter_->transfer_failed(TEST_LOCADDR, TEST_PORT, TEST_ERROR_TEXT);
 }
 TEST_F(GeneralPresenterFixture, setProgressbar_ProvidesStatus) {
     EXPECT_CALL(*view_, update_progressbar_status(100 - 1, testing::_));
@@ -74,20 +75,22 @@ TEST_F(GeneralPresenterFixture, setProgressbar_ProvidesStatus) {
 }
 
 TEST_F(GeneralPresenterFixture, multipleProgressbarUpdates_correctSequence) {
+    const int PROGRBAR_CALLS = 20;
     std::vector<int> update_calls; 
-    update_calls.reserve(20);
+    update_calls.reserve(PROGRBAR_CALLS);
     EXPECT_CALL(*view_, update_progressbar_status(testing::_, testing::_))
-        .Times(20)
+        .Times(PROGRBAR_CALLS)
         .WillRepeatedly([&](double persent, [[maybe_unused]] double _) {
             update_calls.push_back(std::round(persent));
-        });
+        })
+    ;
 
-    for(int i = 0; i < 20; ++i) {
-        presenter_->set_progressbar(i * 5, 100);
+    for(int i = 0; i < PROGRBAR_CALLS; ++i) {
+        presenter_->set_progressbar(i * (100 / PROGRBAR_CALLS), 100);
     }
-
-    for(int i = 0; i < 20; ++i) {
-        EXPECT_EQ(100 - i * 5, update_calls[i]);
+    ASSERT_EQ(update_calls.size(), PROGRBAR_CALLS);
+    for(int i = 0; i < PROGRBAR_CALLS; ++i) {
+        EXPECT_EQ(100 - i * (100 / PROGRBAR_CALLS), update_calls[i]);
     }
 }
 

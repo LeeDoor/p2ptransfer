@@ -46,8 +46,8 @@ void GeneralViewCLI::show_address(const Address& address) {
 void GeneralViewCLI::show_connected(const Address& address, Port port) {
     std::cout << "Connected to remote endpoint: " << address << ":" << port << std::endl;
 }
-void GeneralViewCLI::show_socket_error() {
-    std::cout << "Cant open socket" << std::endl;
+void GeneralViewCLI::show_socket_error(std::string reason) {
+    std::cout << "Cant open socket: " << reason << std::endl;
     close_program();
 }
 void GeneralViewCLI::update_progressbar_status(double percent, double kbps) {
@@ -71,8 +71,8 @@ void GeneralViewCLI::show_file_success() {
     std::cout << "\nFile successfully transfered" << std::endl;
     close_program();
 }
-void GeneralViewCLI::show_transfer_failed(const Address& address, Port port) {
-    std::cout << "FATAL: Connection aborted with remote endpoint " << address << ":" << port << std::endl;
+void GeneralViewCLI::show_transfer_failed(const Address& address, Port port, std::string reason) {
+    std::cout << "FATAL: Connection aborted to [" << address << ":" << port << "]: " << reason << std::endl;
     close_program();
 }
 void GeneralViewCLI::close_program() {

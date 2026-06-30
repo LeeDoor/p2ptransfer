@@ -17,10 +17,10 @@ public:
     /// Called when file successfully gathered.
     virtual void transfer_succeed() = 0;
     /// Called if something went wrong with gathering a file.
-    virtual void transfer_failed(const Address& address, Port port) = 0;
+    virtual void transfer_failed(const Address& address, Port port, std::string reason) = 0;
     /// Notification called if failed to establish connection for
     /// any reason.
-    virtual void cant_open_socket() = 0;
+    virtual void cant_open_socket(std::string reason) = 0;
     /*! \brief While file sharing, notifying about sending progress.
      * \param persent the floating point number in [0;100] segment 
     */

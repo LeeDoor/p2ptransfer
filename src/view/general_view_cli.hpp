@@ -14,10 +14,10 @@ public:
     void stop() override;
     void show_address(const Address& address) override;
     void show_connected(const Address& address, Port port) override;
-    void show_socket_error() override;
+    void show_socket_error(std::string reason) override;
     void update_progressbar_status(double persent, double kbps) override;
     void show_file_success() override;
-    void show_transfer_failed(const Address& address, Port port) override;
+    void show_transfer_failed(const Address& address, Port port, std::string reason) override;
 
     using ListenNotification = std::function<void(Port)>;
     using TransferNotification = std::function<void(const Address&, Port, const Filename&)>;

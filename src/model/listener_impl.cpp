@@ -60,7 +60,7 @@ net::awaitable<ListenerImpl::SocketManagerPtr> ListenerImpl::connect_and_listen(
         WithNetworkCallback::callback()->connection_established(endpoint.address, endpoint.port);
         co_return socket_manager_;
     } catch(const std::exception& ex) {
-        WithNetworkCallback::callback()->cant_open_socket();
+        WithNetworkCallback::callback()->cant_open_socket(ex.what());
         throw;
     }
 }

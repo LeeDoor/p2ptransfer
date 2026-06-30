@@ -49,7 +49,7 @@ net::awaitable<std::shared_ptr<SocketManager>> TransfererImpl::connect(const Add
         callback()->connection_established(rem_endpoint.address, rem_endpoint.port);
         co_return socket_manager_;
     } catch (const std::exception& ex) {
-        callback()->cant_open_socket();
+        callback()->cant_open_socket(ex.what());
         throw;
     }
 }
@@ -62,7 +62,7 @@ net::awaitable<void> TransfererImpl::send_file(std::shared_ptr<SocketManager> so
         co_await file_writer->write_file(filename);
         callback()->transfer_succeed();
     } catch (const std::exception& ex) {
-        callback()->transfer_failed(rem_endpoint.address, rem_endpoint.port);
+        callback()->transfer_failed(rem_endpoint.address, rem_endpoint.port, ex.what());
         throw;
     }
     co_return;
