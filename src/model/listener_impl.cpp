@@ -44,25 +44,28 @@ void ListenerImpl::spawn_listen_coroutine(Port port) {
 net::awaitable<void> ListenerImpl::listen_async(Port port) {
     try {
         socket_manager_ = co_await connect_and_listen(port);
+    } catch(const std::exception& ex) {
+        WithNetworkCallback::callback()->cant_open_socket(ex.what());
+        co_return;
+    }
+    auto remote_endpoint = socket_manager_->get_remote_endpoint();
+    try {
         auto file_reader = file_reader_builder_->create_file_reader(
             WithNetworkCallback::callback(), WithListenerCallback::callback(), socket_manager_);
         co_await file_reader->try_read_file();
     } catch(const std::exception& ex) {
-        Logger::log() << ex.what() << std::endl;
+        WithNetworkCallback::callback()->transfer_failed(remote_endpoint.address, remote_endpoint.port, ex.what());
+        socket_manager_ = nullptr;
+        co_return;
     }
-    socket_manager_ = nullptr;
+    WithNetworkCallback::callback()->transfer_succeed();
 }
 
 net::awaitable<ListenerImpl::SocketManagerPtr> ListenerImpl::connect_and_listen(Port port) {
-    try {
-        socket_manager_ = co_await socket_manager_builder_->tcp_listening_at(port);
-        auto endpoint = socket_manager_->get_remote_endpoint();
-        WithNetworkCallback::callback()->connection_established(endpoint.address, endpoint.port);
-        co_return socket_manager_;
-    } catch(const std::exception& ex) {
-        WithNetworkCallback::callback()->cant_open_socket(ex.what());
-        throw;
-    }
+    socket_manager_ = co_await socket_manager_builder_->tcp_listening_at(port);
+    auto endpoint = socket_manager_->get_remote_endpoint();
+    WithNetworkCallback::callback()->connection_established(endpoint.address, endpoint.port);
+    co_return socket_manager_;
 }
 
 void ListenerImpl::stop() {

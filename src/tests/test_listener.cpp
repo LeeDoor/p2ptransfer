@@ -61,8 +61,14 @@ protected:
     void check_connection_success_callback() {
         EXPECT_CALL(*network_callback_, connection_established(TEST_LOCADDR, TEST_PORT));
     }
-    void check_failure_callback(std::string reason = TEST_ERROR_TEXT) {
+    void check_file_transfered_callback() {
+        EXPECT_CALL(*network_callback_, transfer_succeed());
+    }
+    void check_cant_open_socket_callback(std::string reason = TEST_ERROR_TEXT) {
         EXPECT_CALL(*network_callback_, cant_open_socket(reason));
+    }
+    void check_transfer_failed_callback(std::string reason = TEST_ERROR_TEXT) {
+        EXPECT_CALL(*network_callback_, transfer_failed(TEST_LOCADDR, TEST_PORT, reason));
     }
 
     std::shared_ptr<SocketManagerMock> socket_manager_;
@@ -86,7 +92,9 @@ TEST_F(ListenerFixture, ifNotListening_connectAndReadFile) {
     check_socket_creation();
     check_file_processing();
     check_connection_success_callback();
-
+    check_file_transfered_callback();
+    EXPECT_CALL(*socket_manager_, stop());
+    
     listener_->listen_if_not_already(TEST_PORT);
 }
 
@@ -96,7 +104,7 @@ TEST_F(ListenerFixture, connectingAttemptThrewException_HandleWithoutRethrow) {
         .WillOnce([]() {
             throw std::runtime_error("immitating connection problem");
         });
-    check_failure_callback("immitating connection problem");
+    check_cant_open_socket_callback("immitating connection problem");
 
     EXPECT_NO_THROW(listener_->listen_if_not_already(TEST_PORT));
 }
@@ -109,6 +117,7 @@ TEST_F(ListenerFixture, FileReaderThrew_HandleWithoutRethrow) {
             throw std::runtime_error("immitating filing problem");
         });
     check_connection_success_callback();
+    check_transfer_failed_callback("immitating filing problem");
 
     EXPECT_NO_THROW(listener_->listen_if_not_already(TEST_PORT));
 }

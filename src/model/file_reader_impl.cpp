@@ -10,15 +10,9 @@ FileReaderImpl::FileReaderImpl(SocketManagerPtr socket_manager) :
     socket_manager_(socket_manager) {}
 
 net::awaitable<void> FileReaderImpl::try_read_file() {
-    try {
-        remote_endpoint_ = socket_manager_->get_remote_endpoint();
-        auto send_request = co_await header_handshake();
-        co_await read_file(send_request);
-        WithNetworkCallback::callback()->transfer_succeed();
-    } catch (const std::exception& ex) {
-        WithNetworkCallback::callback()->transfer_failed(remote_endpoint_.address, remote_endpoint_.port, ex.what());
-        throw;
-    }
+    remote_endpoint_ = socket_manager_->get_remote_endpoint();
+    auto send_request = co_await header_handshake();
+    co_await read_file(send_request);
 }
 
 net::awaitable<SendRequest> FileReaderImpl::header_handshake() {

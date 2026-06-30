@@ -34,8 +34,7 @@ protected:
             immitate_file_content_sending(file_content);
             check_progressbar_callbacks();
         }
-        check_transfer_succeed_callback();
-    }
+            }
     void immitate_send_request(const std::string& filename, size_t filesize) {
         EXPECT_CALL(*socket_mock, read_request())
             .WillOnce(Return(return_immediately(
@@ -63,9 +62,6 @@ protected:
         EXPECT_CALL(*network_callback, set_progressbar(::testing::_, ::testing::_))
             .Times(::testing::AtLeast(1));
     }
-    void check_transfer_succeed_callback() {
-        EXPECT_CALL(*network_callback, transfer_succeed());
-    }
     void run_read_file() {
         EXPECT_CALL(*socket_mock, get_remote_endpoint())
             .WillOnce(Return(SocketManager::Endpoint{TEST_LOCADDR, TEST_PORT}));
@@ -85,9 +81,6 @@ protected:
         EXPECT_EQ(ss.str(), expected_file_content);
         ifstream.close();
         std::filesystem::remove(filename);
-    }
-    void check_transfer_failed_callback(std::string reason = TEST_ERROR_TEXT) {
-        EXPECT_CALL(*network_callback, transfer_failed(TEST_LOCADDR, TEST_PORT, reason));
     }
 
     void assert_filesize(size_t filesize) {
@@ -170,8 +163,7 @@ TEST_F(FileReaderFixture, sentTooMuch_readOnlyGivenData) {
             return return_immediately(filesize);
         });
     check_progressbar_callbacks();
-    check_transfer_succeed_callback();
-
+    
     EXPECT_NO_THROW(run_read_file());
 
     verify_file_content(filename, filecontent);
@@ -200,8 +192,7 @@ TEST_F(FileReaderFixture, contentOutOfBufferSize_successFileProcessing) {
             return return_immediately(buffer.size());
         });
     check_progressbar_callbacks();
-    check_transfer_succeed_callback();
-
+    
     EXPECT_NO_THROW(run_read_file());
 
     std::string file_content(filesize, 'f');
@@ -215,7 +206,6 @@ TEST_F(FileReaderFixture, readSendRequestThrowsException_abortRethrow) {
     EXPECT_CALL(*socket_mock, read_request())
         .WillOnce([=]() -> net::awaitable<std::string> 
                   { throw std::runtime_error(TEST_ERROR_TEXT); });
-    check_transfer_failed_callback();
 
     EXPECT_THROW(run_read_file(), std::runtime_error);
 
@@ -226,8 +216,7 @@ TEST_F(FileReaderFixture, invalidRequestGiven_abortRethrow) {
     EXPECT_CALL(*socket_mock, read_request())
         .WillOnce([=]() -> net::awaitable<std::string> 
                   { using namespace std::literals; return return_immediately("INVALID_REQUEST\nFILEisbad\nSIZETOO\n\n"s); });
-    check_transfer_failed_callback("no such method: INVALID_REQUEST");
-
+    
     EXPECT_THROW(run_read_file(), std::runtime_error);
 }
 
@@ -236,8 +225,7 @@ TEST_F(FileReaderFixture, requestFilenameIsDirectory_abortRethrow) {
     const std::string filecontent = "some content\n";
     size_t filesize = filecontent.size();
     immitate_send_request(filename, filesize);
-    check_transfer_failed_callback("filename should not contain directories: directory/new_file.txt");
-
+    
     EXPECT_THROW(run_read_file(), std::runtime_error);
 
     EXPECT_FALSE(std::filesystem::exists(filename));
@@ -249,8 +237,7 @@ TEST_F(FileReaderFixture, userDeclined_exceptionWithoutFile) {
     size_t filesize = filecontent.size();
     immitate_send_request(filename, filesize);
     immitate_user_confirmation(filename, filesize, false); 
-    check_transfer_failed_callback("User denied file gathering");
-
+    
     EXPECT_THROW(run_read_file(), std::runtime_error);
 
     EXPECT_FALSE(std::filesystem::exists(filename));
@@ -266,8 +253,7 @@ TEST_F(FileReaderFixture, sendResponseException_abortRethrow) {
         .WillOnce([]() -> net::awaitable<void> { 
             throw std::runtime_error(TEST_ERROR_TEXT); 
         });
-    check_transfer_failed_callback();
-
+    
     EXPECT_THROW(run_read_file(), std::runtime_error);
 }
 
@@ -284,8 +270,7 @@ TEST_F(FileReaderFixture, exceptionWhileReadingFile_abortRethrow) {
                   -> net::awaitable<size_t> {
             throw std::runtime_error(TEST_ERROR_TEXT);
         }));
-    check_transfer_failed_callback();
-
+    
     EXPECT_THROW(run_read_file(), std::runtime_error);
 }
 
