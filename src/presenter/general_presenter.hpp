@@ -53,7 +53,6 @@ private:
     using hclock = std::chrono::high_resolution_clock;
     decltype(hclock::now()) prev_bar_timestamp_;
     size_t prev_bytes_downloaded_;
-    double prev_kbps_;
 };
 
 }

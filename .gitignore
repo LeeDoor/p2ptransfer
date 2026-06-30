@@ -2,8 +2,7 @@ build/
 win_build/
 .cache/
 compile_commands.json
-READED_*
-big_data.txt
+big_data*
 *.download
 core
 html/

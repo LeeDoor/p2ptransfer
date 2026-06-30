@@ -29,7 +29,6 @@ void GeneralViewCLI::run_action() {
     }
 }
 
-
 void GeneralViewCLI::notify_listen() {
     for(auto iter = listen_subs_.begin(); iter != listen_subs_.end(); ++iter) {
         (*iter)(args_.port);
@@ -52,7 +51,7 @@ void GeneralViewCLI::show_socket_error() {
     close_program();
 }
 void GeneralViewCLI::update_progressbar_status(double percent, double kbps) {
-    int barWidth = 50;
+    const auto barWidth = 50;
     std::cout << "\r" << SpeedConverter::from_kbps(kbps) << " [";
     int pos = barWidth * percent / 100.0;
     
@@ -63,6 +62,9 @@ void GeneralViewCLI::update_progressbar_status(double percent, double kbps) {
     }
     
     std::cout << "] " << std::setw(3) << static_cast<int>(percent) << " %";
+    // If line becomes shorter, clear extra characters.
+    for(int i = 0; i < 10; ++i)
+        std::cout << ' ';
     std::cout.flush();  
 }
 void GeneralViewCLI::show_file_success() {
