@@ -53,10 +53,9 @@ net::awaitable<void> FileReaderImpl::read_file(const SendRequest& send_request) 
     }
     catch(const std::runtime_error& ex) {
         std::error_code ec; 
-        // try to remove. Even if failed, 
-        // keep handling previous error
+        // Try to remove, ignore failure here.
         std::filesystem::remove(temp_filename, ec);
-        throw std::runtime_error("Connection aborted");
+        throw;
     }
     rename_file(temp_filename, send_request.filename);
 }

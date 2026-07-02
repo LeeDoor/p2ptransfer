@@ -51,6 +51,8 @@ private:
             typename SocketType::EndpointType endpoint(SocketType::InternetProtocolType::v4(), port);
             if(acceptor.is_open()) acceptor.close();
             acceptor.open(endpoint.protocol());
+            net::socket_base::reuse_address so_reuseaddr{ true };
+            acceptor.set_option(so_reuseaddr);
             acceptor.bind(endpoint);
             acceptor.listen();
             return acceptor;

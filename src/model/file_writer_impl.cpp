@@ -15,13 +15,8 @@ net::awaitable<void> FileWriterImpl::write_file(const Filename& filepath) {
         throw std::runtime_error("No such file: " + filepath_);
     filename_ = std::filesystem::path(filepath_).filename().string();
     filesize_ = std::filesystem::file_size(filepath_);
-    try {
-        co_await get_permission();
-        co_await send_file();
-    }
-    catch (const boost::system::system_error& ex) {
-        throw std::runtime_error(ex.code().message());
-    }
+    co_await get_permission();
+    co_await send_file();
 }
 net::awaitable<void> FileWriterImpl::get_permission() {
     auto request = RequestSerializer::serialize_send_request(filename_, filesize_);

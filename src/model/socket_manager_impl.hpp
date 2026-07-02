@@ -70,40 +70,58 @@ public:
     }
 
     net::awaitable<std::string> read_request() override {
-        size_t bytes;
-        auto dynamic_buffer = net::dynamic_buffer(reading_buffer_, MAX_SEND_REQUEST_SIZE);
-        bytes = 
-            co_await net::async_read_until(*socket_, dynamic_buffer, 
-                                           REQUEST_COMPLETION, 
-                                           net::use_awaitable);
-        std::string result = reading_buffer_.substr(0, bytes);
-        reading_buffer_.erase(0, bytes);
-        co_return result;
+        try {
+            size_t bytes;
+            auto dynamic_buffer = net::dynamic_buffer(reading_buffer_, MAX_SEND_REQUEST_SIZE);
+            bytes = co_await net::async_read_until(
+                *socket_, dynamic_buffer, 
+                REQUEST_COMPLETION, 
+                net::use_awaitable);
+            std::string result = reading_buffer_.substr(0, bytes);
+            reading_buffer_.erase(0, bytes);
+            co_return result;
+        } catch (const boost::system::system_error& ex) {
+            throw std::runtime_error(ex.code().message());
+        }
     }
 
     net::awaitable<void> write(std::string response) override {
-        co_await net::async_write(*socket_, 
-                                  net::buffer(response), 
-                                  net::use_awaitable);
+        try {
+            co_await net::async_write(
+                *socket_, 
+                net::buffer(response), 
+                net::use_awaitable);
+        } catch (const boost::system::system_error& ex) {
+            throw std::runtime_error(ex.code().message());
+        }
     }
 
     net::awaitable<size_t> read_part_to(BufferType& buffer, size_t& bytes_remaining) override {
-        size_t bytes_read = co_await net::async_read(
-            *socket_, 
-            net::buffer(buffer, std::min(BUFFER_SIZE, bytes_remaining)),
-            net::use_awaitable);
-        bytes_remaining -= bytes_read;
-        co_return bytes_read;
+        try {
+            size_t bytes_read = co_await net::async_read(
+                *socket_, 
+                net::buffer(buffer, std::min(BUFFER_SIZE, bytes_remaining)),
+                net::use_awaitable);
+            bytes_remaining -= bytes_read;
+            co_return bytes_read;
+        } catch (const boost::system::system_error& ex) {
+            throw std::runtime_error(ex.code().message());
+        }
     }
 
     net::awaitable<size_t> write_part_from(WriteBufferType& buffer, size_t& bytes_remaining) override {
-        size_t bytes_written = co_await net::async_write(
-            *socket_, 
-            net::buffer(buffer.get_data(), buffer.get_data_size()),
-            net::use_awaitable);
-        bytes_remaining -= bytes_written;
-        buffer.grab(bytes_written);
-        co_return bytes_written;
+        try {
+            size_t bytes_written = co_await net::async_write(
+                *socket_, 
+                net::buffer(buffer.get_data(), buffer.get_data_size()),
+                net::use_awaitable);
+            bytes_remaining -= bytes_written;
+            buffer.grab(bytes_written);
+            co_return bytes_written;
+        } catch (const boost::system::system_error& ex) {
+            throw std::runtime_error(ex.code().message());
+        }
+
     }
 
 protected:
