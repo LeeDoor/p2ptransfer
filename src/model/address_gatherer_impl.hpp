@@ -17,7 +17,7 @@ class ThreadWrapper;
 */
 class AddressGathererImpl : public AddressGatherer {
 public:
-        using ThreadWrapperPtr = std::shared_ptr<ThreadWrapper>;
+    using ThreadWrapperPtr = std::shared_ptr<ThreadWrapper>;
     using SocketManagerBuilderPtr = std::shared_ptr<SocketManagerBuilder>;
     using SocketManagerPtr = std::shared_ptr<SocketManager>;
 

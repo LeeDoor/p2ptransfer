@@ -9,7 +9,6 @@ AddressGathererImpl::AddressGathererImpl(
     ContextPtr context,
     ThreadWrapperPtr thread_wrapper,
     SocketManagerBuilderPtr socket_builder) :
-
     socket_builder_{socket_builder},
     thread_wrapper_{thread_wrapper},
     context_{context}

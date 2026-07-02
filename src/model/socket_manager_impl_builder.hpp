@@ -1,6 +1,7 @@
 #pragma once
 #include "socket_manager_builder.hpp"
 #include "socket_manager_impl.hpp"
+#include "broadcast_socket_manager_impl.hpp"
 
 namespace p2ptransfer {
 
