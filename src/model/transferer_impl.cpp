@@ -33,39 +33,35 @@ void TransfererImpl::transfer_file(const Address& address, Port port, const File
 }
 
 net::awaitable<void> TransfererImpl::connect_and_send(Address address, Port port, Filename filename) {
+    std::shared_ptr<p2ptransfer::SocketManager> socket;
     try {
-        auto socket = co_await connect(address, port);
-        co_await send_file(socket, filename);
+        socket = co_await connect(address, port);
     } catch (const std::exception& ex) {
-        Logger::log() << ex.what() << std::endl;
+        callback()->cant_open_socket(ex.what());
+        co_return;
+    }
+    SocketManager::Endpoint rem_endpoint = socket->get_remote_endpoint();
+    try {
+        co_await send_file(socket, filename);
+        callback()->transfer_succeed();
+    } catch (const std::exception& ex) {
+        callback()->transfer_failed(rem_endpoint.address, rem_endpoint.port, ex.what());
     }
     socket_manager_ = nullptr;
 }
 
 net::awaitable<std::shared_ptr<SocketManager>> TransfererImpl::connect(const Address& address, Port port) {
-    try {
-        socket_manager_ = co_await socket_manager_builder_->tcp_connecting_to(address, port);
-        auto rem_endpoint = socket_manager_->get_remote_endpoint();
-        callback()->connection_established(rem_endpoint.address, rem_endpoint.port);
-        co_return socket_manager_;
-    } catch (const std::exception& ex) {
-        callback()->cant_open_socket(ex.what());
-        throw;
-    }
+    socket_manager_ = co_await socket_manager_builder_->tcp_connecting_to(address, port);
+    auto rem_endpoint = socket_manager_->get_remote_endpoint();
+    callback()->connection_established(rem_endpoint.address, rem_endpoint.port);
+    co_return socket_manager_;
 }
 
 net::awaitable<void> TransfererImpl::send_file(std::shared_ptr<SocketManager> socket, const Filename& filename){
     SocketManager::Endpoint rem_endpoint{"Unloaded address", 404};
-    try {
-        rem_endpoint = socket->get_remote_endpoint();
-        auto file_writer = file_writer_builder_->create_file_writer(callback(), socket);
-        co_await file_writer->write_file(filename);
-        callback()->transfer_succeed();
-    } catch (const std::exception& ex) {
-        callback()->transfer_failed(rem_endpoint.address, rem_endpoint.port, ex.what());
-        throw;
-    }
-    co_return;
+    rem_endpoint = socket->get_remote_endpoint();
+    auto file_writer = file_writer_builder_->create_file_writer(callback(), socket);
+    co_await file_writer->write_file(filename);
 }
 
 void TransfererImpl::stop() {

@@ -121,14 +121,22 @@ protected:
 
     /*! \throws std::runtime_error if connection failed */
     net::awaitable<void> listen_connection_at(AcceptorType& acceptor) {
-        socket_ = SocketPtr(new SocketType(*context_), get_socket_deleter());
-        co_await acceptor.async_accept(*socket_, net::use_awaitable);
+        try {
+            socket_ = SocketPtr(new SocketType(*context_), get_socket_deleter());
+            co_await acceptor.async_accept(*socket_, net::use_awaitable);
+        } catch (const boost::system::system_error& ex) {
+            throw std::runtime_error(ex.code().message());
+        }
     }
 
     /*! \throws std::runtime_error if connection failed */
     net::awaitable<void> connect_to(const EndpointType& endpoint) {
-        socket_ = SocketPtr(new SocketType(*context_, InternetProtocolType::v4()), get_socket_deleter());
-        co_await socket_->async_connect(endpoint, net::use_awaitable);
+        try {
+            socket_ = SocketPtr(new SocketType(*context_, InternetProtocolType::v4()), get_socket_deleter());
+            co_await socket_->async_connect(endpoint, net::use_awaitable);
+        } catch (const boost::system::system_error& ex) {
+            throw std::runtime_error(ex.code().message());
+        }
     }
 
     ContextPtr context_;

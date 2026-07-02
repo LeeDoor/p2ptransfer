@@ -28,7 +28,7 @@ public:
 
     net::awaitable<std::shared_ptr<SocketManager>> udp_listening_at(Port port) override {
         using SocketType = SocketManagerUdp;
-        return listening_at<SocketManagerUdp>(prepare_acceptor<SocketType>(acceptor_udp_, port));
+        return listening_at<SocketType>(prepare_acceptor<SocketType>(acceptor_udp_, port));
     }
 
     net::awaitable<std::shared_ptr<SocketManager>> tcp_connecting_to(const Address& address, Port port) override {
@@ -47,12 +47,16 @@ private:
 
     template<typename SocketType>
     SocketType::AcceptorType& prepare_acceptor(SocketType::AcceptorType& acceptor, Port port) {
-        typename SocketType::EndpointType endpoint(SocketType::InternetProtocolType::v4(), port);
-        if(acceptor.is_open()) acceptor.close();
-        acceptor.open(endpoint.protocol());
-        acceptor.bind(endpoint);
-        acceptor.listen();
-        return acceptor;
+        try {
+            typename SocketType::EndpointType endpoint(SocketType::InternetProtocolType::v4(), port);
+            if(acceptor.is_open()) acceptor.close();
+            acceptor.open(endpoint.protocol());
+            acceptor.bind(endpoint);
+            acceptor.listen();
+            return acceptor;
+        } catch (const boost::system::system_error& ex) {
+            throw std::runtime_error(ex.code().message());
+        }
     }
 
     template<typename SocketType>
