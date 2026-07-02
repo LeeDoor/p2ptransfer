@@ -2,6 +2,7 @@ add_library(server_presenter
     general_presenter.cpp
     listener_presenter.cpp
     transferer_presenter.cpp
+    listeners_lookup_presenter.cpp
     signal_handler.cpp
 )
 target_link_libraries(server_presenter PUBLIC pch_base)
