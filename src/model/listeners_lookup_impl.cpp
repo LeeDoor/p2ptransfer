@@ -1,5 +1,5 @@
 #include "listeners_lookup_impl.hpp"
-#include "broadcast_socket_manager.hpp"
+#include "socket_manager_multicast.hpp"
 #include "thread_wrapper.hpp"
 
 namespace p2ptransfer {
@@ -30,11 +30,10 @@ void ListenersLookupImpl::run_lookup() {
 
 net::awaitable<void> ListenersLookupImpl::lookup_async() {
     try {
+        co_await socket_manager_->send(LOOKUP_MSG, LOOKUP_ADDRESS, LOOKUP_PORT);
         while(true) {
-         //    auto result = co_await socket_manager_->receive();
-            // callback()->responce_received(result.address, result.port);
-        co_await socket_manager_->broadcast_send(LOOKUP_PORT, LOOKUP_MSG);
-            std::this_thread::sleep_for(std::chrono::seconds(2));
+            auto result = co_await socket_manager_->receive(LOOKUP_ADDRESS, LOOKUP_PORT);
+            callback()->responce_received(result.address, result.port);
         }
     } catch (const std::exception& ex) {
         /* Ignore error */

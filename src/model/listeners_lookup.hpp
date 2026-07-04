@@ -7,7 +7,7 @@ namespace model {
 /*!
 * \brief Part of Model of MVP.
 *
-* Sends broadcast messages to everyone in LAN to detect
+* Sends multicast messages to everyone in LAN to detect
 * listening users around.
 */
 class ListenersLookup : public WithLookupResultsCallback {

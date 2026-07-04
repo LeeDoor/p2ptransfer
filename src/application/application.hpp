@@ -46,6 +46,7 @@ public:
         listener_presenter_->setup();
         transferer_presenter_->setup();
         lookup_presenter_->setup();
+
         lookup_presenter_->lookup();
         return general_presenter_->run();
     }

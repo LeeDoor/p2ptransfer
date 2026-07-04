@@ -1,22 +1,25 @@
 #pragma once
-#include "broadcast_socket_manager.hpp"
+#include "socket_manager_multicast.hpp"
 
 namespace p2ptransfer {
 
-class BroadcastSocketManagerImpl : public BroadcastSocketManager {
+class SocketManagerMulticastImpl : public SocketManagerMulticast {
 public:
     using SocketType = net::ip::udp::socket;
     using SocketDeleter = std::function<void(SocketType*)>;
     using SocketPtr = std::unique_ptr<SocketType, SocketDeleter>;
+    using EndpointType = net::ip::udp::endpoint;
 
-    BroadcastSocketManagerImpl(ContextPtr context);
+    SocketManagerMulticastImpl(ContextPtr context);
 
-    net::awaitable<void> broadcast_send(Port port, std::string message) override;
-    net::awaitable<BroadcastResponse> receive() override;
+    net::awaitable<void> send(std::string message, Address address, Port port) override;
+    net::awaitable<MulticastResponse> receive(Address address, Port port) override;
 
     void stop() override;
 
 private:
+    void prepare_for_receiving(Address address, Port port);
+
     SocketDeleter get_socket_deleter() {
         return [] (SocketType* socket) {
             ErrorCode ec;
@@ -28,6 +31,7 @@ private:
 
     ContextPtr context_;
     SocketPtr socket_;
+    bool is_bound_to_local_address_{ false };
 };
 
 }

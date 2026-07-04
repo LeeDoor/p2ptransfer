@@ -9,7 +9,7 @@ add_library(server_model
     thread_wrapper_impl.cpp
     file_writer_impl.cpp
     listeners_lookup_impl.cpp
-    broadcast_socket_manager_impl.cpp
+    socket_manager_multicast_impl.cpp
 )
 target_link_libraries(server_model PUBLIC pch_base)
 target_include_directories(server_model PUBLIC ${INCLUDE_DIRECTORIES})

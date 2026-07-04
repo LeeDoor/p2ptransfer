@@ -5,7 +5,7 @@
 namespace p2ptransfer {
 
 class SocketManager;
-class BroadcastSocketManager;
+class SocketManagerMulticast;
 
 /*!
 * \brief socket builder for immediate connection

@@ -3,7 +3,7 @@
 
 namespace p2ptransfer {
 
-class BroadcastSocketManager;
+class SocketManagerMulticast;
 class ThreadWrapper;
 
 namespace model {
@@ -11,7 +11,7 @@ namespace model {
 class ListenersLookupImpl : public ListenersLookup {
 public:
     using ThreadWrapperPtr = std::shared_ptr<ThreadWrapper>;
-    using SocketManagerPtr = std::shared_ptr<BroadcastSocketManager>;
+    using SocketManagerPtr = std::shared_ptr<SocketManagerMulticast>;
 
     virtual ~ListenersLookupImpl() = default;
  
@@ -25,6 +25,7 @@ public:
 
 private:
     static constexpr std::string LOOKUP_MSG = "Stub message";
+    static constexpr Address LOOKUP_ADDRESS = "233.255.0.1";
     static constexpr Port LOOKUP_PORT = 45953;
 
     void run_lookup();
