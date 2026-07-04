@@ -1,5 +1,6 @@
 #include "listeners_lookup_impl.hpp"
 #include "socket_manager_multicast.hpp"
+#include "socket_manager_builder.hpp"
 #include "thread_wrapper.hpp"
 
 namespace p2ptransfer {
@@ -7,9 +8,9 @@ namespace model {
 
 ListenersLookupImpl::ListenersLookupImpl(
     ContextPtr context,
-    SocketManagerPtr socket_manager,
+    SocketManagerBuilderPtr socket_builder,
     ThreadWrapperPtr thread_wrapper) :
-    socket_manager_{ socket_manager },
+    socket_builder_{ socket_builder },
     thread_wrapper_{ thread_wrapper },
     context_{ context }
 {}
@@ -30,13 +31,14 @@ void ListenersLookupImpl::run_lookup() {
 
 net::awaitable<void> ListenersLookupImpl::lookup_async() {
     try {
-        co_await socket_manager_->send(LOOKUP_MSG, LOOKUP_ADDRESS, LOOKUP_PORT);
+        socket_manager_ = co_await socket_builder_->multicast_bind_to(LOOKUP_ADDRESS, LOOKUP_PORT);
+        co_await socket_manager_->send(LOOKUP_MSG);
         while(true) {
-            auto result = co_await socket_manager_->receive(LOOKUP_ADDRESS, LOOKUP_PORT);
+            auto result = co_await socket_manager_->receive();
             callback()->responce_received(result.address, result.port);
         }
     } catch (const std::exception& ex) {
-        /* Ignore error */
+        callback()->failed_to_lookup(ex.what());
     }
     socket_manager_ = nullptr;
 }

@@ -48,6 +48,8 @@ public:
     * \throws std::runtime_error if connection rejected or any other connection error occured.
     */
     virtual net::awaitable<std::shared_ptr<SocketManager>> udp_connecting_to(const Address& address, Port port) = 0;
+
+    virtual net::awaitable<std::shared_ptr<SocketManagerMulticast>> multicast_bind_to(const Address& address, Port port) = 0;
 };
 
 }

@@ -13,6 +13,7 @@ public:
 
     /// Called each time someone responses to lookup request.
     virtual void responce_received(Address address, Port port) = 0;
+    virtual void failed_to_lookup(std::string message) = 0;
 };
 
 }

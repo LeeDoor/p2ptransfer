@@ -1,6 +1,7 @@
 #pragma once
 #include "socket_manager_builder.hpp"
 #include "socket_manager_impl.hpp"
+#include "socket_manager_multicast_impl.hpp"
 
 namespace p2ptransfer {
 
@@ -37,6 +38,10 @@ public:
 
     net::awaitable<std::shared_ptr<SocketManager>> udp_connecting_to(const Address& address, Port port) override {
         return connecting_to<SocketManagerUdp>(address, port);
+    }
+
+    net::awaitable<std::shared_ptr<SocketManagerMulticast>> multicast_bind_to(const Address& address, Port port) override {
+        co_return std::make_shared<SocketManagerMulticastImpl>(context_, address, port);
     }
 
 private:

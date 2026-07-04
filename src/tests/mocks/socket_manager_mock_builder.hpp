@@ -23,6 +23,7 @@ public:
     MOCK_METHOD(void, mock_udp_listening_at, (Port port), ());
     MOCK_METHOD(void, mock_tcp_connecting_to, (const Address& address, Port port), ());
     MOCK_METHOD(void, mock_udp_connecting_to, (const Address& address, Port port), ());
+    MOCK_METHOD(net::awaitable<std::shared_ptr<SocketManagerMulticast>>, multicast_bind_to, (const Address& address, Port port), (override));
 
 protected:
     /// Mock method

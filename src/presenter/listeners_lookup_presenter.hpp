@@ -19,6 +19,7 @@ public:
 
     void lookup();
     void responce_received(Address address, Port port) override;
+    void failed_to_lookup(std::string message) override;
 
 private:
     ListenersLookupPtr listeners_lookup_;

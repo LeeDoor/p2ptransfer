@@ -25,5 +25,9 @@ void ListenersLookupPresenter::responce_received(Address address, Port port) {
     Logger::log() << "Looking up found a listener: " << address << ":" << port << std::endl;
 }
 
+void ListenersLookupPresenter::failed_to_lookup(std::string message) {
+    Logger::log() << "Failed to make a lookup:" << message << std::endl;
+}
+
 }
 }

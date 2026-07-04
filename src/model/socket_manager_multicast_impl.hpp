@@ -10,10 +10,10 @@ public:
     using SocketPtr = std::unique_ptr<SocketType, SocketDeleter>;
     using EndpointType = net::ip::udp::endpoint;
 
-    SocketManagerMulticastImpl(ContextPtr context);
+    SocketManagerMulticastImpl(ContextPtr context, const Address& address, Port port);
 
-    net::awaitable<void> send(std::string message, Address address, Port port) override;
-    net::awaitable<MulticastResponse> receive(Address address, Port port) override;
+    net::awaitable<void> send(std::string message) override;
+    net::awaitable<MulticastResponse> receive() override;
 
     void stop() override;
 
@@ -31,7 +31,7 @@ private:
 
     ContextPtr context_;
     SocketPtr socket_;
-    bool is_bound_to_local_address_{ false };
+    EndpointType multicast_group_endpoint_;
 };
 
 }

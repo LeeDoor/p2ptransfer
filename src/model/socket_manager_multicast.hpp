@@ -14,8 +14,8 @@ public:
         Port port;
     };
 
-    virtual net::awaitable<void> send(std::string message, Address address, Port port) = 0;
-    virtual net::awaitable<MulticastResponse> receive(Address address, Port port) = 0;
+    virtual net::awaitable<void> send(std::string message) = 0;
+    virtual net::awaitable<MulticastResponse> receive() = 0;
     virtual void stop() = 0;
 };
 
