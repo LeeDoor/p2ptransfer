@@ -5,6 +5,8 @@
 #include "listener_impl.hpp"
 #include "socket_manager_impl_builder.hpp"
 #include "transferer_impl.hpp"
+#include "listeners_lookup_impl.hpp"
+#include "broadcast_socket_manager_impl.hpp"
 
 namespace p2ptransfer {
 namespace model {
@@ -42,6 +44,15 @@ public:
             context,
             std::make_shared<ThreadWrapperType>(),
             std::make_shared<SocketManagerImplBuilder>(context)
+        );
+    }
+
+    std::shared_ptr<ListenersLookupImpl> create_listeners_lookup() {
+        ContextPtr context;
+        return std::make_shared<ListenersLookupImpl>(
+            context,
+            std::make_shared<BroadcastSocketManagerImpl>(context),
+            std::make_shared<ThreadWrapperType>()
         );
     }
 };

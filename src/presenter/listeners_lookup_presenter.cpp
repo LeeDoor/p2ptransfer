@@ -4,6 +4,10 @@
 namespace p2ptransfer {
 namespace presenter {
 
+ListenersLookupPresenter::ListenersLookupPresenter(ListenersLookupPtr lookupper)
+: listeners_lookup_{ lookupper }
+{}
+
 void ListenersLookupPresenter::setup() {
     listeners_lookup_->set_callback(shared_from_this());
     setupped_ = true;

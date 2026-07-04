@@ -22,7 +22,7 @@ net::awaitable<BroadcastSocketManager::BroadcastResponse> BroadcastSocketManager
     try {
         std::string reading_buffer_;
         net::ip::udp::endpoint remote_endpoint;
-        size_t bytes_read = co_await socket_->async_receive_from(reading_buffer_, remote_endpoint, net::use_awaitable);
+        size_t bytes_read = co_await socket_->async_receive_from(net::buffer(reading_buffer_), remote_endpoint, net::use_awaitable);
         co_return BroadcastResponse{ 
             reading_buffer_.substr(0, bytes_read),
             remote_endpoint.address().to_string(),
