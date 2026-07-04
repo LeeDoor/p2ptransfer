@@ -2,6 +2,7 @@
 #include "application.hpp"
 #include "general_view_cli.hpp"
 #include "listener_view_cli.hpp"
+#include "listeners_lookup_view_cli.hpp"
 #include "model_builder.hpp"
 #include "single_thread_wrapper.hpp"
 #include "transferer_view_cli.hpp"
@@ -26,7 +27,8 @@ private:
         model::ModelBuilder<SingleThreadWrapper>, 
         view::GeneralViewCLI, 
         view::ListenerViewCLI, 
-        view::TransfererViewCLI> application_;
+        view::TransfererViewCLI,
+        view::ListenersLookupViewCLI> application_;
 };
 
 }

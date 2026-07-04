@@ -21,19 +21,23 @@ public:
 
     using ListenNotification = std::function<void(Port)>;
     using TransferNotification = std::function<void(const Address&, Port, const Filename&)>;
+    using LookupStartNotification = std::function<std::tuple<Address, Port>()>;
     void subscribe_listen(ListenNotification func);
     void subscribe_transfer(TransferNotification func);
+    void subscribe_lookup(LookupStartNotification func);
 
 private:
+    void fill_endpoint_if_required();
     void run_action();
     void close_program();
     void notify_listen();
     void notify_transfer();
 
-    std::list<ListenNotification> listen_subs_;
-    std::list<TransferNotification> transfer_subs_;
+    LookupStartNotification lookup_start_invoker_ {};
+    std::list<ListenNotification> listen_subs_ {};
+    std::list<TransferNotification> transfer_subs_ {};
 
-    CLIArgsParser::CLIRunArgs args_;
+    CLIArgsParser::CLIRunArgs args_ {};
 };
 
 }

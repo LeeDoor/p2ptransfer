@@ -12,12 +12,23 @@ GeneralViewCLI::GeneralViewCLI(int argc, char** argv) {
 }
 
 int GeneralViewCLI::run() {
+    fill_endpoint_if_required();
     run_action();
     return !args_.valid;
 }
 
 void GeneralViewCLI::stop() {}
 
+void GeneralViewCLI::fill_endpoint_if_required() {
+#if 0
+    // Now we still require them to mention and will always fill from lookup
+    if(!args_.address.empty() && args_.port != 0)
+        return;
+#endif
+    auto [address, port] = lookup_start_invoker_();
+    args_.address = std::move(address);
+    args_.port = port;
+}
 void GeneralViewCLI::run_action() {
     switch(args_.action) {
         case CLIArgsParser::Listen:
@@ -83,6 +94,9 @@ void GeneralViewCLI::subscribe_listen(ListenNotification func) {
 }
 void GeneralViewCLI::subscribe_transfer(TransferNotification func) {
     transfer_subs_.push_back(std::move(func));
+}
+void GeneralViewCLI::subscribe_lookup(LookupStartNotification func) {
+    lookup_start_invoker_ = std::move(func);
 }
 
 

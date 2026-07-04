@@ -1,14 +1,17 @@
 #include "listeners_lookup_presenter.hpp"
 #include "listeners_lookup.hpp"
+#include "listeners_lookup_view.hpp"
 
 namespace p2ptransfer {
 namespace presenter {
 
-ListenersLookupPresenter::ListenersLookupPresenter(ListenersLookupPtr lookupper)
-: listeners_lookup_{ lookupper }
+ListenersLookupPresenter::ListenersLookupPresenter(ViewPtr view, ListenersLookupPtr lookupper)
+: view_{ view }
+, listeners_lookup_{ lookupper }
 {}
 
 void ListenersLookupPresenter::setup() {
+    view_->setup();
     listeners_lookup_->set_callback(shared_from_this());
     setupped_ = true;
 }

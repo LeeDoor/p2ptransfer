@@ -5,9 +5,10 @@
 #include "transferer_presenter.hpp"
 #include "transferer_view.hpp"
 #include "listeners_lookup_presenter.hpp"
+#include "listeners_lookup_view.hpp"
 
 namespace p2ptransfer {
-template<typename ModelBuilderType, typename GeneralViewType, typename ListenerViewType, typename TransfererViewType>
+template<typename ModelBuilderType, typename GeneralViewType, typename ListenerViewType, typename TransfererViewType, typename LookupViewType>
 class Application {
 public:
     template<typename GeneralViewGenerator, typename SignalFunc>
@@ -28,7 +29,8 @@ public:
         transferer_presenter_{std::make_shared<presenter::TransfererPresenter>(transferer_view_, transferer_, general_presenter_)},
 
         lookupper_{model_builder_.create_listeners_lookup() },
-        lookup_presenter_{ std::make_shared<presenter::ListenersLookupPresenter>(lookupper_) }
+        lookup_view_{ std::make_shared<LookupViewType>(general_view_) },
+        lookup_presenter_{ std::make_shared<presenter::ListenersLookupPresenter>(lookup_view_, lookupper_) }
     {
         SignalHandler::handle_SIGINT(
             [this, func = std::move(signal_func)] {
@@ -47,7 +49,6 @@ public:
         transferer_presenter_->setup();
         lookup_presenter_->setup();
 
-        lookup_presenter_->lookup();
         return general_presenter_->run();
     }
     void stop() {
@@ -72,6 +73,7 @@ private:
     std::shared_ptr<presenter::TransfererPresenter> transferer_presenter_;
 
     std::shared_ptr<model::ListenersLookup> lookupper_;
+    std::shared_ptr<view::ListenersLookupView> lookup_view_;
     std::shared_ptr<presenter::ListenersLookupPresenter> lookup_presenter_;
 };
 
