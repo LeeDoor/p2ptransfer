@@ -1,5 +1,6 @@
 #pragma once
 #include "lookup_results_callback.hpp"
+#include "lookup_view_callback.hpp"
 
 namespace p2ptransfer {
 namespace view { class ListenersLookupView; }
@@ -10,6 +11,7 @@ class NetworkStatusCallback;
 
 class ListenersLookupPresenter final :
     public LookupResultsCallback,
+    public view::LookupViewCallback,
     public std::enable_shared_from_this<ListenersLookupPresenter> {
 public:
     using ViewPtr = std::shared_ptr<view::ListenersLookupView>;
@@ -18,9 +20,9 @@ public:
     ListenersLookupPresenter(ViewPtr view, ListenersLookupPtr lookupper);
 
     void setup();
-    void stop();
+    void cancel_lookup() override;
 
-    void lookup();
+    void lookup() override;
     void responce_received(Address address, Port port) override;
     void failed_to_lookup(std::string message) override;
 

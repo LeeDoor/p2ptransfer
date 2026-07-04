@@ -55,7 +55,7 @@ public:
         general_presenter_->stop();
         listener_presenter_->cancel_listening();
         transferer_presenter_->cancel_transferring();
-        lookup_presenter_->stop();
+        lookup_presenter_->cancel_lookup();
     }
 
 private:

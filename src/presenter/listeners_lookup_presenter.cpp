@@ -15,7 +15,7 @@ void ListenersLookupPresenter::setup() {
     listeners_lookup_->set_callback(shared_from_this());
     setupped_ = true;
 }
-void ListenersLookupPresenter::stop() {
+void ListenersLookupPresenter::cancel_lookup() {
     listeners_lookup_->stop();
 }
 
@@ -29,7 +29,7 @@ void ListenersLookupPresenter::responce_received(Address address, Port port) {
 }
 
 void ListenersLookupPresenter::failed_to_lookup(std::string message) {
-    Logger::log() << "Failed to make a lookup:" << message << std::endl;
+    Logger::log() << "Failed to make a lookup: " << message << std::endl;
 }
 
 }
