@@ -13,6 +13,7 @@ public:
     enum Action { Listen, Transfer };
     struct CLIRunArgs {
         bool valid = true;
+        bool requires_endpoint_selection = false;
         Action action = Transfer;
         Address address = "";
         Port port = 0;

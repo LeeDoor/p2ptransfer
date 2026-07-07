@@ -4,7 +4,9 @@
 #include "file_reader_builder.hpp"
 #include "file_reader.hpp"
 #include "socket_manager_builder.hpp"
+#include "socket_manager_multicast.hpp"
 #include "socket_manager.hpp"
+#include "lookup_endpoint.hpp"
 
 namespace p2ptransfer {
 namespace model {
@@ -17,7 +19,8 @@ ListenerImpl::ListenerImpl(ContextPtr context,
     context_(context),
     socket_manager_builder_(socket_manager_builder),
     socket_manager_{},
-    file_reader_builder_(file_reader_builder)
+    file_reader_builder_(file_reader_builder),
+    timer_{ *context }
 {}
 ListenerImpl::~ListenerImpl() {
     stop();
@@ -43,7 +46,20 @@ void ListenerImpl::spawn_listen_coroutine(Port port) {
 
 net::awaitable<void> ListenerImpl::listen_async(Port port) {
     try {
-        socket_manager_ = co_await connect_and_listen(port);
+        auto lookup_socket = co_await socket_manager_builder_->multicast_bind_to(LOOKUP_ADDRESS, LOOKUP_PORT);
+        std::variant<ListenerImpl::SocketManagerPtr, std::monostate> result;
+        static const int socket_idx = 0;
+        do {
+            timer_.expires_after(std::chrono::seconds(1));
+            co_await lookup_socket->send(std::to_string(port));
+            result = co_await (
+                connect_and_listen(port) ||
+                timer_.async_wait(net::use_awaitable)
+            );
+        } while(result.index() != socket_idx && !is_stopped_);
+        if(is_stopped_)
+            co_return;
+        socket_manager_ = std::get<socket_idx>(result);
     } catch(const std::exception& ex) {
         WithNetworkCallback::callback()->cant_open_socket(ex.what());
         co_return;
@@ -73,6 +89,8 @@ void ListenerImpl::stop() {
     if(socket_manager_) {
         socket_manager_->stop();
     }
+    timer_.cancel();
+    is_stopped_ = true;
 }
 
 }

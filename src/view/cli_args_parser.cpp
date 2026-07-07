@@ -67,8 +67,12 @@ void CLIArgsParser::validate() {
 }
 
 void CLIArgsParser::validate_transfer() {
-    validate_address();
-    validate_port();
+    if(args.port == 0 || args.filename.empty()) {
+        args.requires_endpoint_selection = true;
+    } else {
+        validate_address();
+        validate_port();
+    }
     validate_filename();
 }
 void CLIArgsParser::validate_listen() {

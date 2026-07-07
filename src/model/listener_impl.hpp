@@ -55,6 +55,9 @@ private:
     SocketManagerBuilderPtr socket_manager_builder_;
     SocketManagerPtr socket_manager_;
     FileReaderBuilderPtr file_reader_builder_;
+    net::steady_timer timer_;
+
+    bool is_stopped_ = false;
 };
 
 }

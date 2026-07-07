@@ -27,11 +27,11 @@ net::awaitable<void> SocketManagerMulticastImpl::send(std::string message) {
 }
 net::awaitable<SocketManagerMulticast::MulticastResponse> SocketManagerMulticastImpl::receive() {
     try {
-        std::string reading_buffer;
         net::ip::udp::endpoint remote_endpoint;
+        std::string reading_buffer(1024, '\0');
         size_t bytes_read = 
             co_await socket_->async_receive_from(
-                net::buffer(reading_buffer), 
+                net::buffer(reading_buffer),
                 remote_endpoint, 
                 net::use_awaitable);
         co_return MulticastResponse{ 

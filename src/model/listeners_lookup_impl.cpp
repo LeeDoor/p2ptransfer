@@ -2,6 +2,7 @@
 #include "socket_manager_multicast.hpp"
 #include "socket_manager_builder.hpp"
 #include "thread_wrapper.hpp"
+#include "lookup_endpoint.hpp"
 
 namespace p2ptransfer {
 namespace model {
@@ -33,13 +34,17 @@ net::awaitable<void> ListenersLookupImpl::lookup_async() {
     try {
         socket_manager_ = co_await socket_builder_->multicast_bind_to(LOOKUP_ADDRESS, LOOKUP_PORT);
         net::steady_timer timer(*context_);
-        timer.expires_after(std::chrono::seconds(2));
-        timer.async_wait([&]([[maybe_unused]] auto _) {
-            socket_manager_->stop();
-        });
+        timer.expires_at(std::chrono::steady_clock::now() + std::chrono::seconds(2));
         while(true) {
-            auto result = co_await socket_manager_->receive();
-            callback()->responce_received(result.address, result.port);
+            std::variant<SocketManagerMulticast::MulticastResponse, std::monostate> result = co_await (
+                socket_manager_->receive() ||
+                timer.async_wait(net::use_awaitable)
+            );
+            if(result.index() == 0) {
+                auto response = std::get<0>(result);
+                callback()->responce_received(response .address, std::stoi(response.data));
+                break;
+            }
         }
     } catch (const std::exception& ex) {
         callback()->failed_to_lookup(ex.what());

@@ -26,10 +26,6 @@ public:
     void stop() override;
 
 private:
-    static constexpr std::string LOOKUP_MSG = "Stub message";
-    static constexpr Address LOOKUP_ADDRESS = "233.255.0.1";
-    static constexpr Port LOOKUP_PORT = 45953;
-
     void run_lookup();
     net::awaitable<void> lookup_async();
 

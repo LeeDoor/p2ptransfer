@@ -152,6 +152,7 @@ protected:
         try {
             socket_ = SocketPtr(new SocketType(*context_, InternetProtocolType::v4()), get_socket_deleter());
             co_await socket_->async_connect(endpoint, net::use_awaitable);
+            co_return;
         } catch (const boost::system::system_error& ex) {
             throw std::runtime_error(ex.code().message());
         }

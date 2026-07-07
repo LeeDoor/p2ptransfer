@@ -20,11 +20,8 @@ int GeneralViewCLI::run() {
 void GeneralViewCLI::stop() {}
 
 void GeneralViewCLI::fill_endpoint_if_required() {
-#if 0
-    // Now we still require them to mention and will always fill from lookup
-    if(!args_.address.empty() && args_.port != 0)
+    if(!args_.requires_endpoint_selection)
         return;
-#endif
     auto [address, port] = lookup_start_invoker_();
     args_.address = std::move(address);
     args_.port = port;
