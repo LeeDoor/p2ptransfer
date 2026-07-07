@@ -1,6 +1,7 @@
 #pragma once
 #include "general_view.hpp"
 #include "cli_args_parser.hpp"
+#include "endpoint.hpp"
 
 namespace p2ptransfer {
 namespace view {
@@ -21,7 +22,7 @@ public:
 
     using ListenNotification = std::function<void(Port)>;
     using TransferNotification = std::function<void(const Address&, Port, const Filename&)>;
-    using LookupStartNotification = std::function<std::tuple<Address, Port>()>;
+    using LookupStartNotification = std::function<Endpoint()>;
     void subscribe_listen(ListenNotification func);
     void subscribe_transfer(TransferNotification func);
     void subscribe_lookup(LookupStartNotification func);

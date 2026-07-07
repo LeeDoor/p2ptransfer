@@ -27,6 +27,14 @@ public:
         log() << "\r" << std::flush  << 
             "progress: " << std::setw(10) << std::max(0.0, persent) << " %";
     }
+    static size_t enter_positive_integer() {
+        size_t num = 0;
+        std::cin >> num;
+        if(std::cin.fail()) {
+            throw std::logic_error("Please enter valid positive integer next time ^^");
+        }
+        return num;
+    }
     static constexpr std::string_view ERROR_COLOR = "\033[30;41m";
     static constexpr std::string_view CLEAR_COLOR = "\033[0;0m";
 };

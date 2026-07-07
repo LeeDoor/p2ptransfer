@@ -12,6 +12,7 @@ ListenersLookupPresenter::ListenersLookupPresenter(ViewPtr view, ListenersLookup
 
 void ListenersLookupPresenter::setup() {
     view_->setup();
+    view_->set_callback(shared_from_this());
     listeners_lookup_->set_callback(shared_from_this());
     setupped_ = true;
 }
@@ -25,7 +26,7 @@ void ListenersLookupPresenter::lookup() {
     listeners_lookup_->start_lookup();
 }
 void ListenersLookupPresenter::responce_received(Address address, Port port) {
-    Logger::log() << "Looking up found a listener: " << address << ":" << port << std::endl;
+    view_->endpoints_responced({ {address, port } });
 }
 
 void ListenersLookupPresenter::failed_to_lookup(std::string message) {

@@ -12,10 +12,18 @@ public:
     virtual ~ListenersLookupViewCLI() = default;
 
     void setup() override;
-    std::tuple<Address, Port> select_remote_endpoint() override;
+    Endpoint select_remote_endpoint() override;
+    void endpoints_responced(Endpoints&& endpoints) override;
 
 private:
+    Endpoint select_endpoint();
+    void update_table_on_screen() const;
+    void refresh();
+    size_t make_selection();
+
     std::shared_ptr<GeneralViewCLI> general_view_;
+    Endpoints endpoints_;
+    std::unordered_map<Address, Port> stored_endpoints_;
 };
 
 }

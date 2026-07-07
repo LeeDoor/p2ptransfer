@@ -32,7 +32,11 @@ void ListenersLookupImpl::run_lookup() {
 net::awaitable<void> ListenersLookupImpl::lookup_async() {
     try {
         socket_manager_ = co_await socket_builder_->multicast_bind_to(LOOKUP_ADDRESS, LOOKUP_PORT);
-        co_await socket_manager_->send(LOOKUP_MSG);
+        net::steady_timer timer(*context_);
+        timer.expires_after(std::chrono::seconds(2));
+        timer.async_wait([&]([[maybe_unused]] auto _) {
+            socket_manager_->stop();
+        });
         while(true) {
             auto result = co_await socket_manager_->receive();
             callback()->responce_received(result.address, result.port);
