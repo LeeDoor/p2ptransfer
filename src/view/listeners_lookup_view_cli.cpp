@@ -10,6 +10,9 @@ ListenersLookupViewCLI::ListenersLookupViewCLI(std::shared_ptr<GeneralViewCLI> v
 void ListenersLookupViewCLI::setup() {
     general_view_->subscribe_lookup(std::bind(&ListenersLookupViewCLI::select_remote_endpoint, this));
 }
+void ListenersLookupViewCLI::start_lookup() {
+    refresh();
+}
 Endpoint ListenersLookupViewCLI::select_remote_endpoint() {
     size_t selected_endpoint = 0;
     update_table_on_screen();

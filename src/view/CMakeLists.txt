@@ -5,6 +5,7 @@ if(${GRAPHICS})
         general_view_gui.cpp
         listener_view_gui.cpp
         transferer_view_gui.cpp
+        listeners_lookup_view_gui.cpp
     )
     target_link_libraries(server_view_gui PUBLIC pch_graphics ${LINK_LIBRARIES} ${Qt6Widgets_LIBRARIES} ${Qt6Core_LIBRARIES})
     target_include_directories(server_view_gui PUBLIC ${INCLUDE_DIRECTORIES})

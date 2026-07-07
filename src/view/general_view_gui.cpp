@@ -36,6 +36,7 @@ int GeneralViewGUI::run() {
     QMainWindow::show();
     if(auto application = application_.lock()) {
         running_ = true;
+        lookupping();
         return application->exec();
     } else {
         throw std::logic_error("application removed before ViewGUI::run");
@@ -68,7 +69,7 @@ void GeneralViewGUI::show_connected(const Address& address, Port port) {
     QString qaddress = address.c_str();
     QString qport = QString::number(port);
     run_sync([=, this] {
-            ui_->remote_endpoint_label->setText(qaddress + ":" + qport);
+        ui_->remote_endpoint_label->setText(qaddress + ":" + qport);
     });
 }
 
@@ -123,28 +124,39 @@ void GeneralViewGUI::perform_action() {
     acting_stage();
     try {
         if(is_listen()) {
-            listening(get_port());
+            listening(get_listener_port());
         }
         else if (is_transfer()) {
             if(selected_file_.isEmpty()) 
                 throw std::runtime_error(
                         "No file selected. Please drag your file to "
                         "this window or press the \"select file\" button.");
-            transferring(get_address(), get_port(), selected_file_.toStdString());
+            auto endpoint = select_remote_endpoint();
+            transferring(endpoint.address, endpoint.port, selected_file_.toStdString());
         }
     } catch (const std::runtime_error& ex) {
         QMessageBox::warning(this, "Action error", ex.what());
         input_waiting_stage();
     }   
 }
+Endpoint GeneralViewGUI::select_remote_endpoint() const {
+    auto table = ui_->tableWidget;
+    auto selected_rows = table->selectionModel()->selectedRows();
+    if(selected_rows.size() != 1)
+        throw std::runtime_error("Please select endpoint to connect to");
+    auto row = selected_rows.first().row();
+    Endpoint endpoint;
+    endpoint.address = table->item(row, 0)->text().toStdString();
+    endpoint.port = table->item(row, 1)->text().toUInt();
+    return endpoint;
+}
 
-Port GeneralViewGUI::get_port() const {
+Port GeneralViewGUI::get_listener_port() const {
     QString text;
-    if(is_listen()) {
-        text = ui_->listenPortLineEdit->text();
-    } else if (is_transfer()) {
-        text = ui_->transferPortLineEdit->text();
+    if(!is_listen()) {
+        throw std::runtime_error("getting port from listener's label");
     }
+    text = ui_->listenPortLineEdit->text();
     bool ok;
     Port port = text.toUInt(&ok);
     if(!ok) throw std::runtime_error("port is not an integer");
@@ -153,19 +165,6 @@ Port GeneralViewGUI::get_port() const {
     }
     return port;
 }
-Address GeneralViewGUI::get_address() const {
-    if(!is_transfer())
-        throw std::logic_error("Can't get address while not transfering tab opened");
-    QString ip = ui_->addressLineEdit->text();
-    QRegularExpression ip_regex("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$");
-    QRegularExpressionValidator validator(ip_regex);
-    int pos = 0;
-    if(validator.validate(ip, pos) != QValidator::Acceptable) {
-        throw std::runtime_error("No ip provided or ip is incorrect");
-    }
-    return ip.toStdString();
-}
-
 void GeneralViewGUI::select_file_button_clicked() {
     QString filepath = QFileDialog::getOpenFileName(this);
     if(filepath.isEmpty())

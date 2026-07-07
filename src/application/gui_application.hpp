@@ -5,6 +5,7 @@
 #include "model_builder.hpp"
 #include "thread_wrapper_impl.hpp"
 #include "transferer_view_gui.hpp"
+#include "listeners_lookup_view_gui.hpp"
 
 namespace p2ptransfer {
 
@@ -26,7 +27,8 @@ private:
         model::ModelBuilder<ThreadWrapperImpl>, 
         view::GeneralViewGUI, 
         view::ListenerViewGUI, 
-        view::TransfererViewGUI> application_;
+        view::TransfererViewGUI,
+        view::ListenersLookupViewGUI> application_;
 };
 
 }

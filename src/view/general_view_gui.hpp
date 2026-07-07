@@ -1,6 +1,7 @@
 #pragma once
 #include "general_view.hpp"
 #include "request_structures.hpp"
+#include "endpoint.hpp"
 #ifndef NDEBUG
 #include "logger.hpp"
 #endif
@@ -26,6 +27,8 @@ public:
     /// Required to filter drop events.
     void dragEnterEvent(QDragEnterEvent* event) override;
     void dropEvent(QDropEvent* event) override;
+
+    decltype(auto) get_ui() const { return ui_; }
 
     int run() override;
     void stop() override;
@@ -66,12 +69,16 @@ public slots:
     void action_changed(int index);
     /// Slot for copying the LAN address to clipboard
     void copy_lan_clicked();
+    Endpoint select_remote_endpoint() const;
 
 signals:
     void listening(Port port);
     void cancel_listening();
     void transferring(const Address& address, Port port, const Filename& filename);
     void cancel_transferring();
+    void lookupping();
+    void cancel_lookupping();
+
 private:
     enum Action { Listen, Transfer };
     Action action() const;
@@ -84,11 +91,7 @@ private:
 
     /// Reads port from user input.
     /*! \throws std::runtime_error if port from label is not an integer or too big */
-    Port get_port() const;
-    /// Reads IP address from transfer input line.
-    /*! \throws std::logic_error if called while from the opened listening bar */
-    /*! \throws std::runtime_error if does not match a port regex */
-    Address get_address() const;
+    Port get_listener_port() const;
 
     void set_file_if_accessible(QString filepath);
 
@@ -97,7 +100,7 @@ private:
 
     void acting_stage();
     void input_waiting_stage();
-
+    
     std::shared_ptr<Ui::GeneralViewGUI> ui_;
     std::weak_ptr<QApplication> application_;
     Action action_;

@@ -12,6 +12,7 @@ public:
     virtual ~ListenersLookupViewCLI() = default;
 
     void setup() override;
+    void start_lookup() override;
     Endpoint select_remote_endpoint() override;
     void endpoints_responced(Endpoints&& endpoints) override;
 

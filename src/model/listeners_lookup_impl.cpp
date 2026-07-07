@@ -34,7 +34,7 @@ net::awaitable<void> ListenersLookupImpl::lookup_async() {
     try {
         socket_manager_ = co_await socket_builder_->multicast_bind_to(LOOKUP_ADDRESS, LOOKUP_PORT);
         net::steady_timer timer(*context_);
-        timer.expires_at(std::chrono::steady_clock::now() + LOOKUP_PERIOD * 2);
+        timer.expires_at(std::chrono::steady_clock::now() + LOOKUP_PERIOD * 2 * 1000);
         while(true) {
             std::variant<SocketManagerMulticast::MulticastResponse, std::monostate> result = co_await (
                 socket_manager_->receive() ||
