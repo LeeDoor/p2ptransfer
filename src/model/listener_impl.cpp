@@ -6,7 +6,7 @@
 #include "socket_manager_builder.hpp"
 #include "socket_manager_multicast.hpp"
 #include "socket_manager.hpp"
-#include "lookup_endpoint.hpp"
+#include "lookup_constants.hpp"
 
 namespace p2ptransfer {
 namespace model {
@@ -50,7 +50,7 @@ net::awaitable<void> ListenerImpl::listen_async(Port port) {
         std::variant<ListenerImpl::SocketManagerPtr, std::monostate> result;
         static const int socket_idx = 0;
         do {
-            timer_.expires_after(std::chrono::seconds(1));
+            timer_.expires_after(LOOKUP_PERIOD);
             co_await lookup_socket->send(std::to_string(port));
             result = co_await (
                 connect_and_listen(port) ||
