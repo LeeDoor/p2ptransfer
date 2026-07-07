@@ -51,9 +51,10 @@ private:
     bool is_initialized_ = false;
 
     using hclock = std::chrono::high_resolution_clock;
-    decltype(hclock::now()) bar_timestamp_;
-    size_t bytes_downloaded_;
+    decltype(hclock::now()) latest_bar_timestamp_;
+    size_t bytes_downloaded_ = 0;
     double kbps_ = 0;
+    size_t filesize_ = 0;
 };
 
 }
