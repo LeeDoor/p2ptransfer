@@ -43,6 +43,7 @@ net::awaitable<void> ListenersLookupImpl::lookup_async() {
             if(result.index() == 0) {
                 auto response = std::get<0>(result);
                 callback()->responce_received(response .address, std::stoi(response.data));
+            } else {
                 break;
             }
         }

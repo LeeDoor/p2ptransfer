@@ -12,7 +12,7 @@ public:
         for(auto it = endings.begin(); it != endings.end(); ++it) {
             auto ending = *it;
             if (kbps < 1000 || it == std::prev(endings.end())) {
-                ss << kbps << " " << std::fixed << std::setprecision(2) << ending << "/s";
+                ss << kbps << " " << /*std::fixed << std::setw(7) <<*/ std::setprecision(2) << ending << "/s";
                 break;
             } else {
                 kbps /= 1000;

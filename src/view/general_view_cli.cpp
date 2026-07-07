@@ -60,7 +60,7 @@ void GeneralViewCLI::show_socket_error(std::string reason) {
 }
 void GeneralViewCLI::update_progressbar_status(double percent, double kbps) {
     const auto barWidth = 50;
-    std::cout << "\r" << SpeedConverter::from_kbps(kbps) << " [";
+    std::cout << "\r" << " [";
     int pos = barWidth * percent / 100.0;
     
     for (int i = 0; i < barWidth; ++i) {
@@ -69,7 +69,8 @@ void GeneralViewCLI::update_progressbar_status(double percent, double kbps) {
         else std::cout << " ";
     }
     
-    std::cout << "] " << std::setw(3) << static_cast<int>(percent) << " %";
+    std::cout << "] " << std::setw(3) << static_cast<int>(percent) << " % ";
+    std::cout << SpeedConverter::from_kbps(kbps);
     // If line becomes shorter, clear extra characters.
     for(int i = 0; i < 10; ++i)
         std::cout << ' ';

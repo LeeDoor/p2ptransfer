@@ -8,8 +8,8 @@ namespace presenter {
 GeneralPresenter::GeneralPresenter(AddressGathererPtr address_gatherer, ViewPtr view) :
     address_gatherer_{address_gatherer}, 
     view_{view},
-    prev_bar_timestamp_{}, 
-    prev_bytes_downloaded_{0}
+    bar_timestamp_{},
+    bytes_downloaded_{0}
 {}
 
 void GeneralPresenter::setup() {
@@ -27,16 +27,19 @@ void GeneralPresenter::stop() {
     view_->stop();
 }
 void GeneralPresenter::set_progressbar(size_t bytes_remaining, size_t filesize) {
-    auto time_shift = hclock::now() - prev_bar_timestamp_;
-    double bytes = filesize - (bytes_remaining + prev_bytes_downloaded_);
-    double bpmcs = bytes / std::chrono::duration_cast<std::chrono::microseconds>(time_shift).count();
-    double kbps = bpmcs * 1000;
+    auto time_shift = hclock::now() - bar_timestamp_;
+    if(time_shift >= std::chrono::milliseconds(500)) {
+        double bytes = filesize - (bytes_remaining + bytes_downloaded_);
+        double bpmcs = bytes / std::chrono::duration_cast<std::chrono::microseconds>(time_shift).count();
+        kbps_ = bpmcs * 1000;
+
+        bytes_downloaded_ = filesize - bytes_remaining;
+        bar_timestamp_ = hclock::now();
+    }
     double percent = static_cast<double>(filesize - bytes_remaining) / filesize * 100;
 
-    view_->update_progressbar_status(percent, kbps);
+    view_->update_progressbar_status(percent, kbps_);
 
-    prev_bytes_downloaded_ = filesize - bytes_remaining;
-    prev_bar_timestamp_ = hclock::now();
 }
 void GeneralPresenter::set_address(const Address& address) {
     view_->show_address(address);
