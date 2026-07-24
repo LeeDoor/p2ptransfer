@@ -11,8 +11,8 @@ SocketManagerMulticastImpl::SocketManagerMulticastImpl(ContextPtr context, const
     socket_->set_option(net::socket_base::reuse_address(true));
     socket_->set_option(net::ip::multicast::enable_loopback(true));
     socket_->set_option(net::ip::multicast::hops(16));
+    socket_->bind(EndpointType(net::ip::address_v4::any(), port));
     socket_->set_option(net::ip::multicast::join_group(net::ip::make_address(address)));
-    socket_->bind(multicast_group_endpoint_);
 }
 
 net::awaitable<void> SocketManagerMulticastImpl::send(std::string message) {
@@ -22,7 +22,7 @@ net::awaitable<void> SocketManagerMulticastImpl::send(std::string message) {
             multicast_group_endpoint_,
             net::use_awaitable);
     } catch (const boost::system::system_error& ex) {
-        throw std::runtime_error(ex.code().message());
+        throw std::runtime_error("Multicast sending issue. " + ex.code().message());
     }
 }
 net::awaitable<SocketManagerMulticast::MulticastResponse> SocketManagerMulticastImpl::receive() {
@@ -40,7 +40,7 @@ net::awaitable<SocketManagerMulticast::MulticastResponse> SocketManagerMulticast
             remote_endpoint.port()
         };
     } catch (const boost::system::system_error& ex) {
-        throw std::runtime_error(ex.code().message());
+        throw std::runtime_error("Multicast receiving issue. " + ex.code().message());
     }
 }
 
